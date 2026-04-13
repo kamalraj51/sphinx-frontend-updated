@@ -75,10 +75,17 @@ const Topics = () => {
     };
 
     const performDelete = async (topicId) => {
-        const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
+       try{
+         const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
             method: "DELETE",
         });
         if (!response.ok) throw new Error("Failed to delete topic");
+
+       }catch(err){
+            console.log(err)
+       }finally{
+         dispatch(toggle());
+       }
     };
 
     const executeDelete = async () => {
@@ -107,10 +114,11 @@ const Topics = () => {
                 if (paginatedTopics.length === 1 && currentPage > 1) setCurrentPage(prev => prev - 1);
             }
 
-            dispatch(toggle());
+           
         } catch (err) {
             toast.error(err.message || "Failed to delete topic(s)");
         } finally {
+             dispatch(toggle());
             setLoading(false);
         }
     };

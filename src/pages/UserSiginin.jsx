@@ -92,16 +92,18 @@ const UserSignin = () => {
           body: JSON.stringify(formData),
         },
       );
+     const data = await response.json();
+
       if (!response.ok) {
         console.log("not login...");
-        setApiError("invalid credinatilas ");
+        setApiError(data.message||"invalid credinatilas ");
         return;
       }
 
       //sucess =>redirect
       dispatch(login({ userLoginId: formData.userLoginId }));
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const data = await response.json();
+     
       if (data.role == "admin") {
         navigate("/adminhome");
       } else if (data.role == "user") {
