@@ -11,10 +11,12 @@ import {
   Select,
 } from "../styles/CreateExam.style";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ExamTDetails from "./ExamTDetails";
+import { toast } from "sonner";
 
 const ExamTopic = () => {
+  const apiRefresh = useSelector((state) => state.api.value);
   const [topics, setTopics] = useState([]);
    const { examId } = useParams();
    console.log(examId)
@@ -53,13 +55,23 @@ const ExamTopic = () => {
         body: JSON.stringify(data),
       },
     );
-    if (response.ok) {
 
-      console.log("done poat ")
-      dispatch(toggle())
+    
+    const result = await response.json();
+    if (!response.ok) {
+     
+      toast.error(result.error || "Something went wrong");
+      console.log("API error:", result);
+      return;
     }
+
+    
+    toast.success("Topic added successfully");
+    dispatch(toggle());
+
    }catch(err){
-    console.log("catch :topic add ", err )
+    console.log("catch :topic add ")
+
    }finally{
     setLoading(false)
    }
@@ -87,7 +99,7 @@ const ExamTopic = () => {
     };
 
     fetchTopics();
-  }, []);
+  }, [apiRefresh]);
 
   return (
     <>

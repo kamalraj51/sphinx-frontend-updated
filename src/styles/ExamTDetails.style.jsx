@@ -1,33 +1,92 @@
 import styled from "styled-components";
 
 export const ContainerExamTD = styled.div`
-
-padding: 10px 15px;
-
-`
+  padding: 20px;
+`;
 
 export const H2 = styled.h2`
- margin-bottom:10px;
-
-`
+  margin-bottom: 15px;
+`;
 
 export const ContentETD = styled.div`
-display:flex;
-padding:12px 16px;
-margin-bottom:8px;
-justify-content:space-around;
-background-color: ${({ theme }) => theme.colors?.surface || '#fff'};
-border-radius: 8px;
-box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-`
-export const P = styled.p`
-font-size:20px;
-color:${({ theme }) => theme.colors.surface};
-@media(max-width:768px){
-font-size:16px;
-}
+  display: grid;
+  grid-template-columns: 80px 1fr 120px; /* FIX alignment */
 
-`
+  align-items: center;
+
+  padding: 12px 16px;
+  margin-bottom: 8px;
+
+  background-color: ${({ theme }) => theme.colors?.surface };
+  border-radius: 8px;
+
+  border: 1px solid ${({ theme }) => theme.colors?.border };
+
+  transition: 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  }
+`;
+
+export const P = styled.p`
+  margin: 0;
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors?.textPrimary };
+
+  &:nth-child(1) {
+    text-align: center;
+  }
+
+  &:nth-child(2) {
+    text-align: left;
+    padding-left: 10px;
+  }
+
+  &:nth-child(3) {
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+export const Button = styled.button`
+  display: block;
+  margin-left: auto;
+  margin-top: 15px;
+
+  padding: 10px 16px;
+  font-size: 16px;
+
+  background-color: ${({ theme }) => theme.colors?.success };
+  color: white;
+
+  border: none;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+
+  &:hover {
+    background: grey;
+  }
+
+  &:disabled {
+    background: #999;
+    cursor: not-allowed;
+  }
+`;
+
+
+
+
+
+
+
 
 export const NavLink2 = styled.a`
     text-decoration:none;
@@ -105,19 +164,5 @@ export const Para = styled.p`
   }
 `;
 
-export const Button = styled.button`
-display: block;
-  margin-left: auto;
-  padding:10px 10px;
-  background-color:${({ theme }) => theme.colors.success};
-  border-radius:10px;
-  color:${({ theme }) => theme.colors.surface};
-  font-size:18px;
-  border:none;
-  transition:0.5s linear;
-   &:hover{
-        background:grey;
-        cursor:pointer;
-    }
-`
+
 

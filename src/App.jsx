@@ -182,7 +182,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examcreatetopic/:examID"
+            path="/examcreatetopic/:examId"
             element={
               <ProtectedRoute>
                 <CreateExamTopics />

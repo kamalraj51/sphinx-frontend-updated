@@ -92,16 +92,22 @@ const UserSignin = () => {
           body: JSON.stringify(formData),
         },
       );
+     const data = await response.json();
+
       if (!response.ok) {
         console.log("not login...");
+<<<<<<< HEAD
+        setApiError(data.message||"invalid credinatilas ");
+=======
         setApiError("invalid credentials");
+>>>>>>> b40a367b7ad389de8bfc818af28d8d644a10ed64
         return;
       }
 
       //sucess =>redirect
       dispatch(login({ userLoginId: formData.userLoginId }));
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const data = await response.json();
+     
       if (data.role == "admin") {
         navigate("/adminhome");
       } else if (data.role == "user") {

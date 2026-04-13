@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const HeaderMain = styled.div`
+export const  HeaderMain = styled.div`
   height: 70px;
   width: 100%;
   padding: 0px 40px;
@@ -65,8 +65,9 @@ export const Menu = styled.div`
       }
     }
   }
+     
 
-  @media (max-width: 768px) {
+  @media (max-width: 845px) {
     position: absolute;
     top: 70px;
     left: 0;
@@ -95,7 +96,8 @@ export const MenuToggle = styled.div`
   cursor: pointer;
   z-index: 1000;
 
-  @media (max-width: 768px) {
+  @media (max-width: 845px) {
+    color:${({ theme }) => theme.colors.textPrimary};
     display: block;
   }
 `;
