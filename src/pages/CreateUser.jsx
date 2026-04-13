@@ -4,6 +4,7 @@ import Layout from "../component/Layout";
 import { Button, Card, Container, Form, FormGroup, Input, Label, Title } from "../styles/CreateUser.style";
 import { RegisterError } from "../styles/SignupStyle";
 import { H2, HeadingTable } from "../styles/AvailableExamStyle";
+import { RedSpan } from "../styles/FontsStyle";
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -102,21 +103,21 @@ const CreateUser = () => {
 
 
           <FormGroup>
-            <Label>First Name *</Label>
+            <Label>First Name <RedSpan>*</RedSpan></Label>
             <Input name="firstName" onChange={setValue} />
           </FormGroup>
           {errors.firstName && (
             <RegisterError>{errors.firstName}</RegisterError>
           )}
           <FormGroup>
-            <Label>Last Name *</Label>
+            <Label>Last Name <RedSpan>*</RedSpan></Label>
             <Input name="lastName" onChange={setValue} />
           </FormGroup>
           {errors.lastName && (
             <RegisterError>{errors.lastName}</RegisterError>
           )}
           <FormGroup>
-            <Label>UserName *</Label>
+            <Label>UserName <RedSpan>*</RedSpan></Label>
             <Input name="userName" onChange={setValue} type="text" />
           </FormGroup>
           {errors.userName && (
@@ -124,7 +125,7 @@ const CreateUser = () => {
           )}
 
           <FormGroup>
-            <Label>Email Address *</Label>
+            <Label>Email Address <RedSpan>*</RedSpan></Label>
             <Input name="email" onChange={setValue} />
           </FormGroup>
           {errors.email && (

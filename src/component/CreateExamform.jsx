@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { ApiError, Button, Container, Field, Form, Heading, Input, Label } from '../styles/CreateExam.style'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { RegisterError } from '../styles/SignupStyle'
 import { H2, HeadingTable } from '../styles/AvailableExamStyle'
+import { RedSpan } from '../styles/FontsStyle'
 
 const CreateExamform = () => {
   const navigate = useNavigate()
   const [msg, setMsg] = useState("")
   const [errors, setErrors] = useState({})
+  const location=useLocation()
   let [formData, setFormData] = useState({
     examName: "",
     description: "",
@@ -109,14 +111,14 @@ const CreateExamform = () => {
         <Form onSubmit={handleCreate}>
 
           <Field>
-            <Label>Assessment Name</Label>
+            <Label>Assessment Name<RedSpan>*</RedSpan></Label>
             <Input type="text" name="examName" onChange={handleChange} />
           </Field>
           {errors.examName && (
             <RegisterError>{errors.examName}</RegisterError>
           )}
           <Field>
-            <Label>Description</Label>
+            <Label>Description<RedSpan>*</RedSpan></Label>
             <Input type="text" name="description" onChange={handleChange} />
           </Field>
           {errors.description && (
@@ -124,21 +126,21 @@ const CreateExamform = () => {
           )}
 
           <Field>
-            <Label>No. Of Questions</Label>
+            <Label>No. Of Questions<RedSpan>*</RedSpan></Label>
             <Input type="text" name="noOfQuestions" onChange={handleChange} />
           </Field>
           {errors.noOfQuestions && (
             <RegisterError>{errors.noOfQuestions}</RegisterError>
           )}
           <Field>
-            <Label>Duration (<b>Minutes</b>)</Label>
+            <Label>Duration (<b>Minutes</b>)<RedSpan>*</RedSpan></Label>
             <Input type="text" name="duration" onChange={handleChange} />
           </Field>
           {errors.duration && (
             <RegisterError>{errors.duration}</RegisterError>
           )}
           <Field>
-            <Label>Pass percentage <span><b>%</b></span></Label>
+            <Label>Pass percentage <span><b>%</b><RedSpan>*</RedSpan></span></Label>
             <Input type="text" name="passPercentage" onChange={handleChange} />
           </Field>
           {errors.passPercentage && (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Field, Form, Input, Label } from '../styles/CreateExam.style';
 import { RegisterError } from '../styles/SignupStyle';
 import Layout from '../component/Layout';
@@ -7,6 +7,7 @@ import { H2, HeadingTable } from '../styles/AvailableExamStyle';
 import { Container } from '../styles/CreateExam.style';
 
 const ExamUpdate = () => {
+  const navigate=useNavigate()
     const location = useLocation();
   const { examData } = location.state || {};
   const [errors,setErrors]=useState({})
@@ -84,6 +85,7 @@ const ExamUpdate = () => {
     })
     if(response.ok){
         console.log("successfully")
+        navigate("/adminhome",{ state: { message: "Update Successful" } })
   }}catch(err){
     console.log("unexpected error occured");
     
