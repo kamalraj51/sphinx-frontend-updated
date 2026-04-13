@@ -111,7 +111,7 @@ export const Add = styled.button`
 `;
 
 export const Edit = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color:  #cccc3b;
   padding: 10px 18px;
   border: none;
   border-radius: 6px;
