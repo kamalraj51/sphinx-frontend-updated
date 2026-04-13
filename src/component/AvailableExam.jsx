@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AvailableContainer, AvailableTable, ExamRow, ExamHeaderRow, ExamCol, ButtonDiv, Delete, Edit, H2, HeadingTable, TableWrapper } from '../styles/AvailableExamStyle'
 import { Button } from '../styles/CreateExam.style'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toggle } from '../reducer/apiReduce'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
@@ -14,6 +14,7 @@ const AvailableExam = () => {
    const navigate = useNavigate()
    const [examData, setExamData] = useState([])
    const apiRefresh = useSelector((state) => state.api.value)
+   const location=useLocation()
 
    // Pagination and Modal state
    const [currentPage, setCurrentPage] = useState(1);
@@ -53,9 +54,11 @@ const AvailableExam = () => {
             toast.error("Failed to delete the exam");
             return;
          }
-
-         toast.success("Exam deleted successfully");
-         dispatch(toggle());
+         else{
+             toast.success("Exam deleted successfully");
+            dispatch(toggle());
+         }
+        
 
          // Fix pagination if deleting last item on current page
          if (paginatedData.length === 1 && currentPage > 1) {
@@ -65,10 +68,17 @@ const AvailableExam = () => {
          toast.error("Network error. Could not delete exam.");
       }
    }
-
+    useEffect(()=>{
+      if (location.state?.message) {
+    toast.success(location.state.message);
+  }
+}, [])
+      
+   
    useEffect(() => {
       getAllExam()
    }, [apiRefresh])
+  
 
    const handlePageChange = (page) => setCurrentPage(page);
 
@@ -77,7 +87,7 @@ const AvailableExam = () => {
    return (
       <AvailableContainer>
          <HeadingTable>
-            <H2>Available Exam</H2>
+            <H2>Available Assessment</H2>
          </HeadingTable>
          <TableWrapper>
             <AvailableTable>
@@ -104,10 +114,10 @@ const AvailableExam = () => {
 
                      <ExamCol>
                         <ButtonDiv style={{ display: 'flex', gap: '1px' }}>
-                           <Edit title="Edit Topic" onClick={() => navigate(`/editexam/${data.examId}`)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                           <Edit title="Edit Exam" onClick={() => navigate("/examupdate", { state: { examData: data } })} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <EditIcon size={16} />
                            </Edit>
-                           <Edit title="Edit Exam" onClick={() => navigate("/examupdate", { state: { examData: data } })} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                           <Edit  title="Edit Topic" onClick={() => navigate(`/editexam/${data.examId}`)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <RefreshCw size={16} />
                            </Edit>
                         </ButtonDiv>
@@ -119,7 +129,7 @@ const AvailableExam = () => {
                         </Delete>
                      </ExamCol>
                      <ExamCol>
-                        <Button title="Assign User" onClick={() => navigate(`/getuser/${data.examId}`)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Button title="Assign User" onClick={() =>  navigate("/getuser", { state: { examId: data.examId } })} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                            <UserPlus size={16} /> Assign
                         </Button>
                      </ExamCol>

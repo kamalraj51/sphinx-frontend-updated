@@ -21,6 +21,8 @@ import {
 
 import Layout from "../component/Layout";
 import { H2, HeadingTable } from "../styles/AvailableExamStyle";
+import { Label } from "../styles/CreateUser.style";
+import { RedSpan } from "../styles/FontsStyle";
 
 // REGEX
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -153,8 +155,8 @@ const AddAdmin = () => {
 
             {/* FIRST NAME */}
             <FieldWrapper>
+              <Label>First Name<RedSpan>*</RedSpan></Label>
               <FloatingInput id="firstName" placeholder=" " onChange={handleChange} />
-              <FloatingLabel>First Name</FloatingLabel>
               {errors.firstName && (
                 <RegisterError>{errors.firstName}</RegisterError>
               )}
@@ -162,8 +164,8 @@ const AddAdmin = () => {
 
             {/* LAST NAME */}
             <FieldWrapper>
+              <Label>Last Name<RedSpan>*</RedSpan></Label>
               <FloatingInput id="lastName" placeholder=" " onChange={handleChange} />
-              <FloatingLabel>Last Name</FloatingLabel>
               {errors.lastName && (
                 <RegisterError>{errors.lastName}</RegisterError>
               )}
@@ -171,8 +173,8 @@ const AddAdmin = () => {
 
             {/* USERNAME */}
             <FieldWrapper>
+              <Label>Username<RedSpan>*</RedSpan></Label>
               <FloatingInput id="userName" placeholder=" " onChange={handleChange} />
-              <FloatingLabel>Username</FloatingLabel>
               {errors.userName && (
                 <RegisterError>{errors.userName}</RegisterError>
               )}
@@ -180,32 +182,32 @@ const AddAdmin = () => {
 
             {/* EMAIL */}
             <FieldWrapper>
+              <Label>Email<RedSpan>*</RedSpan></Label>
               <FloatingInput
                 type="email"
                 id="email"
                 placeholder=" "
                 onChange={handleChange}
               />
-              <FloatingLabel>Email</FloatingLabel>
               {errors.email && <RegisterError>{errors.email}</RegisterError>}
             </FieldWrapper>
 
             {/* PHONE */}
             <FieldWrapper>
+              <Label>Phone Number<RedSpan>*</RedSpan></Label>
               <FloatingInput id="phNo" placeholder=" " onChange={handleChange} />
-              <FloatingLabel>Phone Number</FloatingLabel>
               {errors.phNo && <RegisterError>{errors.phNo}</RegisterError>}
             </FieldWrapper>
 
             {/* PASSWORD */}
             <PasswordWrapper>
+              <Label>Password<RedSpan>*</RedSpan></Label>
               <FloatingInput
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder=" "
                 onChange={handleChange}
               />
-              <FloatingLabel>Password</FloatingLabel>
 
               <TogglePassword className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"} onClick={() => setShowPassword((p) => !p)}>
 
@@ -218,13 +220,13 @@ const AddAdmin = () => {
 
             {/* CONFIRM PASSWORD */}
             <PasswordWrapper>
+              <Label>Confirm Password</Label>
               <FloatingInput
                 type={showConfirm ? "text" : "password"}
                 id="confirmPassword"
                 placeholder=" "
                 onChange={handleChange}
               />
-              <FloatingLabel>Confirm Password</FloatingLabel>
 
               <TogglePassword className={showConfirm ? "fa fa-eye-slash" : "fa fa-eye"} onClick={() => setShowConfirm((p) => !p)}>
 
@@ -236,7 +238,7 @@ const AddAdmin = () => {
             </PasswordWrapper>
 
             {/* BUTTON */}
-            <RegisterButton type="submit">
+            <RegisterButton style={{backgroundColor:"green"}}type="submit">
               {loading ? (
                 <>
                   <Spinner /> Adding...
