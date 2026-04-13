@@ -28,18 +28,18 @@ const SelectWrap = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
+  color: ${({ theme }) => theme.colors?.textPrimary || "#333"};
 `;
 
 const Checkbox = styled.input`
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: ${({ theme }) => theme.colors?.error || '#e3342f'};
+  accent-color: ${({ theme }) => theme.colors?.error || "#e3342f"};
 `;
 
 const ShowQuestion = () => {
-  const { topicID } = useParams();
+  const { topicID, tname } = useParams();
   const dispatch = useDispatch();
   const [questions, setquestions] = useState([]);
   const navigate = useNavigate();
@@ -55,13 +55,17 @@ const ShowQuestion = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch("https://localhost:8443/sphinx/api/question/getquesbytopic", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ topicId: topicID }),
-        });
+        const response = await fetch(
+          "https://localhost:8443/sphinx/api/question/getquesbytopic",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topicId: topicID }),
+          },
+        );
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
         const res = await response.json();
         setquestions(res.questionList || []);
       } catch (err) {
@@ -77,11 +81,14 @@ const ShowQuestion = () => {
   };
 
   const performDelete = async (quesId) => {
-    const response = await fetch(`https://localhost:8443/sphinx/api/question/deletequestion`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ questionId: quesId }),
-    });
+    const response = await fetch(
+      `https://localhost:8443/sphinx/api/question/deletequestion`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ questionId: quesId }),
+      },
+    );
     if (!response.ok) throw new Error("Failed to delete question");
   };
 
@@ -90,7 +97,7 @@ const ShowQuestion = () => {
     setLoading(true);
 
     try {
-      if (itemToDelete === 'bulk') {
+      if (itemToDelete === "bulk") {
         for (const id of selectedIds) {
           await performDelete(id);
         }
@@ -99,12 +106,14 @@ const ShowQuestion = () => {
       } else {
         await performDelete(itemToDelete);
         toast.success("Question deleted successfully");
-        setSelectedIds(prev => prev.filter(id => id !== itemToDelete));
+        setSelectedIds((prev) => prev.filter((id) => id !== itemToDelete));
       }
 
-      const remaining = questions.length - (itemToDelete === 'bulk' ? selectedIds.length : 1);
+      const remaining =
+        questions.length - (itemToDelete === "bulk" ? selectedIds.length : 1);
       const newTotalPages = Math.ceil(remaining / 10);
-      if (currentPage > newTotalPages && newTotalPages > 0) setCurrentPage(newTotalPages);
+      if (currentPage > newTotalPages && newTotalPages > 0)
+        setCurrentPage(newTotalPages);
 
       dispatch(toggle());
     } catch (err) {
@@ -124,27 +133,37 @@ const ShowQuestion = () => {
   };
 
   const handleSelectOne = (e, quesId) => {
-    if (e.target.checked) setSelectedIds(prev => [...prev, quesId]);
-    else setSelectedIds(prev => prev.filter(id => id !== quesId));
+    if (e.target.checked) setSelectedIds((prev) => [...prev, quesId]);
+    else setSelectedIds((prev) => prev.filter((id) => id !== quesId));
   };
 
-  const paginatedQuestions = questions.slice((currentPage - 1) * 10, currentPage * 10);
+  const paginatedQuestions = questions.slice(
+    (currentPage - 1) * 10,
+    currentPage * 10,
+  );
 
   const setSelectIdsAllPage = () => {
-    setSelectedIds(paginatedQuestions.map(q => q.questionId));
-  }
+    setSelectedIds(paginatedQuestions.map((q) => q.questionId));
+  };
 
-  const allSelectedOnPage = paginatedQuestions.length > 0 && paginatedQuestions.every(q => selectedIds.includes(q.questionId));
+  const allSelectedOnPage =
+    paginatedQuestions.length > 0 &&
+    paginatedQuestions.every((q) => selectedIds.includes(q.questionId));
 
   return (
     <Layout>
       <ContainerExamTD>
-        <H2>Questions</H2>
+        <H2 style={{ fontWeight: 600, fontSize: "24px" }}>Question: {tname}</H2>
         <Buttons style={{ marginBottom: "20px" }}>
           <Button
             title="Create Question"
-            onClick={() => navigate(`/addquestion/${topicID}`)}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#f59e0b' }}
+            onClick={() => navigate(`/addquestion/${topicID}/${tname}`)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#f59e0b",
+            }}
           >
             <PlusCircle size={18} /> Create Question
           </Button>
@@ -152,28 +171,46 @@ const ShowQuestion = () => {
         {questions.length > 0 && (
           <TopBar>
             <SelectWrap>
-              <Checkbox type="checkbox" checked={allSelectedOnPage} onChange={handleSelectAll} />
+              <Checkbox
+                type="checkbox"
+                checked={allSelectedOnPage}
+                onChange={handleSelectAll}
+              />
               <span>Select All</span>
             </SelectWrap>
             {selectedIds.length > 0 && (
-              <Button title="Delete Selected" style={{ backgroundColor: '#e3342f', display: 'flex', alignItems: 'center', gap: '4px' }} disabled={loading} onClick={() => handleDeleteClick('bulk')}>
+              <Button
+                title="Delete Selected"
+                style={{
+                  backgroundColor: "#e3342f",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+                disabled={loading}
+                onClick={() => handleDeleteClick("bulk")}
+              >
                 <Trash2 size={16} /> Delete Selected ({selectedIds.length})
               </Button>
             )}
           </TopBar>
         )}
 
-        {questions.length === 0
-          ? <p>No question available</p>
-          : paginatedQuestions.map((ques, i) => {
+        {questions.length === 0 ? (
+          <p>No question available</p>
+        ) : (
+          paginatedQuestions.map((ques, i) => {
             const isSelected = selectedIds.includes(ques.questionId);
             return (
-              <ContentQues key={ques.questionId || i} style={{ display: 'flex', alignItems: 'center' }}>
+              <ContentQues
+                key={ques.questionId || i}
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <Checkbox
                   type="checkbox"
                   checked={isSelected}
                   onChange={(e) => handleSelectOne(e, ques.questionId)}
-                  style={{ marginRight: '15px' }}
+                  style={{ marginRight: "15px" }}
                 />
                 <Para>{(currentPage - 1) * 10 + i + 1}</Para>
                 <Para style={{ flex: 1 }}>{ques.questionDetail}</Para>
@@ -183,7 +220,11 @@ const ShowQuestion = () => {
                     title="Update Question"
                     disabled={loading}
                     onClick={() => updateQuestion(ques.questionId)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
                   >
                     <EditIcon size={16} /> {loading ? "..." : ""}
                   </Button>
@@ -191,14 +232,20 @@ const ShowQuestion = () => {
                     title="Delete Question"
                     disabled={loading}
                     onClick={() => handleDeleteClick(ques.questionId)}
-                    style={{ backgroundColor: '#e3342f', display: 'flex', alignItems: 'center', gap: '4px' }}
+                    style={{
+                      backgroundColor: "#e3342f",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
                   >
                     <Trash2 size={16} /> {loading ? "..." : ""}
                   </Button>
                 </QuesButtons>
               </ContentQues>
             );
-          })}
+          })
+        )}
 
         <Pagination
           currentPage={currentPage}
@@ -211,8 +258,16 @@ const ShowQuestion = () => {
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           onConfirm={executeDelete}
-          title={itemToDelete === 'bulk' ? "Bulk Delete Questions" : "Delete Question"}
-          message={itemToDelete === 'bulk' ? `Are you sure you want to delete ${selectedIds.length} questions?` : "Are you sure you want to delete this question? This action cannot be undone."}
+          title={
+            itemToDelete === "bulk"
+              ? "Bulk Delete Questions"
+              : "Delete Question"
+          }
+          message={
+            itemToDelete === "bulk"
+              ? `Are you sure you want to delete ${selectedIds.length} questions?`
+              : "Are you sure you want to delete this question? This action cannot be undone."
+          }
         />
       </ContainerExamTD>
     </Layout>

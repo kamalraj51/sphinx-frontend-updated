@@ -41,7 +41,14 @@ const App = () => {
           <Route path="/" element={<UserSignin />} />
           <Route path="/usersignin" element={<UserSignin />} />
 
-          <Route path="/addadmin" element={<ProtectedRoute><AddAdmin /></ProtectedRoute>} />
+          <Route
+            path="/addadmin"
+            element={
+              <ProtectedRoute>
+                <AddAdmin />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/CreateUser" element={<CreateUser />} />
 
@@ -159,7 +166,7 @@ const App = () => {
             }
           />
           <Route
-            path="/showquestion/:topicID"
+            path="/showquestion/:topicID/:tname"
             element={
               <ProtectedRoute>
                 <ShowQuestion />
@@ -167,7 +174,7 @@ const App = () => {
             }
           />
           <Route
-            path="/addquestion/:topicID"
+            path="/addquestion/:topicID/:tname"
             element={
               <ProtectedRoute>
                 <CreateQuestion />
