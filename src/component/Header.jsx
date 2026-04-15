@@ -26,7 +26,7 @@ const Header = () => {
           <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
             Home
           </NavLink>
-          <NavLink to="/showalltopic" onClick={() => setIsOpen(false)}>
+          <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
             Manage Question
           </NavLink>
           <NavLink to="/createuser" onClick={() => setIsOpen(false)}>

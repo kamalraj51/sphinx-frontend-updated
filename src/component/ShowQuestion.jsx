@@ -56,7 +56,7 @@ const ShowQuestion = () => {
     const fetchQuestions = async () => {
       try {
         const response = await fetch(
-          "https://localhost:8443/sphinx/api/question/getquesbytopic",
+          "https://localhost:8443/sphinx/api/question/get-ques-by-topic",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -82,7 +82,7 @@ const ShowQuestion = () => {
 
   const performDelete = async (quesId) => {
     const response = await fetch(
-      `https://localhost:8443/sphinx/api/question/deletequestion`,
+      `https://localhost:8443/sphinx/api/question/delete-question`,
       {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -153,11 +153,11 @@ const ShowQuestion = () => {
   return (
     <Layout>
       <ContainerExamTD>
-        <H2 style={{ fontWeight: 600, fontSize: "24px" }}>Question: {tname}</H2>
+        <H2 style={{ fontWeight: 600, fontSize: "24px" }}>Topic: {tname}</H2>
         <Buttons style={{ marginBottom: "20px" }}>
           <Button
             title="Create Question"
-            onClick={() => navigate(`/addquestion/${topicID}/${tname}`)}
+            onClick={() => navigate(`/create-question/${topicID}/${tname}`)}
             style={{
               display: "flex",
               alignItems: "center",
@@ -197,7 +197,7 @@ const ShowQuestion = () => {
         )}
 
         {questions.length === 0 ? (
-          <p>No question available</p>
+          <p style={{ textAlign: "center", color: "red" }}>No question available</p>
         ) : (
           paginatedQuestions.map((ques, i) => {
             const isSelected = selectedIds.includes(ques.questionId);

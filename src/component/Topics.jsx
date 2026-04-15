@@ -3,7 +3,7 @@ import { Button, Buttons, H1, TopicContainer, TopicContent, TopicHeading, TopicN
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../reducer/apiReduce';
 import { toast } from 'sonner';
-import { RefreshCw, Trash2 } from 'lucide-react';
+import { EditIcon, RefreshCw, Trash2 } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
 import Pagination from './Pagination';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import {
     ContentQues,
     Para,
 } from "../styles/ExamTDetails.style";
+import { Edit } from '../styles/AvailableExamStyle';
 
 const TopBar = styled.div`
   display: flex;
@@ -75,17 +76,17 @@ const Topics = () => {
     };
 
     const performDelete = async (topicId) => {
-       try{
-         const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
-            method: "DELETE",
-        });
-        if (!response.ok) throw new Error("Failed to delete topic");
+        try {
+            const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) throw new Error("Failed to delete topic");
 
-       }catch(err){
+        } catch (err) {
             console.log(err)
-       }finally{
-         dispatch(toggle());
-       }
+        } finally {
+            dispatch(toggle());
+        }
     };
 
     const executeDelete = async () => {
@@ -114,11 +115,11 @@ const Topics = () => {
                 if (paginatedTopics.length === 1 && currentPage > 1) setCurrentPage(prev => prev - 1);
             }
 
-           
+
         } catch (err) {
             toast.error(err.message || "Failed to delete topic(s)");
         } finally {
-             dispatch(toggle());
+            dispatch(toggle());
             setLoading(false);
         }
     };
@@ -200,11 +201,18 @@ const Topics = () => {
                             <TopicName name='topicName' value={topic.topicName} onChange={(e) => change(e, topic.topicId)} style={{ padding: '0 0 0 10px', width: '40%', background: 'transparent', border: '1.5px solid #ddd', borderRadius: '5px 5px 5px 5px' }} />
                         </Para>
                         <Buttons style={{ width: '30%', justifyContent: 'flex-end', display: 'flex' }}>
-                            <Button title="Update Topic" disabled={loading} onClick={() => updateTopic(topic.topicId, topic.topicName)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <RefreshCw size={16} /> {loading ? "..." : "Update"}
-                            </Button>
+
+                            <Edit
+                                title="Edit Topic"
+                                onClick={() => updateTopic(topic.topicId, topic.topicName)}
+                                disabled={loading}
+                                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                            >
+                                <EditIcon size={16} />
+                            </Edit>
+
                             <Button title="Delete Topic" disabled={loading} onClick={() => handleDeleteClick(topic.topicId)} style={{ backgroundColor: '#e3342f', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <Trash2 size={16} /> {loading ? "..." : "Delete"}
+                                <Trash2 size={16} /> {loading ? "..." : ""}
                             </Button>
                         </Buttons>
                     </ContentQues>

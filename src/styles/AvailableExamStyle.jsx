@@ -111,17 +111,24 @@ export const Add = styled.button`
 `;
 
 export const Edit = styled.button`
-  background-color:  #cccc3b;
-  padding: 10px 18px;
+    background: ${({ theme }) => theme.colors.secondary};
+  padding: 10px 10px;
   border: none;
   border-radius: 6px;
-  color: ${({ theme }) => theme.colors.surface};
+  color:black;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-left: 10px;
 
   &:hover {
-    opacity: 0.85;
+    background: ${({ theme }) => theme.colors.textPrimary};
+    
+    color:white;
+  }
+
+    &:disabled {
+    background: ${({ theme }) => theme.colors.border};
+    cursor: not-allowed;
   }
 `;
 

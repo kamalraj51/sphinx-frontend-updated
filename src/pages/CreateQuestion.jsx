@@ -4,8 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "sonner";
 import { CheckCircle2, ChevronDown } from "lucide-react";
+import { H2 } from "../styles/ExamTDetails.style";
 
-const PremiumWrapper = styled.div`
+export const PremiumWrapper = styled.div`
   max-width: 900px;
   margin: 0 auto;
   background: ${({ theme }) => theme.colors?.surface || "#ffffff"};
@@ -15,7 +16,7 @@ const PremiumWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors?.border || "#f3f4f6"};
 `;
 
-const HeaderSection = styled.div`
+export const HeaderSection = styled.div`
   text-align: center;
   margin-bottom: 40px;
 
@@ -32,7 +33,7 @@ const HeaderSection = styled.div`
   }
 `;
 
-const TypePillContainer = styled.div`
+export const TypePillContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -40,16 +41,16 @@ const TypePillContainer = styled.div`
   margin-bottom: 35px;
 `;
 
-const TypePill = styled.button`
+export const TypePill = styled.button`
   padding: 10px 20px;
   border-radius: 30px;
   font-size: 14px;
   font-weight: 500;
   border: 1px solid
     ${({ active, theme }) =>
-      active
-        ? theme.colors?.primary || "#4f46e5"
-        : theme.colors?.border || "#e5e7eb"};
+    active
+      ? theme.colors?.primary || "#4f46e5"
+      : theme.colors?.border || "#e5e7eb"};
   background: ${({ active, theme }) =>
     active ? theme.colors?.primary || "#4f46e5" : "transparent"};
   color: ${({ active, theme }) =>
@@ -57,7 +58,7 @@ const TypePill = styled.button`
   cursor: pointer;
 `;
 
-const FormGroup = styled.div`
+export const FormGroup = styled.div`
   margin-bottom: 25px;
 
   label {
@@ -68,7 +69,7 @@ const FormGroup = styled.div`
   }
 `;
 
-const Input = styled.input`
+export const Input = styled.textarea`
   width: 100%;
   padding: 14px 16px;
   border-radius: 12px;
@@ -76,7 +77,7 @@ const Input = styled.input`
   background: ${({ theme }) => theme.colors?.background || "#f9fafb"};
 `;
 
-const Textarea = styled.textarea`
+export const Textarea = styled.textarea`
   width: 100%;
   padding: 14px 16px;
   border-radius: 12px;
@@ -84,19 +85,19 @@ const Textarea = styled.textarea`
   min-height: 120px;
 `;
 
-const OptionsGrid = styled.div`
+export const OptionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 `;
 
-const OptionCard = styled.div`
+export const OptionCard = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
 `;
 
-const SubmitBtn = styled.button`
+export const SubmitBtn = styled.button`
   width: 100%;
   padding: 16px;
   border-radius: 12px;
@@ -114,8 +115,14 @@ const CreateQuestion = () => {
   const [textAnswer, setTextAnswer] = useState("");
   const [loading, setLoading] = useState(false);
 
+
+
   const { topicID, tname } = useParams();
   const navigate = useNavigate();
+
+  let optionA = "";
+  let optionB = "";
+  let tag = false;
 
   const [formData, setFormData] = useState({
     topicId: topicID,
@@ -166,7 +173,7 @@ const CreateQuestion = () => {
 
     try {
       const response = await fetch(
-        "https://localhost:8443/sphinx/api/question/createquestion",
+        "https://localhost:8443/sphinx/api/question/create-question",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -177,7 +184,7 @@ const CreateQuestion = () => {
       if (!response.ok) throw new Error("Failed");
 
       toast.success("Question Created Successfully!");
-      navigate(`/showquestion/${topicID}/${tname}`);
+      navigate(`/show-question/${topicID}/${tname}`);
     } catch (err) {
       toast.error("Failed to create question");
     } finally {
@@ -188,9 +195,9 @@ const CreateQuestion = () => {
   return (
     <Layout>
       <PremiumWrapper>
+        <H2 style={{ fontWeight: 600, fontSize: "16px" }}>Topic Name: {tname}</H2>
         <HeaderSection>
           <h1>Create Question</h1>
-          <p>Build smart questions easily</p>
         </HeaderSection>
 
         <TypePillContainer>
@@ -208,6 +215,9 @@ const CreateQuestion = () => {
                 setQuestionType(type);
 
                 if (type === "TRUE_FALSE") {
+                  tag = true;
+                  optionA = formData.optionA;
+                  optionB = formData.optionB;
                   setSingleAnswer("A");
                   setFormData((prev) => ({
                     ...prev,
@@ -216,12 +226,20 @@ const CreateQuestion = () => {
                     optionC: "",
                     optionD: "",
                   }));
+                } if (tag) {
+                  tag = false;
+                  setFormData((prev) => ({
+                    ...prev,
+                    optionA: optionA,
+                    optionB: optionB,
+                  }));
                 }
               }}
             >
               {type.replace("_", " ")}
             </TypePill>
           ))}
+
         </TypePillContainer>
 
         <FormGroup>
@@ -286,14 +304,14 @@ const CreateQuestion = () => {
 
         {(questionType === "FILL_BLANKS" ||
           questionType === "DETAILED_ANSWER") && (
-          <FormGroup>
-            <label>Answer</label>
-            <Textarea
-              value={textAnswer}
-              onChange={(e) => setTextAnswer(e.target.value)}
-            />
-          </FormGroup>
-        )}
+            <FormGroup>
+              <label>Answer</label>
+              <Textarea
+                value={textAnswer}
+                onChange={(e) => setTextAnswer(e.target.value)}
+              />
+            </FormGroup>
+          )}
 
         <SubmitBtn onClick={handleSubmit} disabled={loading}>
           {loading ? "Creating..." : "Save Question"}

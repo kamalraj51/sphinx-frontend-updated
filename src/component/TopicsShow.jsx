@@ -56,7 +56,7 @@ const TopicsShow = () => {
     <Layout>
       <TopicContainer>
         <HeadingTable>
-          <H2>Select Topic Based Questions</H2>
+          <H2>Select Topic Based Question</H2>
         </HeadingTable>
         <Buttons style={{ marginBottom: "20px" }}>
           <Button
@@ -97,7 +97,7 @@ const TopicsShow = () => {
                     disabled={loading}
                     onClick={() =>
                       navigate(
-                        `/showquestion/${topic.topicId}/${topic.topicName}`,
+                        `/show-question/${topic.topicId}/${topic.topicName}`,
                       )
                     }
                     style={{

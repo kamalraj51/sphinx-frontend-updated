@@ -110,7 +110,7 @@ const App = () => {
             }
           />
           <Route
-            path="/showalltopic"
+            path="/show-all-topic"
             element={
               <ProtectedRoute>
                 <TopicsShow />
@@ -166,7 +166,7 @@ const App = () => {
             }
           />
           <Route
-            path="/showquestion/:topicID/:tname"
+            path="/show-question/:topicID/:tname"
             element={
               <ProtectedRoute>
                 <ShowQuestion />
@@ -174,7 +174,7 @@ const App = () => {
             }
           />
           <Route
-            path="/addquestion/:topicID/:tname"
+            path="/create-question/:topicID/:tname"
             element={
               <ProtectedRoute>
                 <CreateQuestion />

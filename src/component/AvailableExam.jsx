@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { Edit as EditIcon, RefreshCw, Trash2, UserPlus } from "lucide-react";
 import ConfirmModal from "./ConfirmModal";
 import Pagination from "./Pagination";
-
+//  <RefreshCw size={16} />
 const AvailableExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const AvailableExam = () => {
   const apiRefresh = useSelector((state) => state.api.value);
   const location = useLocation();
 
-  // Pagination and Modal state
+
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
@@ -115,71 +115,70 @@ const AvailableExam = () => {
             <ExamCol>No of Question</ExamCol>
             <ExamCol>Duration</ExamCol>
             <ExamCol>Pass %</ExamCol>
-            <ExamCol>Edit Exam</ExamCol>
+            <ExamCol>Edit Topic</ExamCol>
             <ExamCol>Delete the Exam</ExamCol>
             <ExamCol>Assign user</ExamCol>
           </ExamHeaderRow>
 
-          {paginatedData.map((data, index) => (
-            <ExamRow key={index}>
-              <ExamCol>{(currentPage - 1) * 10 + index + 1}</ExamCol>
-              <ExamCol title={data.examName}>{data.examName}</ExamCol>
-              <ExamCol title={data.description}>{data.description}</ExamCol>
-              <ExamCol>{data.noOfQuestions}</ExamCol>
-              <ExamCol>{data.duration}</ExamCol>
-              <ExamCol>{data.passPercentage}</ExamCol>
-
-              <ExamCol>
-                <ButtonDiv style={{ display: "flex", gap: "1px" }}>
-                  <Edit
-                    title="Edit Exam"
-                    onClick={() =>
-                      navigate("/examupdate", { state: { examData: data } })
-                    }
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    <EditIcon size={16} />
-                  </Edit>
-                  <Edit
-                    title="Edit Topic"
-                    onClick={() => navigate(`/editexam/${data.examId}`)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    <RefreshCw size={16} />
-                  </Edit>
-                </ButtonDiv>
-              </ExamCol>
-
-              <ExamCol>
-                <Delete
-                  title="Delete Exam"
-                  onClick={() => handleDeleteClick(data.examId)}
-                  style={{ display: "flex", alignItems: "center", gap: "4px" }}
-                >
-                  <Trash2 size={16} />
-                </Delete>
-              </ExamCol>
-              <ExamCol>
-                <Button
-                  title="Assign User"
+          {examData.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "20px", color: "red" }}>
+              No exam available
+            </div>
+          ) : (
+            paginatedData.map((data, index) => (
+              <ExamRow key={index}>
+                <ExamCol>{(currentPage - 1) * 10 + index + 1}</ExamCol>
+                <ExamCol title={data.examName}><button title="Edit Exam"
                   onClick={() =>
-                    navigate("/getuser", { state: { examId: data.examId } })
+                    navigate("/examupdate", { state: { examData: data } })
                   }
-                  style={{ display: "flex", alignItems: "center", gap: "4px" }}
-                >
-                  <UserPlus size={16} /> Assign
-                </Button>
-              </ExamCol>
-            </ExamRow>
-          ))}
+                  style={{ border: "none", cursor: "pointer", color: "blue" }}
+                >{data.examName}</button></ExamCol>
+                <ExamCol title={data.description}>{data.description}</ExamCol>
+                <ExamCol>{data.noOfQuestions}</ExamCol>
+                <ExamCol>{data.duration}</ExamCol>
+                <ExamCol>{data.passPercentage}</ExamCol>
+
+                <ExamCol>
+                  <ButtonDiv style={{ display: "flex", gap: "1px" }}>
+                    <Edit
+                      title="Edit Topic"
+                      onClick={() => navigate(`/editexam/${data.examId}`)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      <EditIcon size={16} />
+                    </Edit>
+
+                  </ButtonDiv>
+                </ExamCol>
+
+                <ExamCol>
+                  <Delete
+                    title="Delete Exam"
+                    onClick={() => handleDeleteClick(data.examId)}
+                    style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                  >
+                    <Trash2 size={16} />
+                  </Delete>
+                </ExamCol>
+                <ExamCol>
+                  <Button
+                    title="Assign User"
+                    onClick={() =>
+                      navigate("/getuser", { state: { examId: data.examId } })
+                    }
+                    style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                  >
+                    <UserPlus size={16} />
+                  </Button>
+                </ExamCol>
+              </ExamRow>
+            ))
+          )}
         </AvailableTable>
       </TableWrapper>
 
