@@ -1,85 +1,99 @@
+
 import React, { useEffect, useState } from 'react';
-import { Outer, Row } from '../styles/Assign.style';
+import {ActionWrapper, Attempt,Cell,CellPrimary, HeaderRow, Outer,Row,Section,Title} from '../styles/Assign.style';
 import { ButtonSecondary } from '../styles/AvailableExamStyle';
 import AlreadyExam from './AlreadyExam';
+import { toast } from 'sonner';
 
-const Assign = ({ examId }) => {
-  const [data, setData] = useState([]);
+const Assign = ({ examId, assignedUsers }) => {
+  console.log(examId);
+  
+ 
+  const [assign, setAssign] = useState([]);
 
-  // GET USERS
-  const getAll = async () => {
+  
+  useEffect(() => {
+    setAssign(assignedUsers || []);
+  }, [assignedUsers]);
+
+ 
+  
+
+
+
+  const lastSubmit = async () => {
     try {
       const response = await fetch(
-        "https://localhost:8443/sphinx/api/user/getAllUser",
+        "https://localhost:8443/sphinx/api/user/saveexamrelationship",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            examId,
-            servicetype: "assigned"
-          })
+          body: JSON.stringify({ allData: assign })
         }
       );
 
+      const data = await response.json();
+
       if (response.ok) {
-        const value = await response.json();
-        setData(value.allUser || []);
+        toast.success(data.success);
+        // getAll();
+      } else {
+        toast.error(data.error);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      toast.error("Something went wrong");
     }
   };
 
-  useEffect(() => {
-    if (examId) getAll();
-  }, [examId]);
-
-  // SUBMIT ALL
-  const lastSubmit = async () => {
-    const response = await fetch(
-      "https://localhost:8443/sphinx/api/user/saveexamrelationship",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ allData: data })
-      }
-    );
-
-    if (response.ok) {
-      console.log("successfully created");
-
-      // ✅ FIX: refresh UI after submit
-      getAll();
-    }
-  };
+  if (!assignedUsers) {
+    return <p>No users assigned</p>;
+  }
 
   return (
-  <>
-    <Outer>
-      <Row>
-        <p>UserLoginId</p>
-        <p>AllowedAttempts</p>
-        <p>NoOfAttempts</p>
-      </Row>
+    <>
+      <Outer>
+        <Title>Assign</Title>
 
-      {data.map((item) => (
-        <Row key={item.partyId}>
-          <p>{item.userLoginId}</p>
-          <p>{item.allowedAttempts}</p>
-          <p>{item.noOfAttempts}</p>
-        </Row>
-      ))}
+        <HeaderRow>
+          <p>User Name</p>
+          <p>AllowedAttempts</p>
+          <p>NoOfAttempts</p>
+          <p>TimeOutDays</p>
+        </HeaderRow>
 
-      <ButtonSecondary onClick={lastSubmit}>
-        submit all
-      </ButtonSecondary>
-    </Outer>
-     <AlreadyExam examId={examId} />
-  </>
+        {assign.length === 0 ? (
+          <p>No assigned users found</p>
+        ) : (
+          assign.map((item) => (
+            <Row key={item.partyId}>
+              <CellPrimary>{item.userLoginId}</CellPrimary>
+
+              <Cell>{item.allowedAttempts}</Cell>
+
+              <Attempt danger={item.noOfAttempts > item.allowedAttempts}>
+                {item.noOfAttempts}
+              </Attempt>
+
+              <Cell>{item.timeoutDays}</Cell>
+            </Row>
+          ))
+        )}
+
+        <ActionWrapper>
+          <ButtonSecondary onClick={lastSubmit}>
+            Submit All
+          </ButtonSecondary>
+        </ActionWrapper>
+      </Outer>
+
+      <Section>
+        <AlreadyExam examId={examId}
+        />
+      </Section>
+    </>
   );
 };
 

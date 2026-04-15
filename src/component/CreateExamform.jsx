@@ -4,13 +4,20 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { RegisterError } from '../styles/SignupStyle'
 import { H2, HeadingTable } from '../styles/AvailableExamStyle'
 import { RedSpan } from '../styles/FontsStyle'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'sonner'
 
 const CreateExamform = () => {
+   const userId = useSelector((state) => state.auth.user);
+   console.log("user",userId);
+   
   const navigate = useNavigate()
   const [msg, setMsg] = useState("")
   const [errors, setErrors] = useState({})
   const location=useLocation()
+  const dispatch=useDispatch()
   let [formData, setFormData] = useState({
+    userLoginId:userId,
     examName: "",
     description: "",
     noOfQuestions: "",
@@ -74,8 +81,8 @@ const CreateExamform = () => {
       setErrors(err)
       return
     }
-
-    let response = await fetch("https://localhost:8443/sphinx/api/exam/createexam", {
+   
+    const response = await fetch("https://localhost:8443/sphinx/api/exam/createexam", {
 
       method: "POST",
       headers: {
@@ -84,17 +91,17 @@ const CreateExamform = () => {
       body: JSON.stringify(formData),
 
     })
-
+    const data = await response.json();
     if (response.ok) {
       console.log("hii fronytend")
-      const data = await response.json();
+     
       const examId = data.examId;
       console.log("1", data.examId);
 
       navigate(`/examcreatetopic/${examId}`)
-    } else if (!response.ok) {
-      const data = await response.json();
-      setMsg(data.error)
+    } else{
+      
+      toast.error(data.error)
 
     }
 

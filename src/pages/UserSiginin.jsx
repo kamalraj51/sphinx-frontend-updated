@@ -26,7 +26,7 @@ import {
   Spinner,
   TogglePassword,
 } from "../styles/SignupStyle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { login } from "../reducer/authSlice";
 import Header from "../component/Header";
@@ -60,7 +60,6 @@ const UserSignin = () => {
     setApiError("");
   };
 
-  //regex validate
   const validate = () => {
     let newErrors = {};
     if (!formData.userLoginId) {
@@ -79,6 +78,7 @@ const UserSignin = () => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
+  
     setApiError("");
 
     try {
@@ -97,13 +97,14 @@ const UserSignin = () => {
         setApiError("invalid credentials");
         return;
       }
-
+      console.log("h")
       //sucess =>redirect
       dispatch(login({ userLoginId: formData.userLoginId }));
+      // dispatch(setLoginId(formData.userLoginId));
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const data = await response.json();
       if (data.role == "admin") {
-        navigate("/adminhome");
+       navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
       } else if (data.role == "user") {
         navigate("/userdashboard");
       }

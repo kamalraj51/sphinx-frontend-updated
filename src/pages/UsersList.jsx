@@ -1,146 +1,376 @@
-import { NavLink, useLocation, useParams } from 'react-router-dom'
-import { Container } from '../styles/UserList.style'
-import { Button, ButtonSecondary, Form, Input, Option, Select } from '../styles/AvailableExamStyle'
+
+
+
+import { useLocation } from 'react-router-dom'
+import { Form, Input, Option, Select, Button } from '../styles/AvailableExamStyle'
 import Layout from '../component/Layout'
 import Assign from '../component/Assign'
-import AlreadyExam from '../component/AlreadyExam'
 import { useEffect, useState } from 'react'
-
+import { toast } from 'sonner'
+import { RegisterError } from '../styles/SignupStyle'
+import {ActionWrapper, Attempt,Cell,CellPrimary, HeaderRow, Outer,Row,Section,Title} from '../styles/Assign.style';
+import { ButtonSecondary } from '../styles/AvailableExamStyle';
+import { List } from '../styles/Assign.style'
 const UsersList = () => {
+  const location = useLocation()
+  const examId = location.state?.examId
 
-    let location = useLocation()
-    const [user, setUser] = useState([])
+  const [user, setUser] = useState([])
+  const [assignedUsers, setAssignedUsers] = useState([])
+  const [alreadyAssignedUsers,setAlreadyAssignedUsers] =useState([])
 
-    const [data, setData] = useState({ allData: [] })
+  const [formData, setFormData] = useState({
+    examId: examId,
+    partyId: "",
+    noOfAttempts: "0",
+    allowedAttempts: "",
+    timeoutDays: "",
+    userLoginId: ""
+  })
+  const [errors,setErrors]=useState({})
 
-    const [formData, setFormData] = useState({
-        examId: location.state?.examId,
-        partyId: "",
-        noOfAttempts: "0",
-        allowedAttempts: "",
-        timeoutDays: "",
-        userLoginId: ""
-    })
+ 
+const numberRegex = /^[0-9]+$/
+ 
+  useEffect(() => {
+    if (examId) {
+      setFormData(prev => ({
+        ...prev,
+        examId
+      }))
+    }
+  }, [examId])
+// useEffect(()=>{
+//     getAll()
+//     getAllAssignedUsers()
+// },[examId])
+  
+  const handleUser = async () => {
+    try {
+      const response = await fetch("https://localhost:8443/sphinx/api/user/getAllUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          examId: formData.examId,
+          servicetype: "not assiggned"
+        })
+      })
 
-    
-    useEffect(() => {
+      if (!response.ok) throw new Error("Failed")
+
+      const data = await response.json()
+      setUser(data.allUser || [])
+
+    } catch (err) {
+      console.log("Retrying...")
+      setTimeout(handleUser, 1000)
+    }
+  }
+
+  
+  const getAllAssignedUsers = async () => {
+    try {
+      const response = await fetch(
+        "https://localhost:8443/sphinx/api/user/getAllUser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            examId: formData.examId,
+            servicetype: "assigned"
+          })
+        }
+      )
+      const value = await response.json()
+      if (response.ok) {
+        
+        setAssignedUsers(value.allUser || [])
+        
+      }else{
+          setAssignedUsers([])
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    if (formData.examId) {
+      handleUser()
+      getAllAssignedUsers()
+    }
+  }, [formData.examId])
+
+  
+  const handleform = (e) => {
+    const { name, value } = e.target
+
+    if (name === "partyId") {
+      const selectedUser = user.find(u => u.partyId === value)
+
+      if (selectedUser) {
         setFormData(prev => ({
-            ...prev,
-            examId: location.state?.examId
+          ...prev,
+          partyId: selectedUser.partyId,
+          userLoginId: selectedUser.userLoginId
         }))
-    }, [location.state?.examId])
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-
-        setData(prev => ({ allData: [...prev.allData, formData] }))
-
-        const response = await fetch("https://localhost:8443/sphinx/api/user/assigntempoary", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        })
-
-        if (response.ok) {
-            console.log("success")
-        }
+      }
+      return
     }
 
-    const handleform = (e) => {
-        let value = e.target.value
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-        if (e.target.name === "partyId") {
-            const selectedUser = user.find(u => u.partyId === value)
+  
+ const handleSubmit = async (e) => {
+  e.preventDefault()
 
-            setFormData({
-                ...formData,
-                partyId: selectedUser.partyId,
-                userLoginId: selectedUser.userLoginId
-            })
+  let err = {}
+  let flag = true
 
-            return
-        }
+  if (!formData.allowedAttempts) {
+    err.allowedAttempts = "Allowed attempts is mandatory"
+    flag = false
+  } else if (!numberRegex.test(formData.allowedAttempts)) {
+    err.allowedAttempts = "Must be a valid number"
+    flag = false
+  }
 
-        setFormData({
-            ...formData,
-            [e.target.name]: value
-        })
-    }
+  if (!formData.timeoutDays) {
+    err.timeoutDays = "Timeout days is mandatory"
+    flag = false
+  } else if (!numberRegex.test(formData.timeoutDays)) {
+    err.timeoutDays = "Must be a valid number"
+    flag = false
+  }
 
-    const handleUser = async () => {
-        try {
-            const response = await fetch("https://localhost:8443/sphinx/api/user/getAllUser", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    examId: formData.examId,
-                    servicetype: "assig"
-                })
-            })
+  if (!flag) {
+    setErrors(err)
+    return
+  }
+  setErrors({})
 
-            if (!response.ok) throw new Error("Failed")
-
-            const data = await response.json()
-            setUser(data.allUser || [])
-
-        } catch (err) {
-            console.log("Retrying...")
-
-            setTimeout(() => {
-                handleUser()
-            }, 1000)
-        }
-    }
-
-    useEffect(() => {
-        if (formData.examId) {
-            handleUser()
-        }
-    }, [formData.examId])
-
-    return (
-        <>
-            <Layout>
-                <Form onSubmit={handleSubmit}>
-                    <Select onChange={(e) => handleform(e)} name="partyId">
-                        <Option>select</Option>
-                        {
-                            user.map((item, i) => (
-                                <Option value={item.partyId} key={i}>
-                                    {item.userLoginId}
-                                </Option>
-                            ))
-                        }
-                    </Select>
-
-                    <Input
-                        type="text"
-                        name="allowedAttempts"
-                        onChange={(e) => handleform(e)}
-                        placeholder='allowedattempts'
-                    />
-
-                    <Input
-                        type="text"
-                        name="timeoutDays"
-                        onChange={(e) => handleform(e)}
-                        placeholder='timeoutdays'
-                    />
-
-                    <Button type="submit">assign</Button>
-                </Form>
-
-               
-                <Assign key={formData.examId} examId={formData.examId} />
-               
-
-            </Layout>
-        </>
+  try {
+    const response = await fetch(
+      "https://localhost:8443/sphinx/api/user/assigntempoary",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      }
     )
+
+    const data = await response.json()
+
+    if (response.ok) {
+      toast.success(data.success)
+      handleUser()
+      getAllAssignedUsers()
+    } else {
+      toast.error(data.error)
+    }
+  } catch (err) {
+    console.log(err)
+    toast.error("retrying")
+  }
+}
+ 
+   const alreadyAssigned = async () => {
+    try {
+      const response = await fetch(
+        "https://localhost:8443/sphinx/api/user/saveexamrelationship",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ allData: assignedUsers })
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.success);
+        getAll();
+        getAllAssignedUsers()
+      } else {
+        toast.error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
+
+  if (!assignedUsers) {
+    return <p>No users assigned</p>;
+  }
+ 
+   const getAll = async () => {
+    try {
+      const response = await fetch(
+        "https://localhost:8443/sphinx/api/user/getPartyExam",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ examId:examId })
+        }
+      )
+
+      if (response.ok) {
+        const value = await response.json()
+        setAlreadyAssignedUsers(value.allData || []) 
+      } else {
+        setAlreadyAssignedUsers([])
+
+      }
+    } catch (err) {
+      console.error(err)
+      setAlreadyAssignedUsers([])
+    }
+  }
+  const handleDeleteExam = async (item) => {
+    try {
+      const res = await fetch(
+        "https://localhost:8443/sphinx/api/user/deleteExamRelationship",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            examId,
+            partyId: item.partyId
+          })
+        }
+      )
+
+      const data = await res.json()
+
+      if (res.ok) {
+        toast.success(data.success)
+        getAll() // refresh
+        handleUser()
+      } else {
+        toast.error(data.error)
+      }
+
+    } catch (err) {
+      console.error(err)
+      toast.error("Delete failed")
+    }
+  }
+
+  
+
+
+  return (
+    <Layout>
+      <Form onSubmit={handleSubmit}>
+        <Select onChange={handleform} name="partyId">
+          <Option>select</Option>
+          {user.map((item) => (
+            <Option value={item.partyId} key={item.partyId}>
+              {item.userLoginId}
+            </Option>
+          ))}
+        </Select>
+
+        <Input
+          type="text"
+          name="allowedAttempts"
+          onChange={handleform}
+          placeholder='allowed attempts'
+        />
+         {errors.allowedAttempts && (
+            <RegisterError>{errors.allowedAttempts}</RegisterError>
+          )}
+
+        <Input
+          type="text"
+          name="timeoutDays"
+          onChange={handleform}
+          placeholder='timeout days'
+        />
+         {errors.timeoutDays && (
+            <RegisterError>{errors.timeoutDays}</RegisterError>
+          )}
+
+        <Button type="submit">Assign</Button>
+      </Form>
+      <Outer>
+        <Title>Assign</Title>
+
+        <HeaderRow>
+          <p>User Name</p>
+          <p>Allowed Attempts</p>
+          <p>No Of Attempts</p>
+          <p>Time Out Days</p>
+        </HeaderRow>
+
+        {assignedUsers.length === 0 ? (
+          <p>No assigned users found</p>
+        ) : (
+          assignedUsers.map((item) => (
+            <Row key={item.partyId}>
+              <CellPrimary>{item.userLoginId}</CellPrimary>
+
+              <Cell>{item.allowedAttempts}</Cell>
+
+              <Attempt danger={item.noOfAttempts > item.allowedAttempts}>
+                {item.noOfAttempts}
+              </Attempt>
+
+              <Cell>{item.timeoutDays}</Cell>
+            </Row>
+          ))
+        )}
+
+        <ActionWrapper>
+          <ButtonSecondary onClick={alreadyAssigned}>
+            Submit All
+          </ButtonSecondary>
+        </ActionWrapper>
+      </Outer>
+
+      <Section>
+         <List>
+      {alreadyAssignedUsers.map((item) => (
+        <li
+          key={item.partyId}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "12px",
+            border: "1px solid #e5e7eb",
+            borderRadius: "8px",
+            marginBottom: "10px"
+          }}
+        >
+          <div>
+            <strong>{item.partyId}</strong>
+            <div>{item.userLoginId}</div>
+          </div>
+
+          <Button onClick={() => handleDeleteExam(item)}>
+            Delete
+          </Button>
+        </li>
+      ))}
+    </List>
+      </Section>
+
+      
+    </Layout>
+  )
 }
 
 export default UsersList
