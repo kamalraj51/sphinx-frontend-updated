@@ -87,7 +87,8 @@ export const ExamCol = styled.div`
 
   &:nth-child(1) { flex: 0.5; } /* Sl.No */
   &:nth-child(2) { flex: 1.5; font-weight: 500; } /* Name */
-  &:nth-child(3) { flex: 2; } /* Desc */
+  &:nth-child(3) { flex: 0.8; } /* Desc */
+  &:nth-child(4) { flex: 1.2; } /* no ques */
   &:nth-child(7), &:nth-child(8), &:nth-child(9) { flex: 1.2; justify-content: center; } /* Actions */
 `;
 export const ButtonDiv = styled.div`

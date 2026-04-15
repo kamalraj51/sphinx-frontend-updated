@@ -154,7 +154,7 @@ const ShowQuestion = () => {
     <Layout>
       <ContainerExamTD>
         <H2 style={{ fontWeight: 600, fontSize: "24px" }}>Topic: {tname}</H2>
-        <Buttons style={{ marginBottom: "20px" }}>
+        
           <Button
             title="Create Question"
             onClick={() => navigate(`/create-question/${topicID}/${tname}`)}
@@ -163,11 +163,11 @@ const ShowQuestion = () => {
               alignItems: "center",
               gap: "8px",
               backgroundColor: "#f59e0b",
+              marginBottom: "20px"
             }}
           >
             <PlusCircle size={18} /> Create Question
           </Button>
-        </Buttons>
         {questions.length > 0 && (
           <TopBar>
             <SelectWrap>
@@ -175,30 +175,32 @@ const ShowQuestion = () => {
                 type="checkbox"
                 checked={allSelectedOnPage}
                 onChange={handleSelectAll}
-              />
+                />
               <span>Select All</span>
             </SelectWrap>
             {selectedIds.length > 0 && (
               <Button
-                title="Delete Selected"
-                style={{
-                  backgroundColor: "#e3342f",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-                disabled={loading}
-                onClick={() => handleDeleteClick("bulk")}
+              title="Delete Selected"
+              style={{
+                backgroundColor: "#e3342f",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+              disabled={loading}
+              onClick={() => handleDeleteClick("bulk")}
               >
                 <Trash2 size={16} /> Delete Selected ({selectedIds.length})
               </Button>
             )}
           </TopBar>
         )}
+      
 
         {questions.length === 0 ? (
           <p style={{ textAlign: "center", color: "red" }}>No question available</p>
         ) : (
+          
           paginatedQuestions.map((ques, i) => {
             const isSelected = selectedIds.includes(ques.questionId);
             return (

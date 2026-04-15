@@ -81,9 +81,9 @@ export const Menu = styled.div`
     backdrop-filter: blur(16px);
     border-bottom: ${({ theme }) => theme.colors.glassBorder || "none"};
 
-    max-height: ${({ isOpen }) => (isOpen ? "500px" : "0px")};
+    max-height: ${({ $isOpen }) => ($isOpen ? "500px" : "0px")};
     overflow: hidden;
-    padding: ${({ isOpen }) => (isOpen ? "20px 0" : "0")};
+    padding: ${({ $isOpen }) => ($isOpen ? "20px 0" : "0")};
 
     transition: all 0.3s ease-in-out;
   }

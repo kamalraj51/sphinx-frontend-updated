@@ -112,7 +112,7 @@ const AvailableExam = () => {
             <ExamCol>Sl.No</ExamCol>
             <ExamCol>Exam Name</ExamCol>
             <ExamCol>Description</ExamCol>
-            <ExamCol>No of Question</ExamCol>
+            <ExamCol>No of Questions</ExamCol>
             <ExamCol>Duration</ExamCol>
             <ExamCol>Pass %</ExamCol>
             <ExamCol>Edit Topic</ExamCol>
