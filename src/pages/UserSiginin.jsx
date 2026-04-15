@@ -106,12 +106,14 @@ const UserSignin = () => {
       //sucess =>redirect
       dispatch(login({ userLoginId: formData.userLoginId }));
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      navigate(data.role);
+      /*
       if (data.role == "admin") {
         navigate("/adminhome");
       } else if (data.role == "user") {
         navigate("/userdashboard");
       }
+      */
     } catch (err) {
       setApiError("Network error. Please try again.");
     } finally {

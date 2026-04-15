@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import { HeaderMain, Logo, Menu, MenuToggle } from "../styles/HeaderStyle";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { RegisterButton } from "../styles/SignupStyle";
-import { logout } from "../reducer/authSlice"
+import { logout } from "../reducer/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
   return (
     <HeaderMain>
       <Logo>
-        <h2>Sphinx</h2>
+        
+        <img src="/public/apple-touch-icon.png" width={"50px"} alt="" />
       </Logo>
 
-      {isAuthenticated ? (<><MenuToggle onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </MenuToggle>
+      {isAuthenticated ? (
+        <>
+          <MenuToggle onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </MenuToggle>
 
-        <Menu isOpen={isOpen}>
+        <Menu $isOpen={isOpen}>
           <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
             Home
           </NavLink>
