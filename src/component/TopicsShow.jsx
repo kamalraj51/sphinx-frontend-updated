@@ -8,10 +8,7 @@ import {
   TopicHeading,
   TopicName,
 } from "../styles/TopicsStyle";
-import {
-  ContentQues,
-  Para,
-} from "../styles/ExamTDetails.style";
+import { ContentQues, Para } from "../styles/ExamTDetails.style";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
@@ -32,7 +29,9 @@ const TopicsShow = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const res = await fetch("https://localhost:8443/sphinx/api/topic/gettopics");
+        const res = await fetch(
+          "https://localhost:8443/sphinx/api/topic/gettopics",
+        );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setTopics(data.topic || []);
@@ -48,20 +47,27 @@ const TopicsShow = () => {
     setPopup(!popup);
   };
 
-  const paginatedTopics = topics.slice((currentPage - 1) * 10, currentPage * 10);
+  const paginatedTopics = topics.slice(
+    (currentPage - 1) * 10,
+    currentPage * 10,
+  );
 
   return (
     <Layout>
       <TopicContainer>
         <HeadingTable>
-          <H2>Select Topic Based Questions</H2>
+          <H2>Select Topic Based Question</H2>
         </HeadingTable>
         <Buttons style={{ marginBottom: "20px" }}>
-
           <Button
             title="Upload Questions"
             onClick={() => handlePop()}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#f59e0b' }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#f59e0b",
+            }}
           >
             <UploadCloud size={18} /> Upload Question
           </Button>
@@ -76,15 +82,29 @@ const TopicsShow = () => {
             return (
               <ContentQues key={topic.topicId}>
                 <Para>{(currentPage - 1) * 10 + index + 1}</Para>
-                <Para style={{ flex: 1, textAlign: 'left' }}>
+                <Para style={{ flex: 1, textAlign: "left" }}>
                   {topic.topicName}
                 </Para>
-                <Buttons style={{ width: '30%', justifyContent: 'flex-end', display: 'flex' }}>
+                <Buttons
+                  style={{
+                    width: "30%",
+                    justifyContent: "flex-end",
+                    display: "flex",
+                  }}
+                >
                   <Button
                     title="Show Questions"
                     disabled={loading}
-                    onClick={() => navigate(`/showquestion/${topic.topicId}`)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                    onClick={() =>
+                      navigate(
+                        `/show-question/${topic.topicId}/${topic.topicName}`,
+                      )
+                    }
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
                   >
                     <FileQuestion size={16} /> Show Question
                   </Button>

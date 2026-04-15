@@ -231,12 +231,12 @@ export const FloatingInput = styled.input`
   /* FLOAT LABEL TRIGGER */
   &:focus + label,
   &:not(:placeholder-shown) + label {
-    top: -8px;
-    left: 10px;
-    font-size: 11px;
-    color: ${({ theme }) => theme.colors.primary};
-    background: ${({ theme }) => theme.colors.surface};
-    padding: 0 6px;
+  top: -3px;
+  left: 10px;
+  font-size: 11px;
+  color: #4F46E5;
+  background: #f2f4f6;
+  padding: 0 3px;
   }
 `;
 

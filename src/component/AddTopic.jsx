@@ -13,6 +13,7 @@ import Topics from "./Topics";
 import { useDispatch } from "react-redux";
 import { toggle } from "../reducer/apiReduce";
 import { HeadingTable, H2 } from "../styles/AvailableExamStyle";
+import { RedSpan } from "../styles/FontsStyle";
 
 
 const AddTopic = () => {
@@ -91,7 +92,7 @@ const AddTopic = () => {
         {apiError && <ApiError>{apiError}</ApiError>}
         <FormContainer onSubmit={handleSubmit}>
           <TopicField>
-            <TopicLabel>Enter the Topic</TopicLabel>
+            <TopicLabel>Enter the Topic <RedSpan>*</RedSpan></TopicLabel>
             <TopicInput
               type="text"
               id="topicName"

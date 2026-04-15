@@ -92,12 +92,13 @@ const UserSignin = () => {
           body: JSON.stringify(formData),
         },
       );
-     const data = await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         console.log("not login...");
 
-        setApiError(data.message||"invalid credinatilas ");
+        setApiError(data.message || "invalid credinatilas ");
+
 
         return;
       }
@@ -105,7 +106,7 @@ const UserSignin = () => {
       //sucess =>redirect
       dispatch(login({ userLoginId: formData.userLoginId }));
       await new Promise((resolve) => setTimeout(resolve, 1000));
-     
+
       if (data.role == "admin") {
         navigate("/adminhome");
       } else if (data.role == "user") {
@@ -152,9 +153,10 @@ const UserSignin = () => {
               />
               <FloatingLabel>Password</FloatingLabel>
 
-              <TogglePassword className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"} onClick={() => setShowPassword((p) => !p)}>
-
-              </TogglePassword>
+              <TogglePassword
+                className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"}
+                onClick={() => setShowPassword((p) => !p)}
+              ></TogglePassword>
 
               {errors.password && <LoginError>{errors.password}</LoginError>}
             </PasswordWrapper>

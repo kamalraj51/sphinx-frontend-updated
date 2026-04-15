@@ -26,20 +26,20 @@ const Header = () => {
           <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
             Home
           </NavLink>
-          <NavLink to="/showalltopic" onClick={() => setIsOpen(false)}>
+          <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
             Manage Question
           </NavLink>
-          <NavLink to="/createuser" onClick={() => setIsOpen(false)}>
+          <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
             Add User
           </NavLink>
 
-          <NavLink to="/createxam" onClick={() => setIsOpen(false)}>
+          <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
             Create Assessment
           </NavLink>
-          <NavLink to="/topicmaster" onClick={() => setIsOpen(false)}>
+          <NavLink to="/topic-master" onClick={() => setIsOpen(false)}>
             Topic Master
           </NavLink>
-          <NavLink to="/addadmin">Add Admin</NavLink>
+          <NavLink to="/add-admin">Add Admin</NavLink>
           <NavLink to="/" onClick={async (e) => {
             setIsOpen(false)
             e.preventDefault();

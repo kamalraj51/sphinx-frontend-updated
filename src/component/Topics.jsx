@@ -3,7 +3,7 @@ import { Button, Buttons, H1, TopicContainer, TopicContent, TopicHeading, TopicN
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../reducer/apiReduce';
 import { toast } from 'sonner';
-import { RefreshCw, Trash2 } from 'lucide-react';
+import { EditIcon, RefreshCw, Trash2 } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
 import Pagination from './Pagination';
 import styled from 'styled-components';
@@ -11,6 +11,8 @@ import {
     ContentQues,
     Para,
 } from "../styles/ExamTDetails.style";
+import { Edit } from '../styles/AvailableExamStyle';
+import UpdateModal from './UpdateModal';
 
 const TopBar = styled.div`
   display: flex;
@@ -45,7 +47,13 @@ const Topics = () => {
     const [selectedIds, setSelectedIds] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null); // 'bulk' or id
-
+    const [updateModel,setUpdateModal]=useState(false)
+    const[updateDetails,setUpdateDetails]=useState(null)
+    
+    const handleOpenModal = (id, name) => {
+     setUpdateModal(true)
+    setUpdateDetails({ topicId: id, topicName: name });
+};
     useEffect(() => {
         const fetchTopics = async () => {
             try {
@@ -75,17 +83,17 @@ const Topics = () => {
     };
 
     const performDelete = async (topicId) => {
-       try{
-         const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
-            method: "DELETE",
-        });
-        if (!response.ok) throw new Error("Failed to delete topic");
+        try {
+            const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) throw new Error("Failed to delete topic");
 
-       }catch(err){
+        } catch (err) {
             console.log(err)
-       }finally{
-         dispatch(toggle());
-       }
+        } finally {
+            dispatch(toggle());
+        }
     };
 
     const executeDelete = async () => {
@@ -114,11 +122,11 @@ const Topics = () => {
                 if (paginatedTopics.length === 1 && currentPage > 1) setCurrentPage(prev => prev - 1);
             }
 
-           
+
         } catch (err) {
             toast.error(err.message || "Failed to delete topic(s)");
         } finally {
-             dispatch(toggle());
+            dispatch(toggle());
             setLoading(false);
         }
     };
@@ -133,8 +141,13 @@ const Topics = () => {
                 headers: { "content-Type": "application/json" },
                 body: JSON.stringify(topic)
             });
-            if (!response.ok) throw new Error("not update");
-            toast.success("Update successfully");
+            if (!response.ok){
+                throw new Error("not update");
+                
+            } 
+           
+            const data=response.json()
+            toast.success(data.successMessage ||"Update successfully");
         } catch (err) {
             toast.error("Failed to update");
         } finally {
@@ -197,19 +210,29 @@ const Topics = () => {
                         />
                         <Para style={{ width: '5%' }}>{(currentPage - 1) * 10 + index + 1}</Para>
                         <Para style={{ flex: 1, textAlign: 'left' }}>
-                            <TopicName name='topicName' value={topic.topicName} onChange={(e) => change(e, topic.topicId)} style={{ padding: '0 0 0 10px', width: '40%', background: 'transparent', border: '1.5px solid #ddd', borderRadius: '5px 5px 5px 5px' }} />
+                            <TopicName  >{topic.topicName}</TopicName>
                         </Para>
                         <Buttons style={{ width: '30%', justifyContent: 'flex-end', display: 'flex' }}>
-                            <Button title="Update Topic" disabled={loading} onClick={() => updateTopic(topic.topicId, topic.topicName)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <RefreshCw size={16} /> {loading ? "..." : "Update"}
-                            </Button>
+
+                            <Edit
+                                title="Edit Topic"
+                                // onClick={() => updateTopic(topic.topicId, topic.topicName)}
+                                onClick={ ()=>handleOpenModal(topic.topicId, topic.topicName)}
+
+                                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+                            >
+                                <EditIcon size={16} />
+                            </Edit>
+
                             <Button title="Delete Topic" disabled={loading} onClick={() => handleDeleteClick(topic.topicId)} style={{ backgroundColor: '#e3342f', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <Trash2 size={16} /> {loading ? "..." : "Delete"}
+                                <Trash2 size={16} /> {loading ? "..." : ""}
                             </Button>
                         </Buttons>
                     </ContentQues>
+                    
                 )
             })}
+            <UpdateModal/>
 
             <Pagination
                 currentPage={currentPage}
@@ -225,7 +248,18 @@ const Topics = () => {
                 title={itemToDelete === 'bulk' ? "Bulk Delete Topics" : "Delete Topic"}
                 message={itemToDelete === 'bulk' ? `Are you sure you want to delete ${selectedIds.length} topics?` : "Are you sure you want to delete this topic?"}
             />
+            <UpdateModal
+                isOpen={updateModel}    
+                
+                 onClose={() => setUpdateModal(false)}
+                topics={updateDetails}    
+                onUpdate={updateTopic}    
+            />
+
+        
         </TopicContainer>
+
+      
     )
 }
 

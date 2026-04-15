@@ -17,10 +17,10 @@ export const ContentETD = styled.div`
   padding: 12px 16px;
   margin-bottom: 8px;
 
-  background-color: ${({ theme }) => theme.colors?.surface };
+  background-color: ${({ theme }) => theme.colors?.surface};
   border-radius: 8px;
 
-  border: 1px solid ${({ theme }) => theme.colors?.border };
+  border: 1px solid ${({ theme }) => theme.colors?.border};
 
   transition: 0.2s ease;
 
@@ -33,7 +33,7 @@ export const ContentETD = styled.div`
 export const P = styled.p`
   margin: 0;
   font-size: 16px;
-  color: ${({ theme }) => theme.colors?.textPrimary };
+  color: ${({ theme }) => theme.colors?.textPrimary};
 
   &:nth-child(1) {
     text-align: center;
@@ -61,7 +61,7 @@ export const Button = styled.button`
   padding: 10px 16px;
   font-size: 16px;
 
-  background-color: ${({ theme }) => theme.colors?.success };
+  background-color: ${({ theme }) => theme.colors?.success};
   color: white;
 
   border: none;
