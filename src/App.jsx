@@ -1,12 +1,11 @@
 import React from "react";
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-import UserSignin from "./pages/UserSiginin";
 import { Toaster } from "sonner";
+
+// Pages & Components
+import UserSignin from "./pages/UserSiginin";
 import AddAdmin from "./pages/AddAdmin";
-import TestLogin from "./pages/TestLogin";
 import UserPromote from "./pages/UserPromote";
 import CreateQuestion from "./pages/CreateQuestion";
 import Getalluser from "./database/Getalluser";
@@ -23,13 +22,36 @@ import UsersList from "./pages/UsersList";
 import EditExam from "./component/EditExam";
 import TopicsShow from "./component/TopicsShow";
 import CreateUser from "./pages/CreateUser";
-import SimpleCollapse from "./pages/TestLogin";
 import ExamUpdate from "./pages/ExamUpdate";
 import Userdashboar from "./Dashboard/Userdashboard";
 
+// 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  return isAuthenticated ? children : <Navigate to="/" replace />;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  // // If no children provided, fallback to admin home
+  // if (!children) {
+  //   console.log("first home");
+
+  //   return <Navigate to="/adminhome" replace />;
+  // }
+
+  return children;
+};
+
+// 2. Public Route: Prevents logged-in users from seeing the Login page
+const PublicRoute = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  if (isAuthenticated) {
+    return <Navigate to="/adminhome" replace />;
+  }
+
+  return children;
 };
 
 const App = () => {
@@ -38,20 +60,26 @@ const App = () => {
       <Toaster position="top-right" richColors />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<UserSignin />} />
-          <Route path="/usersignin" element={<UserSignin />} />
-
+          {/* Public Routes (Redirect to /adminhome if already logged in) */}
           <Route
-            path="/addadmin"
+            path="/"
             element={
-              <ProtectedRoute>
-                <AddAdmin />
-              </ProtectedRoute>
+              <PublicRoute>
+                <UserSignin />
+              </PublicRoute>
             }
           />
-
+          <Route
+            path="/usersignin"
+            element={
+              <PublicRoute>
+                <UserSignin />
+              </PublicRoute>
+            }
+          />
           <Route path="/CreateUser" element={<CreateUser />} />
 
+          {/* Protected Routes (Require Authentication) */}
           <Route
             path="/adminhome"
             element={
@@ -61,10 +89,10 @@ const App = () => {
             }
           />
           <Route
-            path="/test"
+            path="/addadmin"
             element={
               <ProtectedRoute>
-                <TestLogin />
+                <AddAdmin />
               </ProtectedRoute>
             }
           />
@@ -76,7 +104,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/userpromote"
             element={
@@ -189,8 +216,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/test" element={<SimpleCollapse />} />
-
           <Route
             path="/examupdate"
             element={
@@ -200,6 +225,7 @@ const App = () => {
             }
           />
 
+          {/* Fallback for 404 */}
           <Route path="/*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
