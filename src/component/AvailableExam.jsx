@@ -143,7 +143,7 @@ const AvailableExam = () => {
                   <ButtonDiv style={{ display: "flex", gap: "1px" }}>
                     <Edit
                       title="Edit Topic"
-                      onClick={() => navigate(`/editexam/${data.examId}`)}
+                      onClick={() => navigate(`/edit-exam/${data.examId}`)}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -169,7 +169,7 @@ const AvailableExam = () => {
                   <Button
                     title="Assign User"
                     onClick={() =>
-                      navigate("/getuser", { state: { examId: data.examId } })
+                      navigate("/get-user", { state: { examId: data.examId } })
                     }
                     style={{ display: "flex", alignItems: "center", gap: "4px" }}
                   >

@@ -12,6 +12,7 @@ import {
     Para,
 } from "../styles/ExamTDetails.style";
 import { Edit } from '../styles/AvailableExamStyle';
+import UpdateModal from './UpdateModal';
 
 const TopBar = styled.div`
   display: flex;
@@ -46,7 +47,13 @@ const Topics = () => {
     const [selectedIds, setSelectedIds] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null); // 'bulk' or id
-
+    const [updateModel,setUpdateModal]=useState(false)
+    const[updateDetails,setUpdateDetails]=useState(null)
+    
+    const handleOpenModal = (id, name) => {
+     setUpdateModal(true)
+    setUpdateDetails({ topicId: id, topicName: name });
+};
     useEffect(() => {
         const fetchTopics = async () => {
             try {
@@ -134,8 +141,13 @@ const Topics = () => {
                 headers: { "content-Type": "application/json" },
                 body: JSON.stringify(topic)
             });
-            if (!response.ok) throw new Error("not update");
-            toast.success("Update successfully");
+            if (!response.ok){
+                throw new Error("not update");
+                
+            } 
+           
+            const data=response.json()
+            toast.success(data.successMessage ||"Update successfully");
         } catch (err) {
             toast.error("Failed to update");
         } finally {
@@ -198,14 +210,15 @@ const Topics = () => {
                         />
                         <Para style={{ width: '5%' }}>{(currentPage - 1) * 10 + index + 1}</Para>
                         <Para style={{ flex: 1, textAlign: 'left' }}>
-                            <TopicName name='topicName' value={topic.topicName} onChange={(e) => change(e, topic.topicId)} style={{ padding: '0 0 0 10px', width: '40%', background: 'transparent', border: '1.5px solid #ddd', borderRadius: '5px 5px 5px 5px' }} />
+                            <TopicName  >{topic.topicName}</TopicName>
                         </Para>
                         <Buttons style={{ width: '30%', justifyContent: 'flex-end', display: 'flex' }}>
 
                             <Edit
                                 title="Edit Topic"
-                                onClick={() => updateTopic(topic.topicId, topic.topicName)}
-                                disabled={loading}
+                                // onClick={() => updateTopic(topic.topicId, topic.topicName)}
+                                onClick={ ()=>handleOpenModal(topic.topicId, topic.topicName)}
+
                                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                             >
                                 <EditIcon size={16} />
@@ -216,8 +229,10 @@ const Topics = () => {
                             </Button>
                         </Buttons>
                     </ContentQues>
+                    
                 )
             })}
+            <UpdateModal/>
 
             <Pagination
                 currentPage={currentPage}
@@ -233,7 +248,18 @@ const Topics = () => {
                 title={itemToDelete === 'bulk' ? "Bulk Delete Topics" : "Delete Topic"}
                 message={itemToDelete === 'bulk' ? `Are you sure you want to delete ${selectedIds.length} topics?` : "Are you sure you want to delete this topic?"}
             />
+            <UpdateModal
+                isOpen={updateModel}    
+                
+                 onClose={() => setUpdateModal(false)}
+                topics={updateDetails}    
+                onUpdate={updateTopic}    
+            />
+
+        
         </TopicContainer>
+
+      
     )
 }
 

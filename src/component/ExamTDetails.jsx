@@ -2,6 +2,7 @@ import React, { use, useEffect, useState } from 'react'
 import { Button, ContainerExamTD, ContentETD, H2, P } from '../styles/ExamTDetails.style'
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const ExamTDetails = (props) => {
  const [examTopics, setExamTopics] = useState([]);
@@ -58,14 +59,16 @@ const ExamTDetails = (props) => {
         body:JSON.stringify({examId})
 
     });
-
+     const data=await response.json();
      if(!response.ok){
       console.log("failed to generate question")
+       toast.error(data.error)
+
       return;
      }
      await new Promise(resolve => setTimeout(resolve, 1000));
-     const data=await response.json();
-     alert("generated")
+     toast.success(data.message)
+     
 
 }catch(err){
       console.log(err)

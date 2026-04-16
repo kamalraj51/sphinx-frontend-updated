@@ -124,7 +124,7 @@ const ShowQuestion = () => {
   };
 
   const updateQuestion = (quesId) => {
-    navigate(`/updatequestion/${quesId}`);
+    navigate(`/update-question/${quesId}`);
   };
 
   const handleSelectAll = (e) => {

@@ -24,40 +24,38 @@ const Header = () => {
             {isOpen ? <FaTimes /> : <FaBars />}
           </MenuToggle>
 
-          <Menu $isOpen={isOpen}>
-            <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
-              Home
-            </NavLink>
-            <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
-              Manage Question
-            </NavLink>
-            <NavLink to="/createuser" onClick={() => setIsOpen(false)}>
-              Add User
-            </NavLink>
+        <Menu $isOpen={isOpen}>
+          <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
+            Home
+          </NavLink>
+          <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
+            Manage Question
+          </NavLink>
+          <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+            Add User
+          </NavLink>
 
-            <NavLink to="/createxam" onClick={() => setIsOpen(false)}>
-              Create Assessment
-            </NavLink>
-            <NavLink to="/topicmaster" onClick={() => setIsOpen(false)}>
-              Topic Master
-            </NavLink>
-            <NavLink to="/addadmin">Add Admin</NavLink>
-            <NavLink
-              to="/"
-              onClick={async (e) => {
-                setIsOpen(false);
-                e.preventDefault();
-                setLoading(true);
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                setLoading(false);
-                dispatch(logout());
-              }}
-            >
-              {loading ? "Signing out..." : "Sign Out"}
-            </NavLink>
-          </Menu>
-        </>
-      ) : null}
+          <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
+            Create Assessment
+          </NavLink>
+          <NavLink to="/topic-master" onClick={() => setIsOpen(false)}>
+            Topic Master
+          </NavLink>
+          <NavLink to="/add-admin">Add Admin</NavLink>
+          <NavLink to="/" onClick={async (e) => {
+            setIsOpen(false)
+            e.preventDefault();
+            setLoading(true);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            setLoading(false);
+            dispatch(logout());
+
+          }}>
+            {loading ? "Signing out..." : "Sign Out"}
+          </NavLink>
+
+
+        </Menu></>) : null}
     </HeaderMain>
   );
 };

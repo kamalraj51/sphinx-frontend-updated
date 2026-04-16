@@ -29,7 +29,7 @@ gap:10px;
 `
 
 
-export const TopicName = styled.input`
+export const TopicName = styled.span`
 font-size:16px;
 
  border-top-left-radius: 10px;

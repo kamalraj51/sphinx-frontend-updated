@@ -77,7 +77,8 @@ const App = () => {
               </PublicRoute>
             }
           />
-          <Route path="/CreateUser" element={<CreateUser />} />
+
+          <Route path="/Create-User" element={<CreateUser />} />
 
           {/* Protected Routes (Require Authentication) */}
           <Route
@@ -89,7 +90,7 @@ const App = () => {
             }
           />
           <Route
-            path="/addadmin"
+            path="/add-admin"
             element={
               <ProtectedRoute>
                 <AddAdmin />
@@ -121,7 +122,7 @@ const App = () => {
             }
           />
           <Route
-            path="/createxam"
+            path="/creat-exam"
             element={
               <ProtectedRoute>
                 <CreateExam />
@@ -145,7 +146,7 @@ const App = () => {
             }
           />
           <Route
-            path="/updatequestion/:quesId"
+            path="/update-question/:quesId"
             element={
               <ProtectedRoute>
                 <UpdateQuestion />
@@ -153,7 +154,7 @@ const App = () => {
             }
           />
           <Route
-            path="/editexam/:examId"
+            path="/edit-exam/:examId"
             element={
               <ProtectedRoute>
                 <EditExam />
@@ -161,7 +162,7 @@ const App = () => {
             }
           />
           <Route
-            path="/topicmaster"
+            path="/topic-master"
             element={
               <ProtectedRoute>
                 <TopicMaster />
@@ -169,7 +170,7 @@ const App = () => {
             }
           />
           <Route
-            path="/getuser"
+            path="/get-user"
             element={
               <ProtectedRoute>
                 <UsersList />
@@ -177,7 +178,7 @@ const App = () => {
             }
           />
           <Route
-            path="/getuser/:exmaId"
+            path="/get-user/:exmaId"
             element={
               <ProtectedRoute>
                 <UsersList />
@@ -209,7 +210,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examcreatetopic/:examId"
+            path="/exam-create-topic/:examId"
             element={
               <ProtectedRoute>
                 <CreateExamTopics />
