@@ -69,7 +69,7 @@ const ExamTDetails = (props) => {
       setSubmit(true);
       
       const response = await fetch(
-     `https://localhost:8443/sphinx/api/question/generateExamQuestions`,
+     `https://localhost:8443/sphinx/api/question/generate-Exam-Questions`,
     {
       method:"POST",
        headers:{
