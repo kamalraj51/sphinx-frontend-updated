@@ -24,6 +24,8 @@ import TopicsShow from "./component/TopicsShow";
 import CreateUser from "./pages/CreateUser";
 import ExamUpdate from "./pages/ExamUpdate";
 import Userdashboar from "./Dashboard/Userdashboard";
+import ExamTDetails from "./component/ExamTDetails";
+import Header from "./component/Header";
 
 // 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
@@ -157,7 +159,9 @@ const App = () => {
             path="/edit-exam/:examId"
             element={
               <ProtectedRoute>
-                <EditExam />
+                <CreateExamTopics />
+               
+               
               </ProtectedRoute>
             }
           />
