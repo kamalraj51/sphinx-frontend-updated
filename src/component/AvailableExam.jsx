@@ -134,21 +134,33 @@ const AvailableExam = () => {
             return (
               <ExamRow key={data.examId}>
                 <ExamCol>{(currentPage - 1) * 10 + index + 1}</ExamCol>
-                <ExamCol title={data.examName}>{data.examName}</ExamCol>
+                <ExamCol title={data.examName}><button title="Edit Exam"
+                  onClick={() =>
+                    navigate("/examupdate", { state: { examData: data } })
+                  }
+                  style={{ border: "none", cursor: "pointer", color: "blue" }}
+>{data.examName}</button></ExamCol>
                 <ExamCol title={data.description}>{data.description}</ExamCol>
                 <ExamCol>{data.noOfQuestions}</ExamCol>
                 <ExamCol>{data.duration}</ExamCol>
                 <ExamCol>{data.passPercentage}</ExamCol>
 
                 <ExamCol>
-                  <ButtonDiv style={{ display: 'flex', gap: '4px' }}>
-                    <Edit onClick={() => navigate("/examupdate", { state: { examData: data } })}>
+
+                  <ButtonDiv style={{ display: "flex", gap: "1px" }}>
+                    <Edit
+                      title="Edit Topic"
+                      onClick={() => navigate(`/edit-exam/${data.examId}`)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
                       <EditIcon size={16} />
                     </Edit>
 
-                    <Edit onClick={() => navigate(`/editexam/${data.examId}`)}>
-                      <RefreshCw size={16} />
-                    </Edit>
+                    
                   </ButtonDiv>
                 </ExamCol>
 
@@ -159,8 +171,15 @@ const AvailableExam = () => {
                 </ExamCol>
 
                 <ExamCol>
-                  <Button onClick={() => navigate("/getuser", { state: { examId: data.examId } })}>
-                    <UserPlus size={16} /> Assign
+
+                  <Button
+                    title="Assign User"
+                    onClick={() =>
+                      navigate("/get-user", { state: { examId: data.examId } })
+                    }
+                    style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                  >
+                    <UserPlus size={16} />
                   </Button>
                 </ExamCol>
               </ExamRow>

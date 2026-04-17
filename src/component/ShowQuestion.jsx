@@ -124,7 +124,7 @@ const ShowQuestion = () => {
   };
 
   const updateQuestion = (quesId) => {
-    navigate(`/updatequestion/${quesId}`);
+    navigate(`/update-question/${quesId}`);
   };
 
   const handleSelectAll = (e) => {
@@ -196,6 +196,9 @@ const ShowQuestion = () => {
           </TopBar>
         )}
       
+
+
+
 
         {questions.length === 0 ? (
           <p style={{ textAlign: "center", color: "red" }}>No question available</p>

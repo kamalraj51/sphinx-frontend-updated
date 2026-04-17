@@ -98,10 +98,11 @@ const CreateExamform = () => {
       const examId = data.examId;
       console.log("1", data.examId);
 
-      navigate(`/examcreatetopic/${examId}`)
-    } else{
-      
-      toast.error(data.error)
+
+      navigate(`/exam-create-topic/${examId}`)
+    } else if (!response.ok) {
+      const data = await response.json();
+      setMsg(data.error)
 
     }
 
