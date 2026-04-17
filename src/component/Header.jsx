@@ -11,6 +11,9 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const role = useSelector((state) => state.auth.role);
+  console.log("role",role);
+  
   return (
     <HeaderMain>
       <Logo>
@@ -23,6 +26,7 @@ const Header = () => {
           <MenuToggle onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <FaTimes /> : <FaBars />}
           </MenuToggle>
+{(role==='admin')?
 
         <Menu $isOpen={isOpen}>
           <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
@@ -35,7 +39,7 @@ const Header = () => {
             Add User
           </NavLink>
 
-          <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
+ <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
             Create Assessment
           </NavLink>
           <NavLink to="/topic-master" onClick={() => setIsOpen(false)}>
@@ -55,7 +59,36 @@ const Header = () => {
           </NavLink>
 
 
-        </Menu></>) : null}
+        </Menu>
+:
+  <Menu>
+      <NavLink to="/userdashboard" onClick={() => setIsOpen(false)}>
+              Home
+      </NavLink>
+     <NavLink to="" onClick={() => setIsOpen(false)}>
+        Manage Question
+      </NavLink>
+      <NavLink to="" onClick={() => setIsOpen(false)}>
+        Add User
+      </NavLink>
+     <NavLink
+              to="/"
+              onClick={async (e) => {
+                setIsOpen(false);
+                e.preventDefault();
+                setLoading(true);
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                setLoading(false);
+                dispatch(logout());
+              }}
+            >
+              {loading ? "Signing out..." : "Sign Out"}
+        </NavLink>
+  </Menu>
+ }
+        </>
+      ) : null}
+
     </HeaderMain>
   );
 };
