@@ -99,21 +99,21 @@ const UserSignin = () => {
 
         setApiError(data.message || "invalid credinatilas ");
 
-
         return;
       }
 
       //sucess =>redirect
       dispatch(login({ userLoginId: formData.userLoginId }));
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
       // navigate(data.role);
-      
-      if (data.role == "admin") {
+      console.log("role", data.role);
+      if (data.role === "admin") {
         navigate("/adminhome");
-      } else if (data.role == "user") {
+      } else if (data.role === "user") {
         navigate("/userdashboard");
+      } else {
+        navigate("/");
       }
-      
     } catch (err) {
       setApiError("Network error. Please try again.");
     } finally {

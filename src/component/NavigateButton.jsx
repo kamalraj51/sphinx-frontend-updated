@@ -4,9 +4,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 export const NavigateContainer = styled.div`
-  display: flex;
-  padding: 0 20px 20px 20px;
-  justify-content: space-between;
+display:"inline"
 `;
 
 export const NavWrapper = styled.div`
