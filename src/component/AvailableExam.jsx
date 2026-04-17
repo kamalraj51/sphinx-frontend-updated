@@ -28,14 +28,7 @@ const AvailableExam = () => {
  
   const getAllExam = async () => {
     try {
-      const response = await fetch("https://localhost:8443/sphinx/api/exam/getexam", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userLoginId: userId })
-      })
-
+      const response = await fetch(`https://localhost:8443/sphinx/api/exam/get-exam?userLoginId=${encodeURIComponent(userId)}`)
       const allData = await response.json()
 
    
