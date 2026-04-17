@@ -26,6 +26,7 @@ import CreateUser from "./pages/CreateUser";
 import SimpleCollapse from "./pages/TestLogin";
 import ExamUpdate from "./pages/ExamUpdate";
 import Userdashboar from "./Dashboard/Userdashboard";
+import Userdashboard from "./Dashboard/Userdashboard";
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -36,12 +37,20 @@ const App = () => {
   return (
     <>
       <Toaster position="top-right" richColors />
+      {/* //admin flow */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<UserSignin />} />
           <Route path="/usersignin" element={<UserSignin />} />
 
-          <Route path="/addadmin" element={<ProtectedRoute><AddAdmin /></ProtectedRoute>} />
+          <Route
+            path="/addadmin"
+            element={
+              <ProtectedRoute>
+                <AddAdmin />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/CreateUser" element={<CreateUser />} />
 
@@ -61,15 +70,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/userdashboard"
-            element={
-              <ProtectedRoute>
-                <Userdashboar />
-              </ProtectedRoute>
-            }
-          />
-
+         
           <Route
             path="/userpromote"
             element={
@@ -103,7 +104,7 @@ const App = () => {
             }
           />
           <Route
-            path="/showalltopic"
+            path="/show-all-topic"
             element={
               <ProtectedRoute>
                 <TopicsShow />
@@ -159,7 +160,7 @@ const App = () => {
             }
           />
           <Route
-            path="/showquestion/:topicID"
+            path="/show-question/:topicID/:tname"
             element={
               <ProtectedRoute>
                 <ShowQuestion />
@@ -167,7 +168,7 @@ const App = () => {
             }
           />
           <Route
-            path="/addquestion/:topicID"
+            path="/create-question/:topicID/:tname"
             element={
               <ProtectedRoute>
                 <CreateQuestion />
@@ -175,7 +176,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examcreatetopic/:examID"
+            path="/examcreatetopic/:examId"
             element={
               <ProtectedRoute>
                 <CreateExamTopics />
@@ -192,6 +193,16 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          {/* user flow */}
+            <Route
+            path="/userdashboard"
+            element={
+              <ProtectedRoute>
+                <Userdashboard/>
+              </ProtectedRoute>
+            }
+          />
+          
 
           <Route path="/*" element={<NoPage />} />
         </Routes>

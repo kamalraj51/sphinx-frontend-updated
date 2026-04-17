@@ -87,7 +87,8 @@ export const ExamCol = styled.div`
 
   &:nth-child(1) { flex: 0.5; } /* Sl.No */
   &:nth-child(2) { flex: 1.5; font-weight: 500; } /* Name */
-  &:nth-child(3) { flex: 2; } /* Desc */
+  &:nth-child(3) { flex: 0.8; } /* Desc */
+  &:nth-child(4) { flex: 1.2; } /* no ques */
   &:nth-child(7), &:nth-child(8), &:nth-child(9) { flex: 1.2; justify-content: center; } /* Actions */
 `;
 export const ButtonDiv = styled.div`
@@ -111,17 +112,24 @@ export const Add = styled.button`
 `;
 
 export const Edit = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary};
-  padding: 10px 18px;
+    background: ${({ theme }) => theme.colors.secondary};
+  padding: 10px 10px;
   border: none;
   border-radius: 6px;
-  color: ${({ theme }) => theme.colors.surface};
+  color:black;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-left: 10px;
 
   &:hover {
-    opacity: 0.85;
+    background: ${({ theme }) => theme.colors.textPrimary};
+    
+    color:white;
+  }
+
+    &:disabled {
+    background: ${({ theme }) => theme.colors.border};
+    cursor: not-allowed;
   }
 `;
 

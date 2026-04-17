@@ -28,7 +28,7 @@ import {
 } from "../styles/SignupStyle";
 import { useDispatch, useSelector } from "react-redux";
 
-import { login } from "../reducer/authSlice";
+import { login,setRole } from "../reducer/authSlice";
 import Header from "../component/Header";
 //riswan
 const UserSignin = () => {
@@ -92,9 +92,12 @@ const UserSignin = () => {
           body: JSON.stringify(formData),
         },
       );
+      const data = await response.json();
+
       if (!response.ok) {
         console.log("not login...");
-        setApiError("invalid credentials");
+        setApiError(data.message || "invalid credinatilas ");
+
         return;
       }
       console.log("h")
@@ -102,12 +105,17 @@ const UserSignin = () => {
       dispatch(login({ userLoginId: formData.userLoginId }));
       // dispatch(setLoginId(formData.userLoginId));
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const data = await response.json();
+      //navigate(data.role);
+      
+       dispatch(setRole(data.role))
       if (data.role == "admin") {
+       
        navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
       } else if (data.role == "user") {
+       
         navigate("/userdashboard");
       }
+      
     } catch (err) {
       setApiError("Network error. Please try again.");
     } finally {
@@ -149,9 +157,10 @@ const UserSignin = () => {
               />
               <FloatingLabel>Password</FloatingLabel>
 
-              <TogglePassword className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"} onClick={() => setShowPassword((p) => !p)}>
-
-              </TogglePassword>
+              <TogglePassword
+                className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"}
+                onClick={() => setShowPassword((p) => !p)}
+              ></TogglePassword>
 
               {errors.password && <LoginError>{errors.password}</LoginError>}
             </PasswordWrapper>

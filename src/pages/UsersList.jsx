@@ -11,6 +11,7 @@ import { RegisterError } from '../styles/SignupStyle'
 import {ActionWrapper, Attempt,Cell,CellPrimary, HeaderRow, Outer,Row,Section,Title} from '../styles/Assign.style';
 import { ButtonSecondary } from '../styles/AvailableExamStyle';
 import { List } from '../styles/Assign.style'
+import Assignexamtempoaryupdate from '../component/Assignexamtempoaryupdate'
 const UsersList = () => {
   const location = useLocation()
   const examId = location.state?.examId
@@ -18,7 +19,7 @@ const UsersList = () => {
   const [user, setUser] = useState([])
   const [assignedUsers, setAssignedUsers] = useState([])
   const [alreadyAssignedUsers,setAlreadyAssignedUsers] =useState([])
-
+ const [selectedUser, setSelectedUser] = useState(null);
   const [formData, setFormData] = useState({
     examId: examId,
     partyId: "",
@@ -81,6 +82,7 @@ const numberRegex = /^[0-9]+$/
           },
           body: JSON.stringify({
             examId: formData.examId,
+            userLoginId:formData.userLoginId,
             servicetype: "assigned"
           })
         }
@@ -102,6 +104,9 @@ const numberRegex = /^[0-9]+$/
     if (formData.examId) {
       handleUser()
       getAllAssignedUsers()
+      getAll()
+      
+      
     }
   }, [formData.examId])
 
@@ -166,19 +171,22 @@ const numberRegex = /^[0-9]+$/
         body: JSON.stringify(formData)
       }
     )
+    if (response.ok) {
 
     const data = await response.json()
-
-    if (response.ok) {
+    console.log("veera");
+    
       toast.success(data.success)
       handleUser()
       getAllAssignedUsers()
+
     } else {
-      toast.error(data.error)
+        console.log("RESPONSE => ", response);
+      toast.error(data.error || "Failed to Load Data!")
     }
   } catch (err) {
     console.log(err)
-    toast.error("retrying")
+    // toast.error("retrying")
   }
 }
  
@@ -198,6 +206,9 @@ const numberRegex = /^[0-9]+$/
       const data = await response.json();
 
       if (response.ok) {
+
+
+        console.log("hello")
         toast.success(data.success);
         getAll();
         getAllAssignedUsers()
@@ -256,6 +267,8 @@ const numberRegex = /^[0-9]+$/
       const data = await res.json()
 
       if (res.ok) {
+        console.log("hii");
+        
         toast.success(data.success)
         getAll() // refresh
         handleUser()
@@ -330,8 +343,14 @@ const numberRegex = /^[0-9]+$/
               </Attempt>
 
               <Cell>{item.timeoutDays}</Cell>
+              <Button onClick={() => setSelectedUser(item)}>update</Button>
+              
             </Row>
           ))
+        )}
+        {selectedUser && (<Assignexamtempoaryupdate item={selectedUser}
+                            onClose={() => {setSelectedUser(null), getAllAssignedUsers()}}
+                           />
         )}
 
         <ActionWrapper>
