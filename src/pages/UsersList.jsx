@@ -289,7 +289,7 @@ const numberRegex = /^[0-9]+$/
     <Layout>
       <Form onSubmit={handleSubmit}>
         <Select onChange={handleform} name="partyId">
-          <Option>select</Option>
+          <Option value="">select</Option>
           {user.map((item) => (
             <Option value={item.partyId} key={item.partyId}>
               {item.userLoginId}

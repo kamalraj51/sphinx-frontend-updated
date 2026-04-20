@@ -115,11 +115,13 @@ const UserSignin = () => {
 
      
       
+
        
       if (data.role == "admin") {
+
        
        navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
-      } else if (data.role == "user") {
+      } else if (data.role === "user") {
        
         navigate("/userdashboard");
       }
