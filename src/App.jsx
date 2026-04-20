@@ -25,6 +25,7 @@ import CreateUser from "./pages/CreateUser";
 import ExamUpdate from "./pages/ExamUpdate";
 import Userdashboar from "./Dashboard/Userdashboard";
 import Userdashboard from "./Dashboard/Userdashboard";
+import ExamAttend from "./pages/ExamAttend";
 
 // 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
@@ -225,6 +226,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Userdashboard/>
+              </ProtectedRoute>
+            }
+          />
+
+           <Route
+            path="/exam-attend/:examId"
+            element={
+              <ProtectedRoute>
+                <ExamAttend/>
               </ProtectedRoute>
             }
           />
