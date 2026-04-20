@@ -23,7 +23,13 @@ import EditExam from "./component/EditExam";
 import TopicsShow from "./component/TopicsShow";
 import CreateUser from "./pages/CreateUser";
 import ExamUpdate from "./pages/ExamUpdate";
-import Userdashboar from "./Dashboard/Userdashboard";
+
+
+import ExamTDetails from "./component/ExamTDetails";
+import Header from "./component/Header";
+
+import Userdashboard from "./Dashboard/Userdashboard";
+
 
 // 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
@@ -58,6 +64,7 @@ const App = () => {
   return (
     <>
       <Toaster position="top-right" richColors />
+      {/* //admin flow */}
       <BrowserRouter>
         <Routes>
           {/* Public Routes (Redirect to /adminhome if already logged in) */}
@@ -94,14 +101,6 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <AddAdmin />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/userdashboard"
-            element={
-              <ProtectedRoute>
-                <Userdashboar />
               </ProtectedRoute>
             }
           />
@@ -157,7 +156,9 @@ const App = () => {
             path="/edit-exam/:examId"
             element={
               <ProtectedRoute>
-                <EditExam />
+                <CreateExamTopics />
+               
+               
               </ProtectedRoute>
             }
           />
@@ -225,6 +226,16 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          {/* user flow */}
+            <Route
+            path="/userdashboard"
+            element={
+              <ProtectedRoute>
+                <Userdashboard/>
+              </ProtectedRoute>
+            }
+          />
+          
 
           {/* Fallback for 404 */}
           <Route path="/*" element={<NoPage />} />

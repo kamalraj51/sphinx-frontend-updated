@@ -10,23 +10,56 @@ export const H2 = styled.h2`
 
 export const ContentETD = styled.div`
   display: grid;
-  grid-template-columns: 80px 1fr 120px; /* FIX alignment */
-
+  /* 4 columns: Index, Name (flexible), Percentage, Action */
+  grid-template-columns: 40px 1fr 100px 40px; 
   align-items: center;
+  gap: 12px;
 
-  padding: 12px 16px;
-  margin-bottom: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
 
-  background-color: ${({ theme }) => theme.colors?.surface};
-  border-radius: 8px;
-
-  border: 1px solid ${({ theme }) => theme.colors?.border};
-
-  transition: 0.2s ease;
+  background-color: ${({ theme }) => theme.colors?.surface || '#fff'};
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors?.border || '#eee'};
+  
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+    border-color: ${({ theme }) => theme.colors?.primary || '#007bff'};
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Target the text elements */
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: ${({ theme }) => theme.colors?.text || '#333'};
+    font-weight: 500;
+  }
+
+  /* Style for the index number */
+  .index {
+    color: ${({ theme }) => theme.colors?.textSecondary || '#888'};
+    font-size: 12px;
+  }
+
+  /* Style for the button */
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ff4d4f; /* Danger color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #fff1f0;
+    }
   }
 `;
 
@@ -164,6 +197,13 @@ export const Para = styled.p`
     }
   }
 `;
+
+
+export const NotAvail=styled.h2`
+  font-size:20px;
+  text-align:center;
+  color:${({ theme }) => theme.colors?.error}
+`
 
 
 

@@ -21,12 +21,8 @@ import {
 
 import Layout from "../component/Layout";
 import { H2, HeadingTable } from "../styles/AvailableExamStyle";
-
-import { toast } from "sonner";
-
 import { Label } from "../styles/CreateUser.style";
 import { RedSpan } from "../styles/FontsStyle";
-
 
 // REGEX
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -134,8 +130,7 @@ const AddAdmin = () => {
         return;
       }
 
-     toast.success("Admin added successfully!")
-     
+      navigate("/");
     } catch (err) {
       setApiError("Network error. Please try again.");
     } finally {

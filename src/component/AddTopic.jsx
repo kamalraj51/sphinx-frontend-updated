@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { toggle } from "../reducer/apiReduce";
 import { HeadingTable, H2 } from "../styles/AvailableExamStyle";
 import { RedSpan } from "../styles/FontsStyle";
+import { toast } from "sonner";
 
 
 const AddTopic = () => {
@@ -69,10 +70,10 @@ const AddTopic = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setApiError(data.message || "Failed to add topic");
+        toast.error(data.error)
         return;
       }
-      setSucess("topic added successfully");
+      toast.success(data.successMessage)
     } catch (err) {
       setApiError("Network error . please try again. ");
     } finally {

@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isAuthenticated: !!localStorage.getItem('userLoginId'),
   user: localStorage.getItem('userLoginId') || null,
+  role:localStorage.getItem("role")||null
 };
 
 const authSlice = createSlice({
@@ -20,8 +21,12 @@ const authSlice = createSlice({
       state.user = null;
       localStorage.removeItem('userLoginId');
     },
+    setRole:(state,action)=>{
+      state.role=action.payload
+       localStorage.setItem('userLoginId', action.payload);
+    }
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout,setRole } = authSlice.actions;
 export default authSlice.reducer;

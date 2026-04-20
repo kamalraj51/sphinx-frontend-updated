@@ -1,145 +1,145 @@
-import React, { useEffect, useState } from "react";
+
+
+import React, { useEffect, useState } from 'react'
 import {
-  AvailableContainer,
-  AvailableTable,
-  ExamRow,
-  ExamHeaderRow,
-  ExamCol,
-  ButtonDiv,
-  Delete,
-  Edit,
-  H2,
-  HeadingTable,
-  TableWrapper,
-} from "../styles/AvailableExamStyle";
-import { Button } from "../styles/CreateExam.style";
-import { useLocation, useNavigate } from "react-router-dom";
-import { toggle } from "../reducer/apiReduce";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
-import { Edit as EditIcon, RefreshCw, Trash2, UserPlus } from "lucide-react";
-import ConfirmModal from "./ConfirmModal";
-import Pagination from "./Pagination";
-//  <RefreshCw size={16} />
+  AvailableContainer, AvailableTable, ExamRow, ExamHeaderRow,
+  ExamCol, ButtonDiv, Delete, Edit, H2, HeadingTable, TableWrapper
+} from '../styles/AvailableExamStyle'
+import { Button } from '../styles/CreateExam.style'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'sonner'
+import { Edit as EditIcon, RefreshCw, Trash2, UserPlus } from 'lucide-react'
+import ConfirmModal from './ConfirmModal'
+import Pagination from './Pagination'
+
 const AvailableExam = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [examData, setExamData] = useState([]);
-  const apiRefresh = useSelector((state) => state.api.value);
-  const location = useLocation();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
 
+  const [examData, setExamData] = useState([])
+  const userId = useSelector((state) => state.auth.user)
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState(null)
 
+ 
   const getAllExam = async () => {
     try {
-      const response = await fetch(
-        "https://localhost:8443/sphinx/api/exam/getexam",
-        {
-          method: "GET",
-        },
-      );
-      const allData = await response.json();
-      setExamData(allData.data.data || []);
-    } catch (err) {
-      console.error("Failed to fetch exams:", err);
-    }
-  };
+      const response = await fetch(`https://localhost:8443/sphinx/api/exam/get-exam?userLoginId=${encodeURIComponent(userId)}`)
+      const allData = await response.json()
 
+   
+      setExamData((allData?.data?.data || []).filter(item => item))
+
+    } catch (err) {
+      console.error("Failed to fetch exams:", err)
+    }
+  }
+
+  //  Delete click
   const handleDeleteClick = (examId) => {
-    setItemToDelete(examId);
-    setModalOpen(true);
-  };
+    setItemToDelete(examId)
+    setModalOpen(true)
+  }
+
 
   const handleExamDelete = async () => {
-    if (!itemToDelete) return;
-    setModalOpen(false);
+    if (!itemToDelete) return
+
+    setModalOpen(false)
+
     try {
-      const response = await fetch(
-        "https://localhost:8443/sphinx/api/exam/examDelete",
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ examId: itemToDelete }),
+      const response = await fetch("https://localhost:8443/sphinx/api/exam/examDelete", {
+        method: "DELETE", 
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ examId: itemToDelete,userLoginId:userId }),
+      })
 
       if (!response.ok) {
-        toast.error("Failed to delete the exam");
-        return;
-      } else {
-        toast.success("Exam deleted successfully");
-        dispatch(toggle());
+        toast.error("Failed to delete the exam")
+        return
       }
 
-      // Fix pagination if deleting last item on current page
-      if (paginatedData.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
+    
+      setExamData(prev => {
+        const updated = prev.filter(item => item.examId !== itemToDelete)
+
+        if ((updated.length <= (currentPage - 1) * 10) && currentPage > 1) {
+          setCurrentPage(prevPage => prevPage - 1)
+        }
+
+        return updated
+      })
+
+      toast.success("Exam deleted successfully")
+
     } catch (err) {
-      toast.error("Network error. Could not delete exam.");
+      toast.error("Network error. Could not delete exam.")
     }
-  };
+  }
+
+ 
   useEffect(() => {
     if (location.state?.message) {
-      toast.success(location.state.message);
+      toast.success(location.state.message)
+      navigate(location.pathname, { replace: true, state: {} })
     }
-  }, []);
+  }, [location.state])
 
+  //  Initial load
   useEffect(() => {
-    getAllExam();
-  }, [apiRefresh]);
+    getAllExam()
+  }, [])
 
-  const handlePageChange = (page) => setCurrentPage(page);
+  const handlePageChange = (page) => setCurrentPage(page)
 
-  const paginatedData = examData.slice(
-    (currentPage - 1) * 10,
-    currentPage * 10,
-  );
+  const paginatedData = (examData || [])
+    .slice((currentPage - 1) * 10, currentPage * 10)
 
   return (
     <AvailableContainer>
       <HeadingTable>
         <H2>Available Assessment</H2>
       </HeadingTable>
+
       <TableWrapper>
         <AvailableTable>
           <ExamHeaderRow>
             <ExamCol>Sl.No</ExamCol>
             <ExamCol>Exam Name</ExamCol>
             <ExamCol>Description</ExamCol>
-            <ExamCol>No of Questions</ExamCol>
+            <ExamCol>No of Question</ExamCol>
             <ExamCol>Duration</ExamCol>
             <ExamCol>Pass %</ExamCol>
-            <ExamCol>Edit Topic</ExamCol>
+            <ExamCol>Edit Exam</ExamCol>
             <ExamCol>Delete the Exam</ExamCol>
             <ExamCol>Assign user</ExamCol>
           </ExamHeaderRow>
 
-          {examData.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "20px", color: "red" }}>
-              No exam available
-            </div>
-          ) : (
-            paginatedData.map((data, index) => (
-              <ExamRow key={index}>
+          {paginatedData.map((data, index) => {
+            if (!data) return null //  safety
+
+            return (
+              <ExamRow key={data.examId}>
                 <ExamCol>{(currentPage - 1) * 10 + index + 1}</ExamCol>
                 <ExamCol title={data.examName}><button title="Edit Exam"
                   onClick={() =>
                     navigate("/examupdate", { state: { examData: data } })
                   }
                   style={{ border: "none", cursor: "pointer", color: "blue" }}
-                >{data.examName}</button></ExamCol>
+>{data.examName}</button></ExamCol>
                 <ExamCol title={data.description}>{data.description}</ExamCol>
                 <ExamCol>{data.noOfQuestions}</ExamCol>
                 <ExamCol>{data.duration}</ExamCol>
                 <ExamCol>{data.passPercentage}</ExamCol>
 
                 <ExamCol>
+
                   <ButtonDiv style={{ display: "flex", gap: "1px" }}>
                     <Edit
                       title="Edit Topic"
@@ -153,19 +153,18 @@ const AvailableExam = () => {
                       <EditIcon size={16} />
                     </Edit>
 
+                    
                   </ButtonDiv>
                 </ExamCol>
 
                 <ExamCol>
-                  <Delete
-                    title="Delete Exam"
-                    onClick={() => handleDeleteClick(data.examId)}
-                    style={{ display: "flex", alignItems: "center", gap: "4px" }}
-                  >
+                  <Delete onClick={() => handleDeleteClick(data.examId)}>
                     <Trash2 size={16} />
                   </Delete>
                 </ExamCol>
+
                 <ExamCol>
+
                   <Button
                     title="Assign User"
                     onClick={() =>
@@ -177,8 +176,8 @@ const AvailableExam = () => {
                   </Button>
                 </ExamCol>
               </ExamRow>
-            ))
-          )}
+            )
+          })}
         </AvailableTable>
       </TableWrapper>
 
@@ -194,10 +193,11 @@ const AvailableExam = () => {
         onClose={() => setModalOpen(false)}
         onConfirm={handleExamDelete}
         title="Delete Exam"
-        message="Are you sure you want to delete this exam? This action cannot be undone."
+        message="Are you sure you want to delete this exam?"
       />
     </AvailableContainer>
-  );
-};
+  )
+}
 
-export default AvailableExam;
+export default AvailableExam
+

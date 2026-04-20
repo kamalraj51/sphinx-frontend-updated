@@ -52,8 +52,6 @@ const QuestionUpload = ({ handlePop }) => {
     formData.append("file", file);
 
     try {
-      console.log("Uploading file:", file);
-
       const response = await fetch(API_URL, {
         method: "POST",
         body: formData,
@@ -61,9 +59,9 @@ const QuestionUpload = ({ handlePop }) => {
       });
 
       let data;
-
       try {
         data = await response.json();
+        console.log("data", data);
       } catch {
         throw new Error("Invalid JSON response from server");
       }
@@ -77,7 +75,7 @@ const QuestionUpload = ({ handlePop }) => {
       }
     } catch (err) {
       console.error(err);
-      setError("Network error: " + err.message);
+      setError("Network errors: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -105,7 +103,12 @@ const QuestionUpload = ({ handlePop }) => {
             accept=".xlsx"
             onChange={handleFileChange}
             disabled={loading}
-            style={{ border: "1px solid black", padding: "10px", borderRadius: "10px", cursor: "pointer" }}
+            style={{
+              border: "1px solid black",
+              padding: "10px",
+              borderRadius: "10px",
+              cursor: "pointer",
+            }}
           />
         </InputContainer>
         <div>
