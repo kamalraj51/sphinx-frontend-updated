@@ -111,10 +111,10 @@ const UserSignin = () => {
       //navigate(data.role);
       
        dispatch(setRole(data.role))
-      if (data.role == "admin") {
+      if (data.role === "admin") {
        
        navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
-      } else if (data.role == "user") {
+      } else if (data.role === "user") {
        
         navigate("/userdashboard");
       }
