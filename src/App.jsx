@@ -29,6 +29,7 @@ import ExamTDetails from "./component/ExamTDetails";
 import Header from "./component/Header";
 
 import Userdashboard from "./Dashboard/Userdashboard";
+import ExamAttend from "./pages/ExamAttend";
 
 
 // 1. Protected Route: Only allows logged-in users
@@ -120,6 +121,10 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/Create-User" element={
+             <ProtectedRoute>
+              <CreateUser />
+             </ProtectedRoute>} />
           <Route
             path="/creat-exam"
             element={
@@ -232,6 +237,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Userdashboard/>
+              </ProtectedRoute>
+            }
+          />
+
+           <Route
+            path="/exam-attend/:examId"
+            element={
+              <ProtectedRoute>
+                <ExamAttend/>
               </ProtectedRoute>
             }
           />

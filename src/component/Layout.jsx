@@ -5,6 +5,8 @@ import { Toaster } from "sonner";
 import NaviButton from "./NavigateButton";
 import { useEffect } from "react";
 
+import UserHeader from "../user/UserHeader";
+
 function Layout({ children }) {
   useEffect(() => {
     window.scrollTo({
@@ -15,11 +17,13 @@ function Layout({ children }) {
   return (
     <>
       <Header />
+      {/* <UserHeader/> */}
       <MainContainer>
         {/* <Toaster /> */}
-        <LayoutContainer>
-          {children}
-        </LayoutContainer>
+
+        <LayoutContainer>{children}</LayoutContainer>
+        
+
 
         <Footer />
       </MainContainer>

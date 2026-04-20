@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 
 const Userdashboard = () => {
-
+  
   const [data,setData] = useState([])
    useEffect(()=>{
       getExamData()
@@ -47,7 +47,7 @@ const Userdashboard = () => {
           
           <Attempts>{e.noOfAttempts}</Attempts>
            <ActionRow>
-          <StyledLink to="/">attend</StyledLink>
+          <StyledLink to={`/exam-attend/${e.examId}`}>attend</StyledLink>
          </ActionRow>
           </Card>
           )

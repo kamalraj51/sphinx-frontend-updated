@@ -28,7 +28,7 @@ import {
 } from "../styles/SignupStyle";
 import { useDispatch, useSelector } from "react-redux";
 
-import { login,setRole } from "../reducer/authSlice";
+import { login, setRole } from "../reducer/authSlice";
 import Header from "../component/Header";
 //riswan
 const UserSignin = () => {
@@ -78,7 +78,7 @@ const UserSignin = () => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-  
+
     setApiError("");
 
     try {
@@ -101,20 +101,22 @@ const UserSignin = () => {
 
         return;
       }
-      console.log("h")
+      console.log("h");
       //sucess =>redirect
-      dispatch(login({ userLoginId: formData.userLoginId }));
-      // dispatch(setLoginId(formData.userLoginId));
+      dispatch(
+        login({
+          userLoginId: formData.userLoginId,
+          role: data.role,
+        }),
+      );
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      //navigate(data.role);
-      
-       dispatch(setRole(data.role))
-      if (data.role == "admin") {
-       
-       navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
-      } else if (data.role == "user") {
-       
+      if (data.role == "SPX_ADMIN") {
+        navigate("/adminhome", {
+          state: { userLoginId: formData.userLoginId },
+        });
+      } else if (data.role === "SPX_USER") {
         navigate("/userdashboard");
       } else {
         navigate("/");
