@@ -12,7 +12,7 @@ function Layout({ children }) {
       {/* <UserHeader/> */}
       <MainContainer>
         {/* <Toaster /> */}
-        <LayoutContainer><NaviButton/>{children}</LayoutContainer>
+        <LayoutContainer>{children}</LayoutContainer>
         
 
         <Footer />

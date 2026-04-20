@@ -120,6 +120,10 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/Create-User" element={
+             <ProtectedRoute>
+              <CreateUser />
+             </ProtectedRoute>} />
           <Route
             path="/creat-exam"
             element={

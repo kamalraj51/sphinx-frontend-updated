@@ -104,13 +104,18 @@ const UserSignin = () => {
       }
       console.log("h")
       //sucess =>redirect
-      dispatch(login({ userLoginId: formData.userLoginId }));
-      // dispatch(setLoginId(formData.userLoginId));
+    dispatch(
+  login({
+    userLoginId: formData.userLoginId,
+    role: data.role,
+  })
+);
+      
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      //navigate(data.role);
+     
       
-       dispatch(setRole(data.role))
+       
       if (data.role == "admin") {
        
        navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
