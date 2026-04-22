@@ -62,6 +62,47 @@ export const StyledLink = styled(NavLink)`
   }
 `;
 
+
+
+export const Heading = styled.div`
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    letter-spacing: 0.5px;
+    position: relative;
+  }
+
+  h1::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 3px;
+    background: #2563eb;
+    border-radius: 10px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    padding: 16px 0;
+
+    h1 {
+      font-size: 20px;
+    }
+  }
+`;
+
 // import styled from "styled-components";
 // import { NavLink } from "react-router-dom";
 

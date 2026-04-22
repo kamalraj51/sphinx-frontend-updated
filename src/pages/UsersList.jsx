@@ -12,6 +12,7 @@ import {ActionWrapper, Attempt,Cell,CellPrimary, HeaderRow, Outer,Row,Section,Ti
 import { ButtonSecondary } from '../styles/AvailableExamStyle';
 import { List } from '../styles/Assign.style'
 import Assignexamtempoaryupdate from '../component/Assignexamtempoaryupdate'
+import ConfirmModal from '../component/ConfirmModal'
 const UsersList = () => {
   const location = useLocation()
   const examId = location.state?.examId
@@ -20,6 +21,7 @@ const UsersList = () => {
   const [assignedUsers, setAssignedUsers] = useState([])
   const [alreadyAssignedUsers,setAlreadyAssignedUsers] =useState([])
  const [selectedUser, setSelectedUser] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     examId: examId,
     partyId: "",
@@ -110,7 +112,12 @@ const numberRegex = /^[0-9]+$/
     }
   }, [formData.examId])
 
-  
+  const [deleteData,setDeleteData]=useState({})
+  const handleModalDelete=(data)=>{
+      setModalOpen(true)
+      setDeleteData(data)
+  }
+
   const handleform = (e) => {
     const { name, value } = e.target
 
@@ -251,6 +258,7 @@ const numberRegex = /^[0-9]+$/
     }
   }
   const handleDeleteExam = async (item) => {
+    console.log("hai inside delete")
     try {
       const res = await fetch(
         "https://localhost:8443/sphinx/api/user/deleteExamRelationship",
@@ -259,7 +267,7 @@ const numberRegex = /^[0-9]+$/
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             examId,
-            partyId: item.partyId
+            partyId: deleteData.partyId,
           })
         }
       )
@@ -279,9 +287,37 @@ const numberRegex = /^[0-9]+$/
     } catch (err) {
       console.error(err)
       toast.error("Delete failed")
+    }finally{
+      setModalOpen(false)
     }
   }
+  const handleAssignDelete = async (item) => {
+    setModalOpen(false)
+  try {
+    const response = await fetch("https://localhost:8443/sphinx/api/user/deleteAssign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ partyId:item.partyId,examId:item.examId }),
+    });
 
+    const data = await response.json();
+
+    if (response.ok) {
+      // getAll()
+      getAllAssignedUsers()
+      handleUser()
+
+      toast.success(data.success);
+    } else {
+      toast.error(data.error);
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong");
+  }
+};
   
 
 
@@ -334,7 +370,7 @@ const numberRegex = /^[0-9]+$/
         ) : (
           assignedUsers.map((item) => (
             <Row key={item.partyId}>
-              <CellPrimary>{item.userLoginId}</CellPrimary>
+              <CellPrimary  onClick={() => setSelectedUser(item)}>{item.userLoginId}</CellPrimary>
 
               <Cell>{item.allowedAttempts}</Cell>
 
@@ -343,7 +379,9 @@ const numberRegex = /^[0-9]+$/
               </Attempt>
 
               <Cell>{item.timeoutDays}</Cell>
-              <Button onClick={() => setSelectedUser(item)}>update</Button>
+              <button onClick={()=>{handleAssignDelete(item)
+                 setModalOpen(true)}}>deletes</button>
+             
               
             </Row>
           ))
@@ -379,14 +417,22 @@ const numberRegex = /^[0-9]+$/
             <div>{item.userLoginId}</div>
           </div>
 
-          <Button onClick={() => handleDeleteExam(item)}>
+          <Button onClick={() => 
+              handleModalDelete(item)
+          }>
             Delete
           </Button>
         </li>
       ))}
     </List>
       </Section>
-
+      <ConfirmModal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              onConfirm={handleDeleteExam}
+              title="Delete Exam"
+              message="Are you sure you want to delete this exam?"
+            />
       
     </Layout>
   )

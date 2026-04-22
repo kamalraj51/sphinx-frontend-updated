@@ -13,7 +13,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const { isAuthenticated, role } = useSelector((state) => state.auth);
-console.log("role ",role);
+  console.log("role ", role);
 
   if (role !== "SPX_ADMIN") {
     return <UserHeader />;
@@ -23,7 +23,6 @@ console.log("role ",role);
     <HeaderMain>
       <div style={{ display: "flex", columnGap: "30px", alignItems: "center" }}>
         <img src="/apple-touch-icon.png" width="50px" alt="logo" />
-        <NaviButton />
       </div>
 
       {isAuthenticated ? (
@@ -38,7 +37,7 @@ console.log("role ",role);
             </NavLink>
 
             <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
-              Manage Question
+              Manage Questions
             </NavLink>
 
             <NavLink to="/create-user" onClick={() => setIsOpen(false)}>

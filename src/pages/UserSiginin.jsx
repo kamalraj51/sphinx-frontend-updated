@@ -103,20 +103,25 @@ const UserSignin = () => {
       }
       console.log("h");
       //sucess =>redirect
+      console.log("data full", data);
+      console.log("data.role ", data.result.role);
+
       dispatch(
         login({
           userLoginId: formData.userLoginId,
-          role: data.role,
+          role: data.result.role,
         }),
       );
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (data.role == "SPX_ADMIN") {
+        console.log("admin called");
         navigate("/adminhome", {
           state: { userLoginId: formData.userLoginId },
         });
-      } else if (data.role === "SPX_USER") {
+      } else if (data.role === "SPX_EXAMINEE") {
+        console.log("user called");
         navigate("/userdashboard");
       } else {
         navigate("/");
@@ -137,7 +142,7 @@ const UserSignin = () => {
           <LoginTitle>SPHINX</LoginTitle>
 
           <LoginForm onSubmit={handleSubmit}>
-            <h2>SignIn</h2>
+            <h2>Sign In</h2>
             {apiError && <ApiError>{apiError}</ApiError>}
 
             <FieldWrapper>
@@ -147,7 +152,7 @@ const UserSignin = () => {
                 value={formData.userLoginId}
                 onChange={handleForm}
               />
-              <FloatingLabel>Username</FloatingLabel>
+              <FloatingLabel>User name</FloatingLabel>
               {errors.userLoginId && (
                 <LoginError>{errors.userLoginId}</LoginError>
               )}

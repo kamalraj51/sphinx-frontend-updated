@@ -27,7 +27,7 @@ const authSlice = createSlice({
   state.role = null;
 
   localStorage.removeItem("userLoginId");
-  localStorage.removeItem("role"); // ✅ important
+  localStorage.removeItem("role"); // 
 }
     
   },

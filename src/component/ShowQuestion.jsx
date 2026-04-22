@@ -38,13 +38,6 @@ const Checkbox = styled.input`
   accent-color: ${({ theme }) => theme.colors?.error || "#e3342f"};
 `;
 
-export const QuesGrid = styled.div`
-  display: grid;
-grid-template-columns: 60px 80px 700px 170px 140px;
-  align-items: center;
-  gap: 10px;
-`;
-
 const ShowQuestion = () => {
   const { topicID, tname } = useParams();
   const dispatch = useDispatch();
@@ -71,8 +64,9 @@ const ShowQuestion = () => {
           },
         );
 
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
         const res = await response.json();
-        if (!response.ok) throw new Error(res.error);
         setquestions(res.questionList || []);
       } catch (err) {
         console.error(err, "fetching questions");
@@ -160,20 +154,20 @@ const ShowQuestion = () => {
     <Layout>
       <ContainerExamTD>
         <H2 style={{ fontWeight: 600, fontSize: "24px" }}>Topic: {tname}</H2>
-
-        <Button
-          title="Create Question"
-          onClick={() => navigate(`/create-question/${topicID}/${tname}`)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "#f59e0b",
-            marginBottom: "20px",
-          }}
-        >
-          <PlusCircle size={18} /> Create Question
-        </Button>
+        
+          <Button
+            title="Create Question"
+            onClick={() => navigate(`/create-question/${topicID}/${tname}`)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              backgroundColor: "#f59e0b",
+              marginBottom: "20px"
+            }}
+          >
+            <PlusCircle size={18} /> Create Question
+          </Button>
         {questions.length > 0 && (
           <TopBar>
             <SelectWrap>
@@ -181,71 +175,79 @@ const ShowQuestion = () => {
                 type="checkbox"
                 checked={allSelectedOnPage}
                 onChange={handleSelectAll}
-              />
+                />
               <span>Select All</span>
             </SelectWrap>
             {selectedIds.length > 0 && (
               <Button
-                title="Delete Selected"
-                style={{
-                  backgroundColor: "#e3342f",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-                disabled={loading}
-                onClick={() => handleDeleteClick("bulk")}
+              title="Delete Selected"
+              style={{
+                backgroundColor: "#e3342f",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+              disabled={loading}
+              onClick={() => handleDeleteClick("bulk")}
               >
                 <Trash2 size={16} /> Delete Selected ({selectedIds.length})
               </Button>
             )}
           </TopBar>
         )}
-<ContentQues>
-<QuesGrid>
-  <div></div> 
-  <div>S.No.</div>
-  <div>Question Detail</div>
-  <div>Question Type</div>
-  <div>Action</div>
-</QuesGrid>
-</ContentQues>
+      
+
+
+
+
         {questions.length === 0 ? (
-          <p style={{ textAlign: "center", color: "red" }}>
-            No question available
-          </p>
+          <p style={{ textAlign: "center", color: "red" }}>No question available</p>
         ) : (
+          
           paginatedQuestions.map((ques, i) => {
             const isSelected = selectedIds.includes(ques.questionId);
             return (
-             <ContentQues key={ques.questionId || i}>
-  <QuesGrid>
-    <Checkbox
-      type="checkbox"
-      checked={isSelected}
-      onChange={(e) => handleSelectOne(e, ques.questionId)}
-    />
-
-    <Para>{(currentPage - 1) * 10 + i + 1}</Para>
-
-    <Para>{ques.questionDetail}</Para>
-
-    <Para>{ques.questionTypeId}</Para>
-
-    <QuesButtons>
-      <Button onClick={() => updateQuestion(ques.questionId)}>
-        <EditIcon size={16} />
-      </Button>
-
-      <Button
-        onClick={() => handleDeleteClick(ques.questionId)}
-        style={{ backgroundColor: "#e3342f" }}
-      >
-        <Trash2 size={16} />
-      </Button>
-    </QuesButtons>
-  </QuesGrid>
-</ContentQues>
+              <ContentQues
+                key={ques.questionId || i}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Checkbox
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) => handleSelectOne(e, ques.questionId)}
+                  style={{ marginRight: "15px" }}
+                />
+                <Para>{(currentPage - 1) * 10 + i + 1}</Para>
+                <Para style={{ flex: 1 }}>{ques.questionDetail}</Para>
+                <Para>{ques.questionTypeId}</Para>
+                <QuesButtons>
+                  <Button
+                    title="Update Question"
+                    disabled={loading}
+                    onClick={() => updateQuestion(ques.questionId)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <EditIcon size={16} /> {loading ? "..." : ""}
+                  </Button>
+                  <Button
+                    title="Delete Question"
+                    disabled={loading}
+                    onClick={() => handleDeleteClick(ques.questionId)}
+                    style={{
+                      backgroundColor: "#e3342f",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <Trash2 size={16} /> {loading ? "..." : ""}
+                  </Button>
+                </QuesButtons>
+              </ContentQues>
             );
           })
         )}

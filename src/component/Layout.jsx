@@ -4,7 +4,6 @@ import Footer from "./Footer";
 import { Toaster } from "sonner";
 import NaviButton from "./NavigateButton";
 import { useEffect } from "react";
-
 import UserHeader from "../user/UserHeader";
 
 function Layout({ children }) {
@@ -20,7 +19,6 @@ function Layout({ children }) {
       {/* <UserHeader/> */}
       <MainContainer>
         {/* <Toaster /> */}
-
         <LayoutContainer>{children}</LayoutContainer>
         
 

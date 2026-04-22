@@ -11,22 +11,22 @@ export const H2 = styled.h2`
 export const ContentETD = styled.div`
   display: grid;
   /* 4 columns: Index, Name (flexible), Percentage, Action */
-  grid-template-columns: 40px 1fr 100px 40px; 
+  grid-template-columns: 40px 1fr 100px 40px;
   align-items: center;
   gap: 12px;
 
   padding: 16px;
   margin-bottom: 12px;
 
-  background-color: ${({ theme }) => theme.colors?.surface || '#fff'};
+  background-color: ${({ theme }) => theme.colors?.surface || "#fff"};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors?.border || '#eee'};
-  
+  border: 1px solid ${({ theme }) => theme.colors?.border || "#eee"};
+
   transition: all 0.2s ease-in-out;
 
   &:hover {
     transform: translateY(-2px);
-    border-color: ${({ theme }) => theme.colors?.primary || '#007bff'};
+    border-color: ${({ theme }) => theme.colors?.primary || "#007bff"};
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   }
 
@@ -34,13 +34,13 @@ export const ContentETD = styled.div`
   p {
     margin: 0;
     font-size: 14px;
-    color: ${({ theme }) => theme.colors?.text || '#333'};
+    color: ${({ theme }) => theme.colors?.text || "#333"};
     font-weight: 500;
   }
 
   /* Style for the index number */
   .index {
-    color: ${({ theme }) => theme.colors?.textSecondary || '#888'};
+    color: ${({ theme }) => theme.colors?.textSecondary || "#888"};
     font-size: 12px;
   }
 
@@ -114,54 +114,50 @@ export const Button = styled.button`
   }
 `;
 
-
-
-
-
-
-
-
 export const NavLink2 = styled.a`
-    text-decoration:none;
-    &:hover{
-        color:grey;
-        cursor:pointer;
-    }
-`
+  text-decoration: none;
+  &:hover {
+    color: grey;
+    cursor: pointer;
+  }
+`;
 
 export const ContentQuesHead = styled.div`
   display: flex;
   padding: 12px 16px;
   margin-bottom: 8px;
-  background-color: ${({ theme }) => theme.colors?.primary || '#4f46e5'};
+  background-color: ${({ theme }) => theme.colors?.primary || "#4f46e5"};
   color: white;
   border-radius: 8px;
   align-items: center;
-  width:100%;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 export const ContentQues = styled.div`
   display: flex;
   padding: 10px 16px;
   margin-bottom: 8px;
-  background-color: ${({ theme }) => theme.colors?.surface || '#ffffff'};
+  background-color: ${({ theme }) => theme.colors?.surface || "#ffffff"};
   border-radius: 8px;
   align-items: center;
-  width:100%;
-  justify-content:space-between;
-  border: 1px solid ${({ theme }) => theme.colors?.border || '#e5e7eb'};
-  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  justify-content: space-between;
+  border: 1px solid ${({ theme }) => theme.colors?.border || "#e5e7eb"};
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
   }
 `;
 // Define column widths for proper alignment
 export const Para = styled.p`
+
   font-size: 16px;
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
+  color: ${({ theme }) => theme.colors?.textPrimary || "#333"};
   margin: 0; /* remove default margin */
 
   &:nth-child(1) {
@@ -198,12 +194,8 @@ export const Para = styled.p`
   }
 `;
 
-
-export const NotAvail=styled.h2`
-  font-size:20px;
-  text-align:center;
-  color:${({ theme }) => theme.colors?.error}
-`
-
-
-
+export const NotAvail = styled.h2`
+  font-size: 20px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors?.error};
+`;

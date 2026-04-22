@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
-import {ActionRow, Attempts, Card, Container, Description, ExamId, StyledLink, Title} from '../styles/UserDashboar.style'
+import {ActionRow, Attempts, Card, Container, Description, ExamId, Heading, StyledLink, Title} from '../styles/UserDashboar.style'
 import Layout from '../component/Layout';
 import { NavLink } from 'react-router-dom';
 
@@ -35,7 +35,9 @@ const Userdashboard = () => {
   return (
 
     <Layout>
-  
+      <Heading>
+          <h1>Available Exam</h1>
+      </Heading>
     <Container>
        {
         data&& data.map((e,i)=>{
