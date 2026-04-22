@@ -146,7 +146,7 @@ const ExamTDetails = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedPayload || [])
+        body: JSON.stringify(updatedPayload || {})
       }
     );
 
