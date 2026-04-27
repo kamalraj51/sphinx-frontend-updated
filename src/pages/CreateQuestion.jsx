@@ -85,7 +85,6 @@ export const Textarea = styled.textarea`
   border-radius: 12px;
   border: 1px solid #ddd;
   min-height: 120px;
-  border: 1px solid #ddd;
   background: ${({ theme }) => theme.colors?.background || "#f9fafb"};
 `;
 

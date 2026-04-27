@@ -1,39 +1,25 @@
-// import React, { useEffect, useState } from 'react'
-// import { Container, Option, Select } from '../styles/CreateExam.style'
+import React from "react";
+import Layout from "../component/Layout";
 
+import AvailableExam from "../component/AvailableExam";
+import Header from "../component/Header";
+import Userdashboard from "../Dashboard/Userdashboard";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-// const Admindashboard = () => {
-//   let[examName,setExamName]=useState([])
-  
-//   let getAllId=async ()=>{
-//     let response=await fetch("https://localhost:8443/sphinx/api/exam/getexamname",{
-//       method:"GET",
-//       headers:{
-//         "Content-Type": "application/json",
-//       }
-      
+const Admindashboard = () => {
+  const navigate = useNavigate();
+  const { role } = useSelector((state) => state.auth);
+  if (role && role !== "SPX_ADMIN") {
+    navigate("/userdashboard");
+  }
 
-//     })
-//     let data1=await response.json()
-//     setExamName(data1. data);
+  console.log("done");
+  return (
+    <Layout>
+      <AvailableExam />
+    </Layout>
+  );
+};
 
-//   }
-//   return (
-//     <>
-//       <Container>
-//         <Select onClick={getAllId}>
-//           {
-//             examName.map((data,i)=>{
-//               return(
-//                 <Option key={i} >{data}</Option>
-//               )
-              
-//             })
-//           }
-//         </Select>
-//       </Container>
-//     </>
-//   )
-// }
-
-// export default Admindashboard
+export default Admindashboard;

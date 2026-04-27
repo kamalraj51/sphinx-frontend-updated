@@ -31,6 +31,7 @@ import Userdashboard from "./Dashboard/Userdashboard";
 import ExamAttend from "./pages/ExamAttend";
 import UserAttendAssessment from "./user/UserAttendAssessment";
 import Result from "./pages/Result";
+import Admindashboard from "./Dashboard/Admindashboard";
 
 // 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
@@ -94,7 +95,7 @@ const App = () => {
             path="/adminhome"
             element={
               <ProtectedRoute>
-                <Home />
+                <Admindashboard />
               </ProtectedRoute>
             }
           />

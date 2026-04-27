@@ -1,43 +1,250 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
+/* ─── Design Tokens ────────────────────────────────────────────── */
+const token = {
+  primary: "#4f46e5",
+  primaryLight: "#6366f1",
+  primaryGlow: "rgba(79,70,229,0.18)",
+  indigo50: "#eef2ff",
+  slate100: "#f1f5f9",
+  slate200: "#e2e8f0",
+  slate600: "#475569",
+  slate800: "#1e293b",
+  emerald: "#10b981",
+  emeraldLight: "#d1fae5",
+  amber: "#f59e0b",
+  amberLight: "#fef3c7",
+  red: "#ef4444",
+  redLight: "#fee2e2",
+  surface: "#ffffff",
+  radius: "14px",
+  shadow: "0 4px 24px rgba(79,70,229,0.10)",
+  shadowHover: "0 8px 32px rgba(79,70,229,0.16)",
+};
+
+/* ─── Page Container ───────────────────────────────────────────── */
 export const AvailableContainer = styled.div`
-  margin: 10px 0px;
-  padding: 0px 10px;
+  margin: 16px 0;
+  padding: 0 12px;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
 `;
 
+/* ─── Header Banner ────────────────────────────────────────────── */
 export const HeadingTable = styled.div`
-  background: ${({ theme }) => theme.colors.gradientAction || theme.colors.primary};
-  border: none;
-  border-radius: 12px;
-  padding: 20px 24px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: ${token.radius};
+  padding: 28px 32px;
   margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35);
   text-align: center;
-`;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
 
-export const TableWrapper = styled.div`
-  width: 100%;
-  overflow-x: auto;
-  background-color: ${({ theme }) => theme.colors.surface || theme.colors.background};
-  backdrop-filter: ${({ theme }) => theme.colors.blur || "none"};
-  -webkit-backdrop-filter: ${({ theme }) => theme.colors.blur || "none"};
-  border-radius: 16px;
-  border: ${({ theme }) => theme.colors.glassBorder || `1px solid ${theme.colors.border}`};
-  box-shadow: ${({ theme }) => theme.colors.shadowMain || "0 4px 10px rgba(0,0,0,0.05)"};
-  padding: 20px;
-  
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  &:hover {
-    box-shadow: ${({ theme }) => theme.colors.shadowHover || "0 10px 25px rgba(0,0,0,0.1)"};
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
   }
 `;
 
 export const H2 = styled.h2`
-  color: ${({ theme }) => theme.colors.surface};
-  font-size: 24px;
-  font-weight: 600;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin: 0 0 4px;
 `;
 
+export const H2Sub = styled.p`
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 16px;
+  margin: 0;
+  font-weight: 400;
+`;
+
+/* ─── Table Wrapper (Card) ─────────────────────────────────────── */
+export const TableWrapper = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  background: ${token.surface};
+  border-radius: ${token.radius};
+  border: 1px solid ${token.slate200};
+  box-shadow: ${token.shadow};
+  padding: 8px 0;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: ${token.shadowHover};
+  }
+`;
+
+/* ─── Table Elements ───────────────────────────────────────────── */
+export const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+`;
+
+export const THead = styled.thead``;
+
+export const TBody = styled.tbody``;
+
+export const TR = styled.tr`
+  &:not(:last-child) {
+    border-bottom: 1px solid ${token.slate200};
+  }
+
+  &:hover td {
+    background: ${token.indigo50};
+  }
+
+  transition: background 0.15s ease;
+`;
+
+export const TH = styled.th`
+  padding: 14px 16px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: ${token.slate600};
+  background: ${token.slate100};
+  border-bottom: 2px solid ${token.slate200};
+  white-space: nowrap;
+
+  &:first-child {
+    border-radius: 10px 0 0 0;
+    padding-left: 20px;
+  }
+  &:last-child {
+    border-radius: 0 10px 0 0;
+    padding-right: 20px;
+  }
+`;
+
+export const TD = styled.td`
+  padding: 14px 16px;
+  font-size: 14px;
+  color: ${token.slate800};
+  vertical-align: top;
+  line-height: 1.5;
+  background: ${token.surface};
+  transition: background 0.15s ease;
+
+  &:first-child { padding-left: 20px; }
+  &:last-child  { padding-right: 20px; }
+`;
+
+/* ─── Description cell: wraps fully, no truncation ────────────── */
+export const DescriptionCell = styled(TD)`
+  white-space: normal;
+  word-break: break-word;
+  min-width: 180px;
+  max-width: 280px;
+  color: ${token.slate600};
+  font-size: 13px;
+  line-height: 1.6;
+`;
+
+/* ─── Badge Pills ──────────────────────────────────────────────── */
+const badgePalette = {
+  indigo:  { bg: token.indigo50,      color: token.primary },
+  slate:   { bg: token.slate100,      color: token.slate600 },
+  emerald: { bg: token.emeraldLight,  color: "#065f46" },
+};
+
+export const BadgePill = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  ${({ $color = "slate" }) => css`
+    background: ${badgePalette[$color]?.bg || token.slate100};
+    color: ${badgePalette[$color]?.color || token.slate600};
+  `}
+`;
+
+/* ─── Action Buttons ───────────────────────────────────────────── */
+const actionVariants = {
+  edit: {
+    bg: token.indigo50,
+    color: token.primary,
+    hoverBg: token.primary,
+    hoverColor: "#fff",
+  },
+  delete: {
+    bg: token.redLight,
+    color: token.red,
+    hoverBg: token.red,
+    hoverColor: "#fff",
+  },
+  assign: {
+    bg: token.emeraldLight,
+    color: "#065f46",
+    hoverBg: token.emerald,
+    hoverColor: "#fff",
+  },
+};
+
+export const ActionBtn = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease,
+    box-shadow 0.18s ease;
+
+  ${({ $variant = "edit" }) => {
+    const v = actionVariants[$variant];
+    return css`
+      background: ${v.bg};
+      color: ${v.color};
+
+      &:hover {
+        background: ${v.hoverBg};
+        color: ${v.hoverColor};
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px ${v.hoverBg}55;
+      }
+      &:active {
+        transform: scale(0.95);
+      }
+    `;
+  }}
+`;
+
+export const BtnGroup = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+`;
+
+/* ─── Empty State ──────────────────────────────────────────────── */
+export const EmptyState = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+  color: ${token.slate600};
+  font-size: 15px;
+  opacity: 0.7;
+`;
+
+/* ─── Legacy exports kept for other files that import them ─────── */
 export const AvailableTable = styled.div`
   width: 100%;
   display: flex;
@@ -50,116 +257,64 @@ export const ExamRow = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background-color: ${({ theme }) => theme.colors?.surface || '#ffffff'};
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
+  background-color: ${({ theme }) => theme?.colors?.surface || "#fff"};
   border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors?.border || '#e5e7eb'};
-  transition: transform 0.2s, box-shadow 0.2s;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-  }
+  border: 1px solid ${({ theme }) => theme?.colors?.border || "#e5e7eb"};
 `;
 
 export const ExamHeaderRow = styled(ExamRow)`
-  background-color: ${({ theme }) => theme.colors?.primary || '#4f46e5'};
+  background-color: ${({ theme }) => theme?.colors?.primary || "#4f46e5"};
   color: white;
-  border: none;
   font-weight: 600;
-  
-  &:hover {
-    transform: none;
-    box-shadow: none;
-  }
 `;
 
 export const ExamCol = styled.div`
   flex: 1;
-  text-align: left;
   padding: 0 8px;
-  display: flex;
-  align-items: center;
   font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  &:nth-child(1) { flex: 0.5; } /* Sl.No */
-  &:nth-child(2) { flex: 1.5; font-weight: 500; } /* Name */
-  &:nth-child(3) { flex: 0.8; } /* Desc */
-  &:nth-child(4) { flex: 1.2; } /* no ques */
-  &:nth-child(7), &:nth-child(8), &:nth-child(9) { flex: 1.2; justify-content: center; } /* Actions */
 `;
+
 export const ButtonDiv = styled.div`
-display:flex;
-gap:5px;
-`
+  display: flex;
+  gap: 5px;
+`;
 
 export const Add = styled.button`
-  background-color: ${({ theme }) => theme.colors.success};  /* was empty before */
+  background-color: ${({ theme }) => theme?.colors?.success || "#10b981"};
   padding: 10px 18px;
   border: none;
   border-radius: 6px;
-  color: ${({ theme }) => theme.colors.surface};
+  color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-left: 10px;
-
-  &:hover {
-    opacity: 0.85;
-  }
 `;
 
 export const Edit = styled.button`
-    background: ${({ theme }) => theme.colors.secondary};
-  padding: 10px 10px;
+  background: ${({ theme }) => theme?.colors?.secondary || "#e2e8f0"};
+  padding: 10px;
   border: none;
   border-radius: 6px;
-  color:black;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-left: 10px;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.textPrimary};
-    
-    color:white;
-  }
-
-    &:disabled {
-    background: ${({ theme }) => theme.colors.border};
-    cursor: not-allowed;
-  }
 `;
 
 export const Upload = styled.button`
-  background-color: ${({ theme }) => theme.colors.warning};
+  background-color: ${({ theme }) => theme?.colors?.warning || "#f59e0b"};
   padding: 10px 18px;
   border: none;
   border-radius: 6px;
-  color: ${({ theme }) => theme.colors.surface};
+  color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 5px 10px;
-
-  &:hover {
-    opacity: 0.85;
-  }
 `;
 
 export const Delete = styled.button`
-  background-color: ${({ theme }) => theme.colors.error};
-  color: ${({ theme }) => theme.colors.surface};
- padding: 10px 15px;
+  background-color: ${({ theme }) => theme?.colors?.error || "#ef4444"};
+  color: white;
+  padding: 10px 15px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    opacity: 0.85;
-  }
 `;
 
 export const Form = styled.form`
@@ -170,67 +325,37 @@ export const Form = styled.form`
   max-width: 100%;
   margin: 30px auto;
   padding: 30px;
-  border: ${({ theme }) => theme.colors.glassBorder || `1px solid ${theme.colors.border}`};
   border-radius: 20px;
-  background-color: ${({ theme }) => theme.colors.surface || theme.colors.background};
-  backdrop-filter: ${({ theme }) => theme.colors.blur || "none"};
-  -webkit-backdrop-filter: ${({ theme }) => theme.colors.blur || "none"};
-  box-shadow: ${({ theme }) => theme.colors.shadowMain || "0 6px 20px rgba(0, 0, 0, 0.08)"};
+  background-color: ${({ theme }) => theme?.colors?.surface || "#fff"};
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 `;
 
 export const Select = styled.select`
   padding: 8px 12px;
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.textPrimary};
+  border: 1px solid ${({ theme }) => theme?.colors?.border || "#e5e7eb"};
 `;
 
-export const Option = styled.option`
-  background-color: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.textPrimary};
-`;
+export const Option = styled.option``;
 
 export const Input = styled.input`
   padding: 12px 14px;
   border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme?.colors?.border || "#e5e7eb"};
   background-color: transparent;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.textSecondary};
-  }
 `;
 
 export const Button = styled.button`
-background-color: ${({ theme }) => theme.colors.primary};
-color: ${({ theme }) => theme.colors.surface};
-padding: 10px 15px;
+  background-color: ${({ theme }) => theme?.colors?.primary || "#4f46e5"};
+  color: white;
+  padding: 10px 15px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    opacity: 0.85;
-  }
 `;
 
 export const ButtonSecondary = styled(Button)`
-  background-color: ${({ theme }) => theme.colors.success};
-
-  &:hover {
-    opacity: 0.85;
-  }
+  background-color: ${({ theme }) => theme?.colors?.success || "#10b981"};
 `;
-export const ExamUpdate = styled.a`
 
-`
+export const ExamUpdate = styled.a``;
