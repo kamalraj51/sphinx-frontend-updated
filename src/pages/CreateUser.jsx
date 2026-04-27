@@ -5,6 +5,7 @@ import { Button, Card, Container, Form, FormGroup, Input, Label, Title } from ".
 import { RegisterError } from "../styles/SignupStyle";
 import { H2, HeadingTable } from "../styles/AvailableExamStyle";
 import { RedSpan } from "../styles/FontsStyle";
+import { toast } from "sonner";
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -77,12 +78,15 @@ const CreateUser = () => {
         },
         body: JSON.stringify(data),
       });
-
+      const data=await response.json()
       if (response.ok) {
         // navigate("/");
+        
         setShow(true)
+        toast.success(data.successMessage)
+       
       } else {
-        console.error("Failed to add user");
+        toast.error(data.errorMessage);
       }
     } catch (error) {
       console.error("Error:", error);

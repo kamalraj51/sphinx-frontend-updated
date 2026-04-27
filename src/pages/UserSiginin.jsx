@@ -83,7 +83,7 @@ const UserSignin = () => {
 
     try {
       const response = await fetch(
-        "https://localhost:8443/sphinx/api/user/signIn",
+        "https://localhost:8443/sphinx/api/user/login",
         {
           method: "POST",
           headers: {
@@ -93,6 +93,7 @@ const UserSignin = () => {
         },
       );
       const data = await response.json();
+      console.log(data)
 
       if (!response.ok) {
         console.log("not login...");
