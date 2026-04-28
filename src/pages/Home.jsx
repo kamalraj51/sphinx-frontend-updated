@@ -10,21 +10,17 @@ import { useNavigate } from 'react-router-dom'
 const Home = () => {
   const navigate=useNavigate()
    const {  role } = useSelector((state) => state.auth);
-   if (role !== "admin") {
-    return (
-      navigate("/userdashboard")
-    );
-  }
-  return (
-    <>
-     
-      <Layout>
-      <AvailableExam></AvailableExam>
-      
-    </Layout>
-    </>
-    
-  )
-}
+    if (role && role !== "SPX_ADMIN") {
+      navigate("/userdashboard");
+    }
+  
 
-export default Home
+  console.log("done");
+  return (
+    <Layout>
+      <AvailableExam />
+    </Layout>
+  );
+};
+
+export default Home;

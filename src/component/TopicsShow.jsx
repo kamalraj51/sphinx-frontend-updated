@@ -69,7 +69,7 @@ const TopicsShow = () => {
               backgroundColor: "#f59e0b",
             }}
           >
-            <UploadCloud size={18} /> Upload Question
+            <UploadCloud size={18} /> Upload Questions
           </Button>
         </Buttons>
 
@@ -106,7 +106,7 @@ const TopicsShow = () => {
                       gap: "8px",
                     }}
                   >
-                    <FileQuestion size={16} /> Show Question
+                    <FileQuestion size={16} /> Show Questions
                   </Button>
                 </Buttons>
               </ContentQues>

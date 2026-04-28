@@ -28,7 +28,7 @@ import {
 } from "../styles/SignupStyle";
 import { useDispatch, useSelector } from "react-redux";
 
-import { login,setRole } from "../reducer/authSlice";
+import { login, setRole } from "../reducer/authSlice";
 import Header from "../component/Header";
 //riswan
 const UserSignin = () => {
@@ -78,7 +78,7 @@ const UserSignin = () => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
-  
+
     setApiError("");
 
     try {
@@ -99,33 +99,33 @@ const UserSignin = () => {
 
         setApiError(data.message || "invalid credinatilas ");
 
-
         return;
       }
-      console.log("h")
+      console.log("h");
       //sucess =>redirect
-    dispatch(
-  login({
-    userLoginId: formData.userLoginId,
-    role: data.role,
-  })
-);
-      
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("data full", data);
+      console.log("data.role ", data.result.role);
 
-     
-      
+      dispatch(
+        login({
+          userLoginId: formData.userLoginId,
+          role: data.result.role,
+        }),
+      );
 
-       
-      if (data.role == "admin") {
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-       
-       navigate("/adminhome", { state: { userLoginId: formData.userLoginId } });
-      } else if (data.role === "user") {
-       
+      if (data.role == "SPX_ADMIN") {
+        console.log("admin called");
+        navigate("/adminhome", {
+          state: { userLoginId: formData.userLoginId },
+        });
+      } else if (data.role === "SPX_EXAMINEE") {
+        console.log("user called");
         navigate("/userdashboard");
+      } else {
+        navigate("/");
       }
-      
     } catch (err) {
       setApiError("Network error. Please try again.");
     } finally {
@@ -142,7 +142,7 @@ const UserSignin = () => {
           <LoginTitle>SPHINX</LoginTitle>
 
           <LoginForm onSubmit={handleSubmit}>
-            <h2>SignIn</h2>
+            <h2>Sign In</h2>
             {apiError && <ApiError>{apiError}</ApiError>}
 
             <FieldWrapper>
@@ -152,7 +152,7 @@ const UserSignin = () => {
                 value={formData.userLoginId}
                 onChange={handleForm}
               />
-              <FloatingLabel>Username</FloatingLabel>
+              <FloatingLabel>User name</FloatingLabel>
               {errors.userLoginId && (
                 <LoginError>{errors.userLoginId}</LoginError>
               )}

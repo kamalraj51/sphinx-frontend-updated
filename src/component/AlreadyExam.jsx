@@ -12,7 +12,7 @@ const AlreadyExam = ({ examId }) => {
     if (examId) {
       getAll()
     }
-  }, [examId]) // ✅ FIXED
+  }, [examId])  
 
   const handleDeleteExam = async (item) => {
     try {

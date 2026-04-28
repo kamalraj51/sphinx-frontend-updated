@@ -13,66 +13,65 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const { isAuthenticated, role } = useSelector((state) => state.auth);
+  console.log("role ", role);
 
-  
-  
-
-  
-  if (role !== "admin") {
+  if (role !== "SPX_ADMIN") {
     return <UserHeader />;
   }
 
- 
   return (
     <HeaderMain>
       <div style={{ display: "flex", columnGap: "30px", alignItems: "center" }}>
         <img src="/apple-touch-icon.png" width="50px" alt="logo" />
-        <NaviButton />
       </div>
 
-     {isAuthenticated? <> <MenuToggle onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </MenuToggle>
+      {isAuthenticated ? (
+        <>
+          {" "}
+          <MenuToggle onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </MenuToggle>
+          <Menu $isOpen={isOpen}>
+            <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
+              Home
+            </NavLink>
 
-      <Menu $isOpen={isOpen}>
-        <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
-          Home
-        </NavLink>
+            <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
+              Manage Questions
+            </NavLink>
 
-        <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
-          Manage Question
-        </NavLink>
+            <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+              Add User
+            </NavLink>
 
-        <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
-          Add User
-        </NavLink>
+            <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
+              Create Assessment
+            </NavLink>
 
-        <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
-          Create Assessment
-        </NavLink>
+            <NavLink to="/topic-master" onClick={() => setIsOpen(false)}>
+              Topic Master
+            </NavLink>
 
-        <NavLink to="/topic-master" onClick={() => setIsOpen(false)}>
-          Topic Master
-        </NavLink>
+            <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
+              Add Admin
+            </NavLink>
 
-        <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
-          Add Admin
-        </NavLink>
-
-        <NavLink
-          to="/"
-          onClick={async (e) => {
-            e.preventDefault();
-            setIsOpen(false);
-            setLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            setLoading(false);
-            dispatch(logout());
-          }}
-        >
-          {loading ? "Signing out..." : "Sign Out"}
-        </NavLink>
-      </Menu></>:null}
+            <NavLink
+              to="/"
+              onClick={async (e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                setLoading(true);
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                setLoading(false);
+                dispatch(logout());
+              }}
+            >
+              {loading ? "Signing out..." : "Sign Out"}
+            </NavLink>
+          </Menu>
+        </>
+      ) : null}
     </HeaderMain>
   );
 };
