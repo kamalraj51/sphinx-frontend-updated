@@ -149,6 +149,9 @@ const ExamTDetails = (props) => {
           },
           body: JSON.stringify(updatedPayload || {}),
         },
+
+       
+
       );
 
       const result = await response.json();
@@ -156,6 +159,7 @@ const ExamTDetails = (props) => {
       if (!response.ok) {
         toast.error(result.error);
         return;
+
       }
 
       toast.success(result.successMessage);

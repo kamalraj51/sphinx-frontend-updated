@@ -21,7 +21,9 @@ const ExamTopic = () => {
    const { examId } = useParams();
    console.log(examId)
  const [loading,setLoading]=useState(false)
+   const navigate = useNavigate();
   const dispatch=useDispatch()
+  const userId = useSelector((state) => state.auth.user);
   let [data, setData] = useState({
     examTopicName: "",
     topicId: "",
@@ -83,7 +85,7 @@ const ExamTopic = () => {
       console.log(data.topicId)
       try {
         const res = await fetch(
-          "https://localhost:8443/sphinx/api/topic/gettopics",
+          `https://localhost:8443/sphinx/api/topic/gettopics?userLoginId=${encodeURIComponent(userId)}`,
         ); //id, name
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -123,6 +125,14 @@ const ExamTopic = () => {
         </Field>
 
         <Button type="submit" disabled={loading}>{loading?"submitting":"add topic"}</Button>
+         <p style={{ textAlign:'center' }}>
+           Create new topic?{" "}
+          <a onClick={()=>{
+            navigate('/topic-master')
+          }} style={{ color: "blue", cursor:'pointer'}}>
+          Create topic
+         </a>
+        </p>
       </Form>
      
     </Container>

@@ -321,11 +321,12 @@ const TopicsShow = () => {
   const [popup, setPopup]           = useState(false);
   const navigate = useNavigate();
   const apiRefresh = useSelector((state) => state.api.value);
+  const userId = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const res = await fetch("https://localhost:8443/sphinx/api/topic/gettopics");
+        const res = await fetch(`https://localhost:8443/sphinx/api/topic/gettopics?userLoginId=${encodeURIComponent(userId)}`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setTopics(data.topic || []);
