@@ -1,23 +1,3 @@
-// UserAttendAssessment.jsx
-//
-// ─── HOW THE TIMER WORKS ───────────────────────────────────────────────────
-//  Userdashboard passes `duration` (minutes) + `examName` via React Router
-//  route state when the student clicks "Start Examination":
-//
-//    <NavLink to={`/exam-attend/${exam.examId}`}
-//             state={{ duration: exam.duration, examName: exam.examName }}>
-//
-//  This component reads it immediately with useLocation().state.duration,
-//  converts to seconds, and starts the countdown right away — no API needed.
-//  When the timer hits 0, the exam auto-submits.
-//
-// ─── OTHER LOGIC ──────────────────────────────────────────────────────────
-//  • Save & Next  → calls submit API only if an answer is selected, then
-//                   always moves to the next question
-//  • Skip         → never calls submit API, just moves to next question
-//  • Submit Exam  → appears ONLY on the last question
-// ─────────────────────────────────────────────────────────────────────────
-
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Layout from "../component/Layout";

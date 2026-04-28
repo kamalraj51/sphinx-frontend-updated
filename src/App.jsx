@@ -254,7 +254,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examresult"
+            path="/examresult/:examId/:userId"
             element={
               <ProtectedRoute>
                 <Result />
