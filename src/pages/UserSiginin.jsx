@@ -97,7 +97,7 @@ const UserSignin = () => {
       if (!response.ok) {
         console.log("not login...");
 
-        setApiError(data.message || "invalid credinatilas ");
+        setApiError(data.message || "invalid credentials ");
 
         return;
       }

@@ -30,7 +30,12 @@ const SelectWrap = styled.div`
   gap: 10px;
   color: ${({ theme }) => theme.colors?.textPrimary || "#333"};
 `;
-
+export const QuesGrid = styled.div`
+  display: grid;
+grid-template-columns: 20px 60px 735px 215px 1px;
+  align-items: center;
+  gap: 10px;
+`;
 const Checkbox = styled.input`
   width: 18px;
   height: 18px;
@@ -195,6 +200,15 @@ const ShowQuestion = () => {
             )}
           </TopBar>
         )}
+                <ContentQues>
+                <QuesGrid>
+                  <div></div> 
+                  <div>S.No.</div>
+                  <div>Question Details</div>
+                  <div>Question Type</div>
+                  <div>Action</div>
+                </QuesGrid>
+                </ContentQues>
       
 
 

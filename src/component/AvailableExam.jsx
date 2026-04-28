@@ -226,8 +226,10 @@ const AvailableExam = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
+  
   const message = location.state?.message;
 
+  
   const getAllExam = async () => {
     try {
       const response = await fetch(
@@ -241,11 +243,13 @@ const AvailableExam = () => {
     }
   };
 
+  
   const handleDeleteClick = (examId) => {
     setItemToDelete(examId);
     setModalOpen(true);
   };
 
+  
   const handleExamDelete = async () => {
     if (!itemToDelete) return;
 
@@ -287,6 +291,7 @@ const AvailableExam = () => {
     }
   };
 
+  
   useEffect(() => {
     if (message) {
       toast.success(message);
@@ -298,6 +303,7 @@ const AvailableExam = () => {
     }
   }, [message, navigate, location.pathname]);
 
+  
   useEffect(() => {
     if (userId) {
       getAllExam();
@@ -321,7 +327,7 @@ const AvailableExam = () => {
         <AvailableTable>
           <ExamHeaderRow>
             <ExamCol>Sl.No</ExamCol>
-            <ExamCol>Assessment Name</ExamCol>
+            <ExamCol>Exam Name</ExamCol>
             <ExamCol>Description</ExamCol>
             <ExamCol>No of Question</ExamCol>
             <ExamCol>Duration</ExamCol>

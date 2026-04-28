@@ -150,7 +150,7 @@ const ExamTDetails = (props) => {
           body: JSON.stringify(updatedPayload || {}),
         },
 
-        body: JSON.stringify(updatedPayload || {})
+       
 
       );
 

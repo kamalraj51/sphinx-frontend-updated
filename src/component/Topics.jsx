@@ -38,7 +38,7 @@ const Checkbox = styled.input`
 const Topics = () => {
     const [topics, setTopics] = useState([]);
     const [loading, setLoading] = useState(false);
-
+      const userId = useSelector((state) => state.auth.user);
     const dispatch = useDispatch()
     const apiRefresh = useSelector((state) => state.api.value);
 
@@ -57,7 +57,7 @@ const Topics = () => {
     useEffect(() => {
         const fetchTopics = async () => {
             try {
-                const res = await fetch("https://localhost:8443/sphinx/api/topic/gettopics");
+                const res = await fetch(`https://localhost:8443/sphinx/api/topic/gettopics?userLoginId=${encodeURIComponent(userId)}`);
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
@@ -84,7 +84,8 @@ const Topics = () => {
 
     const performDelete = async (topicId) => {
         try {
-            const response = await fetch(`https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}`, {
+            const response = await fetch( `https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}&userLoginId=${encodeURIComponent(userId)}`
+, {
                 method: "DELETE",
             });
             if (!response.ok) throw new Error("Failed to delete topic");
@@ -132,7 +133,7 @@ const Topics = () => {
     };
 
     const updateTopic = async (topicId, topicName) => {
-        let topic = { "topicId": topicId, "topicName": topicName };
+        let topic = { "topicId": topicId, "topicName": topicName,"userLoginId":userId };
         setLoading(true);
 
         try {

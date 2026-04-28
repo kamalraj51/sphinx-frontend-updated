@@ -10,7 +10,7 @@ import {
   TopicError,
 } from "../styles/AddTopicStyle";
 import Topics from "./Topics";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggle } from "../reducer/apiReduce";
 import { HeadingTable, H2 } from "../styles/AvailableExamStyle";
 import { RedSpan } from "../styles/FontsStyle";
@@ -18,6 +18,7 @@ import { toast } from "sonner";
 
 
 const AddTopic = () => {
+  const userId = useSelector((state) => state.auth.user);
   const [topicName, setTopicName] = useState("");
   const [error, setError] = useState("");
   const [apiError, setApiError] = useState("");
@@ -64,7 +65,7 @@ const AddTopic = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ topicName }),
+          body: JSON.stringify({ topicName,userId }),
         },
       );
       const data = await response.json();
