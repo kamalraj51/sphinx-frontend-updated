@@ -88,7 +88,7 @@ const App = () => {
             }
           />
 
-          <Route path="/Create-User" element={<CreateUser />} />
+          
 
           {/* Protected Routes (Require Authentication) */}
           <Route
@@ -129,6 +129,7 @@ const App = () => {
               <ProtectedRoute>
                 <CreateUser />
               </ProtectedRoute>
+                
             }
           />
           <Route

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled, { keyframes, css } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
@@ -31,43 +31,36 @@ const slideIn = keyframes`
 ═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   min-height: 100vh;
-  
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
 `;
 
 /* ═══════════════════════════════════════════
-   HERO HEADER
+   HERO HEADER  ← blue palette
 ═══════════════════════════════════════════ */
-const Hero = styled.div`
+const HeroBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px 32px;
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  border-radius: 16px;
+  margin-bottom: 24px;
   position: relative;
-  
-  padding: 44px 40px 100px;
   overflow: hidden;
 
-  /* Teal glow blob */
+  /* Glow blob */
   &::before {
     content: '';
     position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 320px;
-    height: 320px;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
     background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
-  }
-
-  /* Bottom wave */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 50px;
-    background: #f0fdf9;
-    clip-path: ellipse(60% 100% at 50% 100%);
   }
 `;
 
@@ -75,10 +68,9 @@ const HeroInner = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
   flex-wrap: wrap;
-  gap: 20px;
 `;
 
 const HeroLeft = styled.div`
@@ -88,15 +80,15 @@ const HeroLeft = styled.div`
 `;
 
 const HeroIconRing = styled.div`
-  width: 58px;
-  height: 58px;
-  border-radius: 18px;
-  
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1.5px solid rgba(52, 211, 153, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-
+  color: #34d399;
   flex-shrink: 0;
 `;
 
@@ -104,10 +96,10 @@ const HeroTitleGroup = styled.div``;
 
 const HeroTitle = styled.h1`
   color: #ffffff;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
-  margin: 0 0 6px;
-  letter-spacing: -0.5px;
+  margin: 0 0 5px;
+  letter-spacing: -0.4px;
 `;
 
 export const HeroBadge = styled.span`
@@ -115,7 +107,7 @@ export const HeroBadge = styled.span`
   align-items: center;
   gap: 5px;
   background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(52, 211, 153, 0.35);
   color: #34d399;
   font-size: 12px;
   font-weight: 600;
@@ -124,14 +116,22 @@ export const HeroBadge = styled.span`
   letter-spacing: 0.3px;
 `;
 
+const HeroDot = styled.span`
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  display: inline-block;
+`;
+
+/* Upload button — amber accent */
 const UploadBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 22px;
+  padding: 11px 20px;
   border-radius: 12px;
-  border: 1.5px solid rgba(245, 158, 11, 0.4);
-  background: rgba(245, 158, 11, 0.1);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.12);
   color: #fbbf24;
   font-size: 14px;
   font-weight: 700;
@@ -139,14 +139,15 @@ const UploadBtn = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
 
   &:hover {
-    background: rgba(245, 158, 11, 0.2);
+    background: rgba(245, 158, 11, 0.22);
     border-color: rgba(245, 158, 11, 0.7);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
   }
-
   &:active { transform: scale(0.97); }
 `;
 
@@ -154,7 +155,6 @@ const UploadBtn = styled.button`
    CONTENT AREA
 ═══════════════════════════════════════════ */
 const ContentArea = styled.div`
-  
   position: relative;
   z-index: 2;
   padding: 0 32px;
@@ -173,7 +173,24 @@ const TableCard = styled.div`
   margin: 0 auto;
 `;
 
-/* ── Table Header Row ── */
+/* Stats strip */
+const StatsStrip = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #fafbff;
+`;
+
+const StatItem = styled.div`
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 500;
+  strong { color: #1e293b; font-weight: 800; }
+`;
+
+/* Table header row — blue tint */
 const TableHead = styled.div`
   display: grid;
   grid-template-columns: 60px 1fr 160px;
@@ -188,11 +205,10 @@ const HeadCell = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: #059669;
-
   &:last-child { text-align: center; }
 `;
 
-/* ── Topic Row ── */
+/* Topic row */
 const TopicRow = styled.div`
   display: grid;
   grid-template-columns: 60px 1fr 160px;
@@ -204,10 +220,7 @@ const TopicRow = styled.div`
   animation-delay: ${({ $index }) => $index * 0.04}s;
 
   &:last-child { border-bottom: none; }
-
-  &:hover {
-    background: #f0fdf4;
-  }
+  &:hover { background: #f0fdf4; }
 `;
 
 const RowIndex = styled.span`
@@ -223,6 +236,7 @@ const TopicInfo = styled.div`
   gap: 12px;
 `;
 
+/* Icon dot — blue tint */
 const TopicIconDot = styled.div`
   width: 36px;
   height: 36px;
@@ -243,6 +257,7 @@ const TopicLabel = styled.span`
   line-height: 1.3;
 `;
 
+/* Action button — blue gradient */
 const ShowBtn = styled.button`
   display: flex;
   align-items: center;
@@ -266,9 +281,7 @@ const ShowBtn = styled.button`
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
   }
-
   &:active { transform: scale(0.97); }
-
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -276,7 +289,7 @@ const ShowBtn = styled.button`
   }
 `;
 
-/* ── Empty State ── */
+/* Empty state */
 const EmptyState = styled.div`
   padding: 64px 32px;
   text-align: center;
@@ -286,46 +299,27 @@ const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
-
   svg { opacity: 0.3; }
 `;
 
-/* ── Stats strip above table ── */
-const StatsStrip = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px;
-  border-bottom: 1px solid #e2e8f0;
-  background: #fafbff;
-`;
-
-const StatItem = styled.div`
-  font-size: 12.5px;
-  color: #64748b;
-  font-weight: 500;
-
-  strong {
-    color: #1e293b;
-    font-weight: 800;
-  }
-`;
-
 /* ═══════════════════════════════════════════
-   COMPONENT
+   COMPONENT  — logic untouched
 ═══════════════════════════════════════════ */
 const TopicsShow = () => {
-  const [topics, setTopics]         = useState([]);
-  const [loading, setLoading]       = useState(false);
+  const [topics, setTopics]           = useState([]);
+  const [loading, setLoading]         = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [popup, setPopup]           = useState(false);
-  const navigate = useNavigate();
-  const apiRefresh = useSelector((state) => state.api.value);
+  const [popup, setPopup]             = useState(false);
+  const navigate    = useNavigate();
+  const apiRefresh  = useSelector((state) => state.api.value);
+  const userId      = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const res = await fetch("https://localhost:8443/sphinx/api/topic/gettopics");
+        const res = await fetch(
+          `https://localhost:8443/sphinx/api/topic/gettopics?userLoginId=${encodeURIComponent(userId)}`
+        );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
         setTopics(data.topic || []);
@@ -341,36 +335,30 @@ const TopicsShow = () => {
 
   return (
     <Layout>
-      
+      <PageWrap>
+
         {/* ── Hero ── */}
-       <HeadingTable
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+        <HeroBar>
           <HeroInner>
             <HeroLeft>
               <HeroIconRing>
-                <Layers size={26} />
+                <Layers size={24} />
               </HeroIconRing>
               <HeroTitleGroup>
                 <HeroTitle>Topic Based Questions</HeroTitle>
                 <HeroBadge>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#34d399", display: "inline-block" }} />
+                  <HeroDot />
                   {topics.length} Topics Available
                 </HeroBadge>
               </HeroTitleGroup>
             </HeroLeft>
-
           </HeroInner>
-            <UploadBtn onClick={() => setPopup(!popup)}>
-              <UploadCloud size={17} />
-              Upload Questions
-            </UploadBtn>
-        </HeadingTable>
+
+          <UploadBtn onClick={() => setPopup(!popup)}>
+            <UploadCloud size={17} />
+            Upload Questions
+          </UploadBtn>
+        </HeroBar>
 
         {/* ── Upload Popup ── */}
         {popup && <QuestionUpload handlePop={() => setPopup(false)} />}
@@ -438,7 +426,8 @@ const TopicsShow = () => {
             />
           </div>
         </ContentArea>
-      
+
+      </PageWrap>
     </Layout>
   );
 };

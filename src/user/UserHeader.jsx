@@ -13,7 +13,7 @@ const UserHeader = () => {
   return (
     <HeaderMain>
       <Logo>
-        <img src="/apple-touch-icon.png" width="50px" alt="logo" />
+        <img src="src/assets/letter-s.png"  width="50px" alt="logo" />
       </Logo>
 
      {isAuthenticated? <>
