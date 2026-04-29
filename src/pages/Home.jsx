@@ -3,18 +3,13 @@ import Layout from '../component/Layout'
 
 import AvailableExam from '../component/AvailableExam'
 import Header from '../component/Header'
+import Userdashboard from '../Dashboard/Userdashboard'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
-  return (
-    <>
-     
-      <Layout>
-      <AvailableExam></AvailableExam>
-      
-    </Layout>
-    </>
-    
-  )
-}
+  return (<></>
+  );
+};
 
-export default Home
+export default Home;

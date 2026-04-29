@@ -24,13 +24,14 @@ import TopicsShow from "./component/TopicsShow";
 import CreateUser from "./pages/CreateUser";
 import ExamUpdate from "./pages/ExamUpdate";
 
-
 import ExamTDetails from "./component/ExamTDetails";
 import Header from "./component/Header";
 
 import Userdashboard from "./Dashboard/Userdashboard";
 import ExamAttend from "./pages/ExamAttend";
-
+import UserAttendAssessment from "./user/UserAttendAssessment";
+import Result from "./pages/Result";
+import Admindashboard from "./Dashboard/Admindashboard";
 
 // 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
@@ -52,10 +53,11 @@ const ProtectedRoute = ({ children }) => {
 
 // 2. Public Route: Prevents logged-in users from seeing the Login page
 const PublicRoute = ({ children }) => {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  if (isAuthenticated) {
+  const { isAuthenticated, role } = useSelector((state) => state.auth);
+  if (isAuthenticated && role === "SPX_ADMIN") {
     return <Navigate to="/adminhome" replace />;
+  } else if (isAuthenticated && role === "SPX_EXAMINEE") {
+    return <Navigate to="/userdashboard" replace />;
   }
 
   return children;
@@ -93,7 +95,7 @@ const App = () => {
             path="/adminhome"
             element={
               <ProtectedRoute>
-                <Home />
+                <Admindashboard />
               </ProtectedRoute>
             }
           />
@@ -118,6 +120,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Getalluser />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Create-User"
+            element={
+              <ProtectedRoute>
+                <CreateUser />
               </ProtectedRoute>
             }
           />
@@ -158,8 +168,6 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <CreateExamTopics />
-               
-               
               </ProtectedRoute>
             }
           />
@@ -228,24 +236,31 @@ const App = () => {
             }
           />
           {/* user flow */}
-            <Route
+          <Route
             path="/userdashboard"
             element={
               <ProtectedRoute>
-                <Userdashboard/>
+                <Userdashboard />
               </ProtectedRoute>
             }
           />
 
-           <Route
+          <Route
             path="/exam-attend/:examId"
             element={
               <ProtectedRoute>
-                <ExamAttend/>
+                <ExamAttend />
               </ProtectedRoute>
             }
           />
-          
+          <Route
+            path="/examresult"
+            element={
+              <ProtectedRoute>
+                <Result />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Fallback for 404 */}
           <Route path="/*" element={<NoPage />} />

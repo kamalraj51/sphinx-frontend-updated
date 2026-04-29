@@ -21,8 +21,8 @@ export const  HeaderMain = styled.div`
   transition: all 0.3s ease;
 `;
 
-export const Logo = styled.div`
-  h2 {
+export const Logo = styled.h2`
+  
     color: ${({ theme }) => theme.colors.primary};
     font-weight: 800;
     font-size: 1.5rem;
@@ -30,7 +30,7 @@ export const Logo = styled.div`
     background: ${({ theme }) => theme.colors.gradientAction || theme.colors.primary};
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
+  
 `;
 
 export const Menu = styled.div`

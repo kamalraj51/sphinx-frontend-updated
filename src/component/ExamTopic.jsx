@@ -27,6 +27,7 @@ const ExamTopic = () => {
     topicId: "",
     examId: examId,
     topicPassPercentage: "",
+    weightage: "",
   });
 
 
@@ -118,6 +119,11 @@ const ExamTopic = () => {
         </Field>
 
         <Field>
+          
+          <Label for="topicPassPercentage">Topic Name</Label>
+          <Input type="text" name="examTopicName" value={data.topicName} onChange={handleinput}></Input>
+          <Label for="topicPassPercentage">Weightage %</Label>
+          <Input type="text" name="weightage" value={data.topicPassPercentage} onChange={handleinput}></Input>
           <Label for="topicPassPercentage">percentage</Label>
           <Input type="text" name="topicPassPercentage" value={data.topicPassPercentage} onChange={handleinput}></Input>
         </Field>

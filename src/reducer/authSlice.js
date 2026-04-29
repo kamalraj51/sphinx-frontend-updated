@@ -12,19 +12,24 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.isAuthenticated = true;
-      state.user = action.payload.userLoginId;
-      localStorage.setItem('userLoginId', action.payload.userLoginId);
-    },
+  const { userLoginId, role } = action.payload;
+
+  state.isAuthenticated = true;
+  state.user = userLoginId;
+  state.role = role;
+
+  localStorage.setItem("userLoginId", userLoginId);
+  localStorage.setItem("role", role);
+},
     logout: (state) => {
-      state.isAuthenticated = false;
-      state.user = null;
-      localStorage.removeItem('userLoginId');
-    },
-    setRole:(state,action)=>{
-      state.role=action.payload
-       localStorage.setItem('userLoginId', action.payload);
-    }
+  state.isAuthenticated = false;
+  state.user = null;
+  state.role = null;
+
+  localStorage.removeItem("userLoginId");
+  localStorage.removeItem("role"); 
+}
+    
   },
 });
 

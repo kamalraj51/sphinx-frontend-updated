@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { toast } from "sonner";
 import { CheckCircle2, ChevronDown } from "lucide-react";
 import { H2 } from "../styles/ExamTDetails.style";
+import { useSelector } from "react-redux";
 
 export const PremiumWrapper = styled.div`
   max-width: 900px;
@@ -69,7 +70,7 @@ export const FormGroup = styled.div`
   }
 `;
 
-export const Input = styled.textarea`
+export const Input = styled.input`
   width: 100%;
   padding: 14px 16px;
   border-radius: 12px;
@@ -77,12 +78,15 @@ export const Input = styled.textarea`
   background: ${({ theme }) => theme.colors?.background || "#f9fafb"};
 `;
 
+
+
 export const Textarea = styled.textarea`
   width: 100%;
   padding: 14px 16px;
   border-radius: 12px;
   border: 1px solid #ddd;
   min-height: 120px;
+  background: ${({ theme }) => theme.colors?.background || "#f9fafb"};
 `;
 
 export const OptionsGrid = styled.div`
@@ -114,7 +118,7 @@ const CreateQuestion = () => {
   const [singleAnswer, setSingleAnswer] = useState("A");
   const [textAnswer, setTextAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const userId = useSelector((state) => state.auth.user);
 
 
   const { topicID, tname } = useParams();
@@ -134,6 +138,7 @@ const CreateQuestion = () => {
     answer: "",
     numAnswers: 1,
     questionTypeId: "SINGLE_CHOICE",
+    userLoginId:userId
   });
 
   useEffect(() => {
@@ -282,19 +287,24 @@ const CreateQuestion = () => {
                         />
                       )}
 
-                      <Input
-                        id={`option${opt}`}
-                        value={
-                          questionType === "TRUE_FALSE"
-                            ? opt === "A"
-                              ? "True"
-                              : "False"
-                            : formData[`option${opt}`]
-                        }
-                        onChange={handleChange}
-                        readOnly={questionType === "TRUE_FALSE"}
-                        placeholder={`Option ${opt}`}
-                      />
+                      {questionType === "TRUE_FALSE" ? (
+  <Input
+    id={`option${opt}`}
+    value={opt === "A" ? "True" : "False"}
+    disabled
+    readOnly
+    className="your-input-styles"
+  />
+) : (
+  <Textarea
+    id={`option${opt}`}
+    value={formData[`option${opt}`]}
+    onChange={handleChange}
+    placeholder={`Option ${opt}`}
+    rows={1}
+    className="your-input-styles"
+  />
+)}
                     </OptionCard>
                   );
                 })}

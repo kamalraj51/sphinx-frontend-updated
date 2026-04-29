@@ -46,35 +46,35 @@ const CreateExamform = () => {
     let flag = true
     const err = {}
     if (formData.examName.trim() == "") {
-      err.examName = "Exam name is mandatory"
+      err.examName = "Assessment name is mandatory"
       flag = false
     }
 
     if (!durationRegex.test(formData.duration) && formData.duration) {
-      err.duration = "valid duration"
+      err.duration = "enter a duration of at least 10 minutes"
       flag = false
     } else if (formData.duration == "") {
       err.duration = "duration is mandatory"
       flag = false
     }
     if (!noOfQuestionRegex.test(formData.noOfQuestions) && formData.noOfQuestions) {
-      err.noOfQuestions = "should be enter valid noofquestions"
+      err.noOfQuestions = "enter no. of questions of at least 1"
       flag = false
     } else if (formData.noOfQuestions == "") {
-      err.noOfQuestions = "npof questions is a mandatory"
+      err.noOfQuestions = "no. of questions is mandatory"
       flag = false
     }
 
     if (!passPercentageRegex.test(formData.passPercentage) && formData.passPercentage) {
-      err.passPercentage = "should be enter valid pass percentage"
+      err.passPercentage = "enter pass percentage of at least 1"
       flag = false
     } else if (formData.passPercentage == "") {
-      err.passPercentage = "pass percentage is a mandatory"
+      err.passPercentage = "pass percentage is mandatory"
       flag = false
     }
 
     if (formData.description.trim() == "") {
-      err.description = "description is a mandatory"
+      err.description = "description is mandatory"
       flag = false
     }
     if (!flag) {
@@ -102,6 +102,8 @@ const CreateExamform = () => {
       navigate(`/exam-create-topic/${examId}`)
     } else if (!response.ok) {
       const data = await response.json();
+      console.log("error catched");
+      
       setMsg(data.error)
 
     }
