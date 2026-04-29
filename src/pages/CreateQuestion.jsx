@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { toast } from "sonner";
 import { CheckCircle2, ChevronDown } from "lucide-react";
 import { H2 } from "../styles/ExamTDetails.style";
+import { useSelector } from "react-redux";
 
 export const PremiumWrapper = styled.div`
   max-width: 900px;
@@ -117,7 +118,7 @@ const CreateQuestion = () => {
   const [singleAnswer, setSingleAnswer] = useState("A");
   const [textAnswer, setTextAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const userId = useSelector((state) => state.auth.user);
 
 
   const { topicID, tname } = useParams();
@@ -137,6 +138,7 @@ const CreateQuestion = () => {
     answer: "",
     numAnswers: 1,
     questionTypeId: "SINGLE_CHOICE",
+    userLoginId:userId
   });
 
   useEffect(() => {

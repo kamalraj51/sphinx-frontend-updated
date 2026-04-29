@@ -1,6 +1,6 @@
 export const appTheme = {
   colors: {
-    primary: "#4F46E5",       // vibrant indigo
+  primary: "#10B981",       // vibrant indigo
     secondary: "#FFFFFF",     // bright white 
     accent: "#06B6D4",        // cyan highlight
 
@@ -17,7 +17,7 @@ export const appTheme = {
     warning: "#F59E0B",       // amber
     info: "#3B82F6",          // bright blue
 
-    gradientAction: "linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%)",
+    gradientAction: "linear-gradient(135deg, #10B981 0%, #22C55E 50%, #4ADE80 100%)",
     shadowMain: "0 10px 25px rgba(0, 0, 0, 0.05)",
     shadowHover: "0 20px 40px rgba(0, 0, 0, 0.1)",
     glassBorder: "1px solid rgba(255, 255, 255, 0.4)",

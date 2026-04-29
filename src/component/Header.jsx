@@ -22,7 +22,7 @@ const Header = () => {
   return (
     <HeaderMain>
       <div style={{ display: "flex", columnGap: "30px", alignItems: "center" }}>
-        <img src="/apple-touch-icon.png" width="50px" alt="logo" />
+        <img src="src/assets/letter-s.png" width="50px" alt="logo" />
       </div>
 
       {isAuthenticated ? (
@@ -40,9 +40,9 @@ const Header = () => {
               Manage Questions
             </NavLink>
 
-            <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+            {/* <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
               Add User
-            </NavLink>
+            </NavLink> */}
 
             <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
               Create Assessment
@@ -52,9 +52,9 @@ const Header = () => {
               Topic Master
             </NavLink>
 
-            <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
+            {/* <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
               Add Admin
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               to="/"

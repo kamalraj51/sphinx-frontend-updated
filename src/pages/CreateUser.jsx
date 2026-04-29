@@ -9,11 +9,11 @@ import {
   FormGroup,
   Input,
   Label,
-  Title,
 } from "../styles/CreateUser.style";
 import { RegisterError } from "../styles/SignupStyle";
 import { H2, HeadingTable } from "../styles/AvailableExamStyle";
 import { RedSpan } from "../styles/FontsStyle";
+import { toast } from "sonner";
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -31,77 +31,101 @@ const CreateUser = () => {
     firstName: "",
     lastName: "",
     email: "",
-
     role: "SPX_USER",
     userName: "",
   });
-  const firstName = /^[A-Za-z][A-Za-z '\-]{0,49}$/;
-  const lastName = /^[A-Za-z][A-Za-z '\-\.]{0,49}$/;
-  const email = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-  const userName = /^[a-zA-Z0-9_]{3,20}$/;
 
+  // Regex patterns
+  const firstNameRegex = /^[A-Za-z][A-Za-z '\-]{0,49}$/;
+  const lastNameRegex = /^[A-Za-z][A-Za-z '\-\.]{0,49}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+  const userNameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+
+  // Handle input change
   const setValue = (e) => {
-    console.log(e.target.name + e.target.value);
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  // Handle submit
   const handleSubmit = async (e) => {
-    const err = {};
-    //   firstName:"",
-    //   userName:"",
-    //   email:"",
-    //   lastName:""
-
-    // }
+    console.log("form submitted");
+    
     e.preventDefault();
 
-    if (!firstName.test(data.firstName) && data.firstName != "") {
-      err.firstName = "firstname shold be valid name";
-    } else if (data.firstName == "") {
-      err.firstName = "firstname is mandatory";
+    const err = {};
+
+    if (!data.firstName) {
+      err.firstName = "First name is mandatory";
+    } else if (!firstNameRegex.test(data.firstName)) {
+      err.firstName = "First name should be valid";
     }
 
-    if (!lastName.test(data.lastName) && data.lastName != "") {
-      err.lastName = "last Name should be valid lastNmae";
-    } else if (data.lastName == "") {
-      err.lastName = "lastname is mandatory";
+    if (!data.lastName) {
+      err.lastName = "Last name is mandatory";
+    } else if (!lastNameRegex.test(data.lastName)) {
+      err.lastName = "Last name should be valid";
     }
-    if (!email.test(data.email) && data.email != "") {
-      err.email = "email should be valid ";
-    } else if (data.email == "") {
+
+    if (!data.email) {
       err.email = "Email is mandatory";
+    } else if (!emailRegex.test(data.email)) {
+      err.email = "Email should be valid";
     }
-    if (!userName.test(data.userName) && data.userName != "") {
-      err.userName = "username should be valid";
-    } else if (data.userName == "") {
-      err.userName = "userName is mandatory";
+
+    if (!data.userName) {
+      err.userName = "Username is mandatory";
+    } else if (!userNameRegex.test(data.userName)) {
+      err.userName = "Username should be valid";
     }
-    console.log(err);
+
     setErrors(err);
+
+    // 🚫 Stop API call if validation fails
+    if (Object.keys(err).length > 0){
+      console.log("stoped");
+       return};
+
     try {
-      console.log(data);
       const response = await fetch(
         "https://localhost:8443/sphinx/api/user/addUser",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            
           },
+          credentials: "include",
           body: JSON.stringify(data),
-        },
+        }
       );
 
+      const result = await response.json(); // ✅ renamed from "data"
+
       if (response.ok) {
-        // navigate("/");
         setShow(true);
+        toast.success(result.successMessage);
+
+        // Optional: reset form
+        setData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          role: "SPX_USER",
+          userName: "",
+        });
+
+        // Optional: navigate after success
+        // navigate("/");
       } else {
-        console.error("Failed to add user");
+        toast.error(result.errorMessage);
       }
     } catch (error) {
       console.error("Error:", error);
+      toast.error("Something went wrong!");
     }
   };
 
@@ -110,41 +134,66 @@ const CreateUser = () => {
       <HeadingTable>
         <H2>Add User</H2>
       </HeadingTable>
+
       <Container>
-        {/* <Title>Add User</Title> */}
-        {show && <Card>submited successfully</Card>}
+        {show && <Card>Submitted successfully</Card>}
+
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label>
               First Name <RedSpan>*</RedSpan>
             </Label>
-            <Input name="firstName" onChange={setValue} />
+            <Input
+              name="firstName"
+              value={data.firstName}
+              onChange={setValue}
+            />
           </FormGroup>
           {errors.firstName && (
             <RegisterError>{errors.firstName}</RegisterError>
           )}
+
           <FormGroup>
             <Label>
               Last Name <RedSpan>*</RedSpan>
             </Label>
-            <Input name="lastName" onChange={setValue} />
+            <Input
+              name="lastName"
+              value={data.lastName}
+              onChange={setValue}
+            />
           </FormGroup>
-          {errors.lastName && <RegisterError>{errors.lastName}</RegisterError>}
+          {errors.lastName && (
+            <RegisterError>{errors.lastName}</RegisterError>
+          )}
+
           <FormGroup>
             <Label>
-              UserName <RedSpan>*</RedSpan>
+              Username <RedSpan>*</RedSpan>
             </Label>
-            <Input name="userName" onChange={setValue} type="text" />
+            <Input
+              name="userName"
+              value={data.userName}
+              onChange={setValue}
+            />
           </FormGroup>
-          {errors.userName && <RegisterError>{errors.userName}</RegisterError>}
+          {errors.userName && (
+            <RegisterError>{errors.userName}</RegisterError>
+          )}
 
           <FormGroup>
             <Label>
               Email Address <RedSpan>*</RedSpan>
             </Label>
-            <Input name="email" onChange={setValue} />
+            <Input
+              name="email"
+              value={data.email}
+              onChange={setValue}
+            />
           </FormGroup>
-          {errors.email && <RegisterError>{errors.email}</RegisterError>}
+          {errors.email && (
+            <RegisterError>{errors.email}</RegisterError>
+          )}
 
           <Button type="submit">Add User +</Button>
         </Form>
@@ -152,4 +201,5 @@ const CreateUser = () => {
     </Layout>
   );
 };
+
 export default CreateUser;
