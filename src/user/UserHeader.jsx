@@ -10,36 +10,47 @@ const UserHeader = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { isAuthenticated, role } = useSelector((state) => state.auth);
+
+  const userId = useSelector((state) => state.auth.user);
   return (
     <HeaderMain>
       <Logo>
         <img src="/apple-touch-icon.png" width="50px" alt="logo" />
       </Logo>
 
-     {isAuthenticated? <>
-      <MenuToggle onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </MenuToggle>
+      {isAuthenticated ? (
+        <>
+          <MenuToggle onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </MenuToggle>
 
-      <Menu $isOpen={isOpen}>
-        <NavLink to="/userdashboard" onClick={() => setIsOpen(false)}>
-          Home
-        </NavLink>
-         <NavLink
-          to="/"
-          onClick={async (e) => {
-            e.preventDefault();
-            setIsOpen(false);
-            setLoading(true);
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            setLoading(false);
-            dispatch(logout());
-          }}
-        >
-          {loading ? "Signing out..." : "Sign Out"}
-        </NavLink>
-      </Menu>
-     </>:null}
+          <Menu $isOpen={isOpen}>
+            <NavLink to="/userdashboard" onClick={() => setIsOpen(false)}>
+              Home
+            </NavLink>
+
+            <NavLink
+              to={`/examreport/${userId}`}
+              onClick={() => setIsOpen(false)}
+            >
+              Report
+            </NavLink>
+            <NavLink
+              to="/"
+              onClick={async (e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                setLoading(true);
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                setLoading(false);
+                dispatch(logout());
+              }}
+            >
+              {loading ? "Signing out..." : "Sign Out"}
+            </NavLink>
+          </Menu>
+        </>
+      ) : null}
     </HeaderMain>
   );
 };

@@ -176,11 +176,7 @@ const injectStyles = () => {
   document.head.appendChild(el);
 };
 
-/* ══════════════════════════════════════════════════════
-   TIMER HOOK
-   Uses a ref-based interval so the closure is always
-   fresh. durationSeconds arrives from route state.
-══════════════════════════════════════════════════════ */
+
 const useCountdownTimer = (durationSeconds, onExpire) => {
   const [remaining, setRemaining] = useState(0);
   const onExpireRef = useRef(onExpire);
@@ -225,9 +221,7 @@ const useCountdownTimer = (durationSeconds, onExpire) => {
   };
 };
 
-/* ══════════════════════════════════════════════════════
-   QUESTION TYPE COMPONENTS
-══════════════════════════════════════════════════════ */
+
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
 const SingleChoice = ({ question, selected, setSelected }) => (
@@ -326,13 +320,11 @@ const SendSVG = () => (
   </svg>
 );
 
-/* ── Q type maps ── */
+
 const Q_MAP   = { SINGLE_CHOICE: SingleChoice, MULTI_CHOICE: MultiChoice, TRUE_FALSE: TrueOrFalse, FILL_BLANKS: FillBlanks, DETAILED_ANSWER: DetailedAnswer };
 const Q_LABEL = { SINGLE_CHOICE: "Single Choice", MULTI_CHOICE: "Multiple Choice", TRUE_FALSE: "True / False", FILL_BLANKS: "Fill in the Blank", DETAILED_ANSWER: "Detailed Answer" };
 
-/* ══════════════════════════════════════════════════════
-   MAIN COMPONENT
-══════════════════════════════════════════════════════ */
+
 const UserAttendAssessment = () => {
   const { examId }   = useParams();
   const navigate     = useNavigate();
@@ -478,9 +470,7 @@ const UserAttendAssessment = () => {
     </Layout>
   );
 
-  /* ════════════════════════════════════════════
-     COMPLETED / AUTO-SUBMIT
-  ════════════════════════════════════════════ */
+ 
   if (completed) return (
     <Layout>
       <div className="v3-root" style={{ ...S.page, alignItems: "center", justifyContent: "center" }}>
@@ -506,7 +496,7 @@ const UserAttendAssessment = () => {
             </p>
           </div>
 
-          {/* Stat row */}
+         
           <div style={S.statRow}>
             {[
               { val: answered.size,         label: "Answered", color: "#34d399" },
@@ -523,7 +513,7 @@ const UserAttendAssessment = () => {
             ))}
           </div>
 
-          {/* Completion bar */}
+          
           <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ height: 10, background: "rgba(255,255,255,0.05)", borderRadius: 100, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${total > 0 ? (answered.size / total) * 100 : 0}%`, background: "linear-gradient(90deg,#34d399,#06b6d4)", borderRadius: 100, transition: "width 1.2s ease" }} />
@@ -541,9 +531,7 @@ const UserAttendAssessment = () => {
     </Layout>
   );
 
-  /* ════════════════════════════════════════════
-     MAIN EXAM UI
-  ════════════════════════════════════════════ */
+  
   return (
     <Layout>
       <div className="v3-root" style={S.page}>
@@ -554,7 +542,7 @@ const UserAttendAssessment = () => {
           <div style={{ position: "absolute", bottom: "5%", left: "5%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle,rgba(139,92,246,0.06) 0%,transparent 60%)", animation: "glow 7s ease infinite reverse" }} />
         </div>
 
-        {/* ════════ SIDEBAR ════════ */}
+        
         <aside style={S.sidebar}>
 
           {/* Exam info */}
@@ -564,8 +552,7 @@ const UserAttendAssessment = () => {
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: "#2d3748", marginTop: 2 }}>{examId}</p>
           </div>
 
-          {/* ── TIMER BOX ─────────────────────────────────────────────────── */}
-          {/* Always renders; shows "--:--" only if no duration was passed    */}
+          
           <div style={{ ...S.sideBlock, background: timerBg, border: `1px solid ${timerBorder}`, borderRadius: 16, padding: 16, gap: 0 }}>
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10 }}>
@@ -576,7 +563,7 @@ const UserAttendAssessment = () => {
               <p style={{ ...S.sideLabel, margin: 0, color: timerColor }}>Time Remaining</p>
             </div>
 
-            {/* Big countdown */}
+            
             <p
               className={timer.isCritical ? "v3-timer-critical" : ""}
               style={{
