@@ -11,12 +11,14 @@ import {
   CancelButton,
 } from "../styles/QuestionUploadStyle";
 import { Button } from "../styles/CreateExam.style";
+import { useSelector } from "react-redux";
 
 const QuestionUpload = ({ handlePop }) => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const userId = useSelector((state) => state.auth.user);
 
   const API_URL = "https://localhost:8443/sphinx/api/question/upload";
 
@@ -50,6 +52,7 @@ const QuestionUpload = ({ handlePop }) => {
 
     const formData = new FormData();
     formData.append("file", file);
+     formData.append("userLoginId", userId);
 
     try {
       const response = await fetch(API_URL, {
