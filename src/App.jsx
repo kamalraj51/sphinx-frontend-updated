@@ -90,8 +90,6 @@ const App = () => {
             }
           />
 
-          
-
           {/* Protected Routes (Require Authentication) */}
           <Route
             path="/adminhome"
@@ -131,7 +129,6 @@ const App = () => {
               <ProtectedRoute>
                 <CreateUser />
               </ProtectedRoute>
-                
             }
           />
           <Route
@@ -249,7 +246,7 @@ const App = () => {
           />
 
           <Route
-            path="/exam-attend/:examId"
+            path="/exam-attend/:examId/:duration"
             element={
               <ProtectedRoute>
                 <ExamAttend />
@@ -257,7 +254,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examresult/:examId/:userId"
+            path="/examresult/:examId/:userId/:skipped"
             element={
               <ProtectedRoute>
                 <Result />

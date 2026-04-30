@@ -579,7 +579,7 @@ const Userdashboard = () => {
 
                       {/* CTA — passes duration (minutes) via route state so the exam timer works */}
                       <NavLink
-                        to={`/exam-attend/${exam.examId}`}
+                        to={`/exam-attend/${exam.examId}/${exam.duration}`}
                         state={{
                           duration: exam.duration,
                           examName: exam.examName,

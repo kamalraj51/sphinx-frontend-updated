@@ -351,7 +351,7 @@ const SkeletonBox = styled.div`
 /* ═══════════════════════════════════════════════ */
 
 const Result = () => {
-  const { examId, userId } = useParams();
+  const { examId, userId ,skipped} = useParams();
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -458,6 +458,11 @@ const Result = () => {
                   <StatIcon>❌</StatIcon>
                   <StatVal color="#f87171">{wrong}</StatVal>
                   <StatLabel>Wrong</StatLabel>
+                </StatBox>
+                <StatBox delay=".2s">
+                  <StatIcon>⚪</StatIcon>
+                  <StatVal color="#f87171">{Number(skipped) || 0}</StatVal>
+                  <StatLabel>Skipped</StatLabel>
                 </StatBox>
                 <StatBox delay=".25s">
                   <StatIcon>🔁</StatIcon>
