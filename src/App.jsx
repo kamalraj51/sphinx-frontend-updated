@@ -32,6 +32,8 @@ import ExamAttend from "./pages/ExamAttend";
 import UserAttendAssessment from "./user/UserAttendAssessment";
 import Result from "./pages/Result";
 import Admindashboard from "./Dashboard/Admindashboard";
+import ExamReport from "./user/ExamReport";
+import ResultPage from "./user/ResultPage";
 
 // 1. Protected Route: Only allows logged-in users
 const ProtectedRoute = ({ children }) => {
@@ -255,10 +257,27 @@ const App = () => {
             }
           />
           <Route
-            path="/examresult"
+            path="/examresult/:examId/:userId"
             element={
               <ProtectedRoute>
                 <Result />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/examreport/:userId"
+            element={
+              <ProtectedRoute>
+                <ExamReport />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/result/:examId/:userId"
+            element={
+              <ProtectedRoute>
+                <ResultPage />
               </ProtectedRoute>
             }
           />

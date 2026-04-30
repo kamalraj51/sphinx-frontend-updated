@@ -1,10 +1,9 @@
 // import React, { useEffect, useState } from "react";
 // import styled from "styled-components";
 // import { useSelector } from "react-redux";
-// import { useParams } from "react-router-dom";
+// import { useNavigate, useParams } from "react-router-dom";
 // import { toast } from "sonner";
-
-// /* ================== STYLES ================== */
+// import UserHeader from "../user/UserHeader";
 
 // const Layout = styled.div`
 //   display: flex;
@@ -61,10 +60,14 @@
 
 // const QBtn = styled.button`
 //   padding: 10px;
-//   border: none;
 //   border-radius: 6px;
-//   color: white;
 //   cursor: pointer;
+//   color: ${(p) => (!p.status ? "#333" : "white")};
+//   border: ${(p) => {
+//     if (p.active) return "2px solid black";
+//     if (!p.status) return "1px solid #ccc";
+//     return "none";
+//   }};
 
 //   background: ${(p) => {
 //     switch (p.status) {
@@ -75,27 +78,23 @@
 //       case "marked_review":
 //         return "#ffc107";
 //       default:
-//         return "#6c757d";
+//         return "#ffffff";
 //     }
 //   }};
 // `;
 
-// /* ================== COMPONENT ================== */
-
 // const ExamAttend = () => {
+//   const navigate = useNavigate();
 //   const { examId } = useParams();
 //   const userId = useSelector((state) => state.auth.user);
 
 //   const [question, setQuestion] = useState({});
 //   const [offSet, setOffSet] = useState(0);
 //   const [totalQuestions, setTotalQuestions] = useState(0);
-
 //   const [answersMap, setAnswersMap] = useState({});
 
 //   const currentQ = question;
-//   const currentAnswer = answersMap[currentQ.qId]?.answer || [];
-
-//   /* ================== FETCH QUESTION ================== */
+//   const currentAnswer = answersMap[offSet]?.answer || [];
 
 //   const getQuestion = async (offsetValue) => {
 //     try {
@@ -118,8 +117,6 @@
 //     getQuestion(offSet);
 //   }, [offSet]);
 
-//   /* ================== ANSWER HANDLING ================== */
-
 //   const handleAnswer = (val) => {
 //     const type = currentQ.questionTypeId;
 
@@ -127,7 +124,7 @@
 
 //     if (type === "SINGLE_CHOICE" || type === "TRUE_FALSE") {
 //       updated = [val];
-//     } else if (type === "MULTI_CHOICE") {
+//     } else {
 //       updated = currentAnswer.includes(val)
 //         ? currentAnswer.filter((x) => x !== val)
 //         : [...currentAnswer, val];
@@ -135,7 +132,7 @@
 
 //     setAnswersMap((prev) => ({
 //       ...prev,
-//       [currentQ.qId]: {
+//       [offSet]: {
 //         answer: updated,
 //         status: "attempted",
 //       },
@@ -143,93 +140,112 @@
 //   };
 
 //   const handleFill = (val) => {
+//     const isAnswered = val.trim() !== "";
+
 //     setAnswersMap((prev) => ({
 //       ...prev,
-//       [currentQ.qId]: {
-//         answer: val ? [val] : [],
-//         status: "attempted",
+//       [offSet]: {
+//         answer: isAnswered ? [val] : [],
+//         status: isAnswered ? "attempted" : "not_answered",
 //       },
 //     }));
 //   };
 
-//   /* ================== NAVIGATION ================== */
+//   const saveAnswer = async () => {
+//     const data = answersMap[offSet] || { answer: [] };
+//     const isAnswered = data.answer.length > 0;
 
-//   const handleNext = async () => {
-//     const data = answersMap[currentQ.qId];
+//     if (!isAnswered) return;
 
-//     // mark not answered if empty
-//     if (!data || data.answer.length === 0) {
-//       setAnswersMap((prev) => ({
-//         ...prev,
-//         [currentQ.qId]: {
-//           answer: [],
-//           status: "not_answered",
-//         },
-//       }));
+//     const payload = {
+//       questionId: currentQ.qId,
+//       examId,
+//       submittedAnswer: data.answer.join(","),
+//       sNo: offSet + 1,
+//       isFlagged: 1,
+//       userLoginId: userId,
+//     };
+
+//     const response = await fetch(
+//       "https://localhost:8443/sphinx/api/user/submited-answer",
+//       {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(payload),
+//       },
+//     );
+
+//     if (!response.ok) {
+//       throw new Error(await response.text());
 //     }
-
-//     // submit answer
-//     await fetch("https://localhost:8443/sphinx/api/user/submited-answer", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         questionId: currentQ.qId,
-//         examId,
-//         submittedAnswer: data?.answer?.join(",") || "",
-//         sNo: offSet + 1,
-//         isFlagged: data?.answer?.length > 0 ? 1 : 0,
-//         userLoginId: userId,
-//       }),
-//     });
-
-//     // 🚨 BLOCK IF LAST QUESTION
-//     if (offSet >= totalQuestions - 1) return;
-
-//     setOffSet((prev) => prev + 1);
 //   };
 
-//   const handlePrev = () => {
-//     if (offSet <= 0) return; // 🚨 block negative
+//   const handleNext = async () => {
+//     try {
+//       await saveAnswer();
+//       if (offSet < totalQuestions - 1) {
+//         setOffSet((prev) => prev + 1);
+//       }
+//     } catch {
+//       toast.error("Save failed");
+//     }
+//   };
 
-//     setOffSet((prev) => prev - 1);
+//   const handlePrev = async () => {
+//     try {
+//       await saveAnswer();
+//       if (offSet > 0) {
+//         setOffSet((prev) => prev - 1);
+//       }
+//     } catch {
+//       toast.error("Save failed");
+//     }
+//   };
+
+//   const handleJump = async (index) => {
+//     try {
+//       await saveAnswer();
+//       setOffSet(index);
+//     } catch {
+//       toast.error("Save failed");
+//     }
 //   };
 
 //   const markReview = () => {
 //     setAnswersMap((prev) => ({
 //       ...prev,
-//       [currentQ.qId]: {
+//       [offSet]: {
 //         answer: currentAnswer,
 //         status: "marked_review",
 //       },
 //     }));
 //   };
 
-//   /* ================== PALETTE STATUS ================== */
-
-//   const getStatus = (qId) => {
-//     return answersMap[qId]?.status || "not_visited";
-//   };
-//   //lastsubmit
 //   const handleSubmitExam = async () => {
-//     const response = await fetch(
-//       "https://localhost:8443/sphinx/api/user/submit-final",
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
+//     try {
+//       await saveAnswer();
+
+//       const response = await fetch(
+//         "https://localhost:8443/sphinx/api/user/submit-final",
+//         {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify({ examId, userLoginId: userId }),
 //         },
-//         body: JSON.stringify({ examId: examId, userLoginId: userId })
-//       },
-//     );
-//     const data = await response.json();
-//     if (response.ok) {
-//       toast.success(data.success);
-//     } else {
-//       toast.error(data.error);
+//       );
+
+//       const data = await response.json();
+
+//       if (!response.ok) {
+//         toast.error(data.error);
+//       } else {
+//         toast.success(data.success);
+//         navigate(`/examresult/${examId}/${userId}`);
+//       }
+//     } catch {
+//       toast.error("Final submit failed");
 //     }
 //   };
-
-//   /* ================== OPTIONS ================== */
 
 //   const renderOptions = () => {
 //     const type = currentQ.questionTypeId;
@@ -258,10 +274,9 @@
 //     ));
 //   };
 
-//   /* ================== UI ================== */
-
 //   return (
-//     <Layout>
+//     <>
+//       <UserHeader />
 //       <Left>
 //         <Box>
 //           <h3>
@@ -271,7 +286,7 @@
 //           {renderOptions()}
 
 //           <div>
-//             <Button onClick={handlePrev} bg="#6c757d" disabled={offSet === 0}>
+//             <Button onClick={handlePrev} disabled={offSet === 0} bg="#6c757d">
 //               Prev
 //             </Button>
 
@@ -285,6 +300,7 @@
 //             <Button onClick={markReview} bg="#ffc107">
 //               Mark Review
 //             </Button>
+
 //             <Button bg="#28a745" onClick={handleSubmitExam}>
 //               Submit Exam
 //             </Button>
@@ -299,8 +315,9 @@
 //           {Array.from({ length: totalQuestions }).map((_, i) => (
 //             <QBtn
 //               key={i}
-//               status={answersMap[Object.keys(answersMap)[i]]?.status}
-//               onClick={() => setOffSet(i)}
+//               status={answersMap[i]?.status}
+//               active={i === offSet}
+//               onClick={() => handleJump(i)}
 //             >
 //               {i + 1}
 //             </QBtn>
@@ -312,9 +329,9 @@
 //         <p>🟢 Attempted</p>
 //         <p>🔴 Not Answered</p>
 //         <p>🟡 Marked Review</p>
-//         <p>⚪ Not Visited</p>
+//         <p style={{ color: "#333" }}>⬜ Not Visited</p>
 //       </Right>
-//     </Layout>
+//     </>
 //   );
 // };
 
@@ -325,13 +342,16 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import UserHeader from "../user/UserHeader";
 
-/* ================== STYLES ================== */
+/* ===================== STYLES ===================== */
 
 const Layout = styled.div`
   display: flex;
-  gap: 20px;
-  padding: 20px;
+  gap: 24px;
+  padding: 24px;
+  background: #f8fafc;
+  min-height: 100vh;
 `;
 
 const Left = styled.div`
@@ -340,37 +360,69 @@ const Left = styled.div`
 
 const Right = styled.div`
   flex: 1;
-  background: #f4f6f8;
-  padding: 15px;
-  border-radius: 10px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 `;
 
 const Box = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+`;
+
+const Title = styled.h3`
+  margin-bottom: 10px;
+`;
+
+const SubInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #555;
 `;
 
 const Option = styled.label`
-  display: block;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #f1f5f9;
+  }
+
+  input {
+    accent-color: #2563eb;
+  }
 `;
 
 const Button = styled.button`
-  margin: 8px 5px 0 0;
-  padding: 10px 15px;
+  margin: 10px 8px 0 0;
+  padding: 10px 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
-  background: ${(p) => p.bg || "#007bff"};
+  transition: 0.2s;
+  background: ${(p) => p.bg || "#2563eb"};
   color: white;
 
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
   &:disabled {
-    background: #ccc;
+    background: #cbd5e1;
     cursor: not-allowed;
   }
 `;
@@ -378,31 +430,39 @@ const Button = styled.button`
 const Palette = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  gap: 10px;
 `;
 
 const QBtn = styled.button`
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+
+  border: ${(p) => (p.active ? "2px solid #111827" : "1px solid #e5e7eb")};
 
   background: ${(p) => {
     switch (p.status) {
       case "attempted":
-        return "#28a745";
+        return "#22c55e";
       case "not_answered":
-        return "#dc3545";
+        return "#ef4444";
       case "marked_review":
-        return "#ffc107";
+        return "#facc15";
       default:
-        return "#6c757d";
+        return "#ffffff";
     }
   }};
+
+  color: ${(p) => (p.status ? "#fff" : "#111")};
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
-/* ================== COMPONENT ================== */
+/* ===================== COMPONENT ===================== */
 
 const ExamAttend = () => {
   const navigate = useNavigate();
@@ -412,20 +472,32 @@ const ExamAttend = () => {
   const [question, setQuestion] = useState({});
   const [offSet, setOffSet] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-
   const [answersMap, setAnswersMap] = useState({});
+  const [time, setTime] = useState(3600); // 1 hr
 
-  const currentQ = question;
-  const currentAnswer = answersMap[currentQ.qId]?.answer || [];
+  const currentAnswer = answersMap[offSet]?.answer || [];
 
-  /* ================== FETCH QUESTION ================== */
+  /* ===================== TIMER ===================== */
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((t) => {
+        if (t <= 1) {
+          handleSubmitExam();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
 
+    return () => clearInterval(timer);
+  }, []);
+
+  /* ===================== FETCH ===================== */
   const getQuestion = async (offsetValue) => {
     try {
       const res = await fetch(
         `https://localhost:8443/sphinx/api/question/get-Exam-Question?examId=${examId}&offSet=${offsetValue}`,
       );
-
       const data = await res.json();
 
       if (res.ok) {
@@ -441,16 +513,15 @@ const ExamAttend = () => {
     getQuestion(offSet);
   }, [offSet]);
 
-  /* ================== ANSWER HANDLING ================== */
+  /* ===================== HANDLERS ===================== */
 
   const handleAnswer = (val) => {
-    const type = currentQ.questionTypeId;
-
+    const type = question.questionTypeId;
     let updated = [];
 
     if (type === "SINGLE_CHOICE" || type === "TRUE_FALSE") {
       updated = [val];
-    } else if (type === "MULTI_CHOICE") {
+    } else {
       updated = currentAnswer.includes(val)
         ? currentAnswer.filter((x) => x !== val)
         : [...currentAnswer, val];
@@ -458,117 +529,96 @@ const ExamAttend = () => {
 
     setAnswersMap((prev) => ({
       ...prev,
-      [currentQ.qId]: {
-        answer: updated,
-        status: "attempted",
-      },
+      [offSet]: { answer: updated, status: "attempted" },
     }));
   };
 
   const handleFill = (val) => {
+    const isAnswered = val.trim() !== "";
+
     setAnswersMap((prev) => ({
       ...prev,
-      [currentQ.qId]: {
-        answer: val ? [val] : [],
-        status: "attempted",
+      [offSet]: {
+        answer: isAnswered ? [val] : [],
+        status: isAnswered ? "attempted" : "not_answered",
       },
     }));
   };
 
-  /* ================== SAVE & NEXT ================== */
+  const saveAnswer = async () => {
+    const data = answersMap[offSet] || { answer: [] };
+    if (!data.answer.length) return;
+
+    const payload = {
+      questionId: question.qId,
+      examId,
+      submittedAnswer: data.answer.join(","),
+      sNo: offSet + 1,
+      isFlagged: 1,
+      userLoginId: userId,
+    };
+
+    await fetch("https://localhost:8443/sphinx/api/user/submited-answer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  };
 
   const handleNext = async () => {
-    try {
-      const data = answersMap[currentQ.qId] || {
-        answer: [],
-        status: "not_answered",
-      };
-
-      const payload = {
-        questionId: currentQ.qId,
-        examId,
-        submittedAnswer: data.answer.join(","),
-        sNo: offSet + 1,
-        isFlagged: data.answer.length > 0 ? 1 : 0,
-        userLoginId: userId,
-      };
-
-      const response = await fetch(
-        "https://localhost:8443/sphinx/api/user/submited-answer",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        },
-      );
-
-      if (!response.ok) {
-        const err = await response.text();
-        throw new Error(err);
-      }
-
-      if (offSet < totalQuestions - 1) {
-        setOffSet((prev) => prev + 1);
-      }
-    } catch (err) {
-      toast.error("Save failed");
-      console.log(err.message);
-    }
+    await saveAnswer();
+    if (offSet < totalQuestions - 1) setOffSet((p) => p + 1);
   };
 
-  /* ================== PREV ================== */
-
-  const handlePrev = () => {
-    if (offSet > 0) setOffSet((prev) => prev - 1);
+  const handlePrev = async () => {
+    await saveAnswer();
+    if (offSet > 0) setOffSet((p) => p - 1);
   };
 
-  /* ================== MARK REVIEW ================== */
+  const handleJump = async (i) => {
+    await saveAnswer();
+    setOffSet(i);
+  };
 
   const markReview = () => {
     setAnswersMap((prev) => ({
       ...prev,
-      [currentQ.qId]: {
-        answer: currentAnswer,
-        status: "marked_review",
-      },
+      [offSet]: { answer: currentAnswer, status: "marked_review" },
     }));
   };
 
-  /* ================== FINAL SUBMIT ================== */
-
   const handleSubmitExam = async () => {
-    try {
-      handleNext();
-      const response = await fetch(
-        "https://localhost:8443/sphinx/api/user/submit-final",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ examId: examId, userLoginId: userId }),
-        },
-      );
+    if (!window.confirm("Submit exam?")) return;
 
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.error);
-      } else {
-        toast.success(data.success);
-        navigate("/examresult");
-      }
-    } catch (err) {
-      toast.error("Final submit failed");
-      console.log(err.message);
+    await saveAnswer();
+
+    const res = await fetch(
+      "https://localhost:8443/sphinx/api/user/submit-final",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ examId, userLoginId: userId }),
+      },
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) toast.error(data.error);
+    else {
+      toast.success(data.success);
+      navigate(`/examresult/${examId}/${userId}`);
     }
   };
 
-  /* ================== OPTIONS ================== */
+  /* ===================== RENDER ===================== */
 
   const renderOptions = () => {
-    const type = currentQ.questionTypeId;
+    const type = question.questionTypeId;
 
     if (type === "FILL_BLANK") {
       return (
         <input
+          style={{ padding: "10px", width: "100%" }}
           value={currentAnswer[0] || ""}
           onChange={(e) => handleFill(e.target.value)}
         />
@@ -585,70 +635,87 @@ const ExamAttend = () => {
           checked={currentAnswer.includes(opt)}
           onChange={() => handleAnswer(opt)}
         />
-        {currentQ[`option${opt}`] || opt}
+        {question[`option${opt}`] || opt}
       </Option>
     ));
   };
 
-  /* ================== UI ================== */
+  const formatTime = () => {
+    const m = Math.floor(time / 60);
+    const s = time % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
 
   return (
-    <Layout>
-      <Left>
-        <Box>
-          <h3>
-            Q{offSet + 1}. {currentQ.questionDetail}
-          </h3>
+    <>
+      <UserHeader />
 
-          {renderOptions()}
+      <Layout>
+        {/* LEFT */}
+        <Left>
+          <Box>
+            <SubInfo>
+              <span>
+                Question {offSet + 1} / {totalQuestions}
+              </span>
+              <span>⏱ {formatTime()}</span>
+            </SubInfo>
 
-          <div>
-            <Button onClick={handlePrev} bg="#6c757d" disabled={offSet === 0}>
-              Prev
-            </Button>
+            <Title>
+              Q{offSet + 1}. {question.questionDetail}
+            </Title>
 
-            <Button
-              onClick={handleNext}
-              disabled={offSet >= totalQuestions - 1}
-            >
-              Save & Next
-            </Button>
+            {renderOptions()}
 
-            <Button onClick={markReview} bg="#ffc107">
-              Mark Review
-            </Button>
+            <div>
+              <Button onClick={handlePrev} disabled={offSet === 0} bg="#6c757d">
+                Prev
+              </Button>
 
-            <Button bg="#28a745" onClick={handleSubmitExam}>
-              Submit Exam
-            </Button>
-          </div>
-        </Box>
-      </Left>
+              <Button
+                onClick={handleNext}
+                disabled={offSet >= totalQuestions - 1}
+              >
+                Save & Next
+              </Button>
 
-      <Right>
-        <h4>Question Palette</h4>
+              <Button onClick={markReview} bg="#f59e0b">
+                Mark Review
+              </Button>
 
-        <Palette>
-          {Array.from({ length: totalQuestions }).map((_, i) => {
-            const qIds = Object.keys(answersMap);
-            const qId = qIds[i];
+              <Button bg="#22c55e" onClick={handleSubmitExam}>
+                Submit Exam
+              </Button>
+            </div>
+          </Box>
+        </Left>
 
-            return (
-              <QBtn key={i} status={answersMap[qId]?.status}>
+        {/* RIGHT */}
+        <Right>
+          <h4>Question Palette</h4>
+
+          <Palette>
+            {Array.from({ length: totalQuestions }).map((_, i) => (
+              <QBtn
+                key={i}
+                status={answersMap[i]?.status}
+                active={i === offSet}
+                onClick={() => handleJump(i)}
+              >
                 {i + 1}
               </QBtn>
-            );
-          })}
-        </Palette>
+            ))}
+          </Palette>
 
-        <hr />
+          <hr />
 
-        <p>🟢 Attempted</p>
-        <p>🔴 Not Answered</p>
-        <p>🟡 Marked Review</p>
-        <p>⚪ Not Visited</p>
-      </Right>
-    </Layout>
+          <p>🟢 Attempted</p>
+          <p>🔴 Not Answered</p>
+          <p>🟡 Marked Review</p>
+          <p>⬜ Not Visited</p>
+        </Right>
+      </Layout>
+    </>
   );
 };
 

@@ -180,7 +180,7 @@ const styles = {
     padding: "5px 10px",
   },
 
-  /* ── CTA ── */
+  
   ctaLink: {
     display: "flex",
     alignItems: "center",
@@ -198,7 +198,7 @@ const styles = {
     boxShadow: "0 4px 20px rgba(99,102,241,0.3)",
   },
 
-  /* ── Empty state ── */
+  
   empty: {
     gridColumn: "1/-1",
     display: "flex",
@@ -238,7 +238,7 @@ const styles = {
   loaderText: { fontSize: "13px", color: "#475569", fontWeight: 500 },
 };
 
-/* ─── Keyframes injected once ─── */
+
 const injectKeyframes = () => {
   if (document.getElementById("udash-kf")) return;
   const s = document.createElement("style");
@@ -262,7 +262,7 @@ const injectKeyframes = () => {
   document.head.appendChild(s);
 };
 
-/* ─── Color accents per card index ─── */
+
 const ACCENTS = [
   "linear-gradient(90deg,#6366f1,#8b5cf6)",
   "linear-gradient(90deg,#ec4899,#f43f5e)",
@@ -272,7 +272,7 @@ const ACCENTS = [
   "linear-gradient(90deg,#a855f7,#6366f1)",
 ];
 
-/* ─── Icons (inline SVG as tiny components) ─── */
+
 const IconClock = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
@@ -290,7 +290,7 @@ const IconArrow = () => (
   </svg>
 );
 
-/* ─── Main Component ─── */
+
 const Userdashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -407,17 +407,17 @@ const Userdashboard = () => {
                     )}
                     {exam.totalMarks && (
                       <span style={styles.metaChip}>
-                        🎯 {exam.totalMarks} marks
+                         {exam.totalMarks} marks
                       </span>
                     )}
                     {exam.passingMarks && (
                       <span style={styles.metaChip}>
-                        ✅ Pass: {exam.passingMarks}
+                         Pass: {exam.passingMarks}
                       </span>
                     )}
                     {exam.scheduledDate && (
                       <span style={styles.metaChip}>
-                        📅{" "}
+                        {" "}
                         {new Date(exam.scheduledDate).toLocaleDateString(
                           "en-IN",
                           { day: "numeric", month: "short", year: "numeric" }
@@ -426,7 +426,7 @@ const Userdashboard = () => {
                     )}
                   </div>
 
-                  {/* CTA */}
+                 
                   <NavLink
                     to={`/exam-attend/${exam.examId}`}
                     className="udash-cta"

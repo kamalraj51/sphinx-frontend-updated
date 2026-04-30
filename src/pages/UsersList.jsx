@@ -559,13 +559,13 @@ const UsersList = () => {
             </Table>
           )}
 
+        </Card>
           {selectedUser && (
             <Assignexamtempoaryupdate
               item={selectedUser}
               onClose={() => { setSelectedUser(null); getAll(); }}
             />
           )}
-        </Card>
 
       </PageWrap>
 
