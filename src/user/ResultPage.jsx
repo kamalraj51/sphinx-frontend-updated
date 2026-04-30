@@ -337,6 +337,7 @@ const SkeletonBox = styled.div`
 const buildCertificateHTML = ({
   userId,
   examId,
+  examName,   
   score,
   correct,
   total,
@@ -516,13 +517,12 @@ const buildCertificateHTML = ({
     <div class="trophy">🏆</div>
     <div class="cert-type">Certificate of Achievement</div>
     <div class="certify-text">This is to certify that</div>
-    <div class="user-id">User ID: <strong>${userId}</strong></div>
+    <div class="user-id">Name: <strong>${userId}</strong></div>
     <div class="divider"></div>
     <div class="body-text">
       has successfully completed the examination<br/>
-      <strong class="exam-name">${examId}</strong><br/>
-      with a score of <strong class="score-val">${score}%</strong>
-      &nbsp;(${correct} correct out of ${total} questions)<br/>
+      <strong class="exam-name">${examName}</strong><br/>
+     
       on <strong>${date}</strong>
     </div>
     <div class="stats-pills">
@@ -530,14 +530,7 @@ const buildCertificateHTML = ({
         <div class="stat-val" style="color:#6366f1">${score}%</div>
         <div class="stat-label">Score</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-val" style="color:#16a34a">${correct}</div>
-        <div class="stat-label">Correct</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-val" style="color:#a855f7">${acc}%</div>
-        <div class="stat-label">Accuracy</div>
-      </div>
+      
       <div class="stat-item">
         <div class="stat-val" style="color:#f59e0b">#${attempt}</div>
         <div class="stat-label">Attempt</div>
@@ -570,6 +563,7 @@ const ResultPage = () => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  
 
   const getResult = async () => {
     try {
@@ -584,6 +578,7 @@ const ResultPage = () => {
       const data = await response.json();
       if (response.ok) {
         setResult(data.result[0]);
+        
       } else {
         toast.error("Result not updated yet — please wait.");
       }
@@ -597,7 +592,7 @@ const ResultPage = () => {
   useEffect(() => {
     getResult();
   }, []);
-
+  
   const passed = result?.userPassed === 1;
   const score = parseFloat(result?.score || 0).toFixed(1);
   const correct = result?.totalCorrect ?? 0;
@@ -605,6 +600,7 @@ const ResultPage = () => {
   const total = result?.noOfQuestions ?? correct + wrong;
   const attempt = (result?.attemptNo ?? 0) + 1;
   const acc = total ? Math.round((correct / total) * 100) : 0;
+ 
 
   const fmtDate = (ts) =>
     ts
@@ -629,16 +625,17 @@ const ResultPage = () => {
       const html2canvas = (await import("html2canvas")).default;
 
       // 2. Build the isolated HTML string — no Tailwind, no oklch
-      const certHTML = buildCertificateHTML({
-        userId,
-        examId: result?.examId || examId,
-        score,
-        correct,
-        total,
-        acc,
-        attempt,
-        date: fmtDate(result?.date),
-      });
+    const certHTML = buildCertificateHTML({
+  userId,
+  examId: result?.examId || examId,
+  examName: result?.examName || "Exam", // ✅ add this
+  score,
+  correct,
+  total,
+  acc,
+  attempt,
+  date: fmtDate(result?.date),
+});
 
       // 3. Create an off-screen iframe with NO inherited styles
       const iframe = document.createElement("iframe");
