@@ -22,7 +22,7 @@ const Header = () => {
   return (
     <HeaderMain>
       <div style={{ display: "flex", columnGap: "30px", alignItems: "center" }}>
-        <img src="src/assets/letter-s.png" width="50px" alt="logo" />
+        <img src="src/assets/letter-s.png" width="50px" alt="S" />
       </div>
 
       {isAuthenticated ? (

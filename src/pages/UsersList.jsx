@@ -474,6 +474,7 @@ const UsersList = () => {
                     name="allowedAttempts"
                     onChange={handleform}
                     placeholder="e.g. 3"
+                    
                   />
                   {errors.allowedAttempts && <ErrorText>{errors.allowedAttempts}</ErrorText>}
                 </FieldWrap>
@@ -484,7 +485,8 @@ const UsersList = () => {
                     type="text"
                     name="timeoutDays"
                     onChange={handleform}
-                    placeholder="e.g. 30"
+                    placeholder="e.g. 10"
+                    
                   />
                   {errors.timeoutDays && <ErrorText>{errors.timeoutDays}</ErrorText>}
                 </FieldWrap>
