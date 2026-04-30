@@ -16,7 +16,7 @@ const UserHeader = () => {
     <HeaderMain>
       <Logo>
 
-        <img src="src/assets/letter-s.png"  width="50px" alt="S" />
+       <img src="/letter-s.png" width="50px" alt="S" />
 
       </Logo>
 
