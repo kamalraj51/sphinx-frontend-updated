@@ -1068,7 +1068,7 @@ const ExamReport = () => {
                     $pass={passed}
                     onClick={() => navigate(`/result/${r.examId}/${userId}`)}
                   >
-                    <AttemptBadge>#{(r.attemptNo ?? 0) + 1}</AttemptBadge>
+                    <AttemptBadge>#{(r.attemptNo ?? 0) }</AttemptBadge>
 
                     {/* ── Ring + meta ── */}
                     <CardHeader>

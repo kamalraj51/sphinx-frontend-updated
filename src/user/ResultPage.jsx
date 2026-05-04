@@ -598,7 +598,7 @@ const ResultPage = () => {
   const correct = result?.totalCorrect ?? 0;
   const wrong = result?.totalWrong ?? 0;
   const total = result?.noOfQuestions ?? correct + wrong;
-  const attempt = (result?.attemptNo ?? 0) + 1;
+  const attempt = (result?.attemptNo ?? 0) ;
   const acc = total ? Math.round((correct / total) * 100) : 0;
  
 
