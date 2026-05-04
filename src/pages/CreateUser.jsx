@@ -105,11 +105,11 @@ const CreateUser = () => {
         }
       );
  
-      const result = await response.json(); // ✅ renamed from "data"
+      const result = await response.json();
  
       if (response.ok) {
-        setShow(true);
-        toast.success(result.successMessage);
+        
+        toast.success(result.success);
  
         // Optional: reset form
         setData({
@@ -123,7 +123,7 @@ const CreateUser = () => {
         // Optional: navigate after success
         // navigate("/");
       } else {
-        toast.error(result.errorMessage);
+        toast.error(result.error);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -138,7 +138,7 @@ const CreateUser = () => {
       </HeadingTable>
  
       <Container>
-        {show && <Card>Submitted successfully</Card>}
+      
  
         <Form onSubmit={handleSubmit}>
           <FormGroup>
