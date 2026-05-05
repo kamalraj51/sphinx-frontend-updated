@@ -398,7 +398,7 @@ const ResultPage = () => {
   };
 
   return (
-    <Layout>
+    <>
       <GlobalStyle />
 
       <svg style={{ position: "absolute", width: 0, height: 0 }}>
@@ -548,7 +548,7 @@ const ResultPage = () => {
 
         </Inner>
       </Page>
-    </Layout>
+    </>
   );
 };
 
