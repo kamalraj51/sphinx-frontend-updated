@@ -1021,7 +1021,7 @@ const ExamAttend = () => {
                     {question.questionTypeId.replace(/_/g, " ")}
                   </QTypeBadge>
                 )}
-                <QMarksBadge>+2 / –0.67</QMarksBadge>
+              
               </QuestionMeta>
               <QuestionText>
                 {question.questionDetail || "Loading question…"}

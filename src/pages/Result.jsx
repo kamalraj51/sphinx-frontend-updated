@@ -1064,7 +1064,7 @@ const Result = () => {
                   style={{ gridColumn: "1 / -1" }}
                 >
                   <StatIcon>🔁</StatIcon>
-                  <StatVal color="var(--amber-600)">{attempt}</StatVal>
+                  <StatVal color="var(--amber-600)">{attempt-1}</StatVal>
                   <StatLabel>Attempt No.</StatLabel>
                 </StatBox>
               </StatsGrid>
