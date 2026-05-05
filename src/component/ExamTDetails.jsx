@@ -298,7 +298,7 @@ const ExamTDetails = (props) => {
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updateContent),
+          body: JSON.stringify(deleteDetails),
         }
       );
       const result = await response.json();

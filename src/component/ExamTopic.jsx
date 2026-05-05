@@ -339,7 +339,7 @@ const ExamTopic = () => {
           </FieldGroup>
 
           <FieldGroup>
-            <StyledLabel htmlFor="topicPassPercentage">Pass Percentage</StyledLabel>
+            <StyledLabel htmlFor="topicPassPercentage">Question Percentage</StyledLabel>
             <StyledInput
               type="text"
               name="topicPassPercentage"
