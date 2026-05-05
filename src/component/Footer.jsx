@@ -46,7 +46,7 @@ const Footer = () => {
     <FooterContainer>
       <QuickLinks>
 
-        <NavLink to="/adminhome">Home</NavLink>
+        <NavLink to="/admin-home">Home</NavLink>
 
       </QuickLinks>
       <Copyright>

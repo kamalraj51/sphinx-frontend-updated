@@ -25,13 +25,13 @@ const UserHeader = () => {
           </MenuToggle>
 
           <Menu $isOpen={isOpen}>
-            <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
+            <NavLink to="/admin-home" onClick={() => setIsOpen(false)}>
               Home
             </NavLink>
             <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
               Manage Question
             </NavLink>
-            <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+            <NavLink to="/add-user" onClick={() => setIsOpen(false)}>
               Add User
             </NavLink>
 

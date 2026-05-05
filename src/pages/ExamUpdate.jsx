@@ -44,6 +44,7 @@ const HeroBar = styled.div`
   position: relative;
   overflow: hidden;
 
+   
   &::before {
     content: '';
     position: absolute;
@@ -51,6 +52,7 @@ const HeroBar = styled.div`
     width: 260px; height: 260px;
     background: radial-gradient(circle, rgba(16,185,129,0.18), transparent 70%);
     border-radius: 50%;
+    pointer-events: none;
   }
 `;
 
@@ -86,7 +88,7 @@ const HeroSub = styled.p`
   margin: 2px 0 0;
 `;
 
-const BackBtn = styled.button`
+export const BackBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 6px;
@@ -243,7 +245,7 @@ const ExamUpdate = () => {
       body: JSON.stringify(data),
     });
 
-    navigate("/adminhome");
+    navigate("/admin-home");
   };
 
   return (
@@ -262,12 +264,13 @@ const ExamUpdate = () => {
             </div>
           </HeroLeft>
 
-          <BackBtn onClick={() => navigate(-1)}>
+         <BackBtn onClick={() => {
+  navigate(-1);
+}}>
             <ArrowLeft size={14} /> Back
           </BackBtn>
         </HeroBar>
 
-        {/* FORM */}
         <Card>
           <CardHeader>
             <FileText size={15} color="#059669" />

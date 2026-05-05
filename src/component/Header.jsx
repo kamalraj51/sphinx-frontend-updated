@@ -32,7 +32,7 @@ const Header = () => {
             {isOpen ? <FaTimes /> : <FaBars />}
           </MenuToggle>
           <Menu $isOpen={isOpen}>
-            <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
+            <NavLink to="/admin-home" onClick={() => setIsOpen(false)}>
               Home
             </NavLink>
 
@@ -40,7 +40,7 @@ const Header = () => {
               Manage Questions
             </NavLink>
 
-            <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+            <NavLink to="/add-user" onClick={() => setIsOpen(false)}>
               Add User
             </NavLink>
 

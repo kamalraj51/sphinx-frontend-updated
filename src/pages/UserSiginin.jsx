@@ -117,7 +117,7 @@ const UserSignin = () => {
 
       if (data.role == "SPX_ADMIN") {
         console.log("admin called");
-        navigate("/adminhome", {
+        navigate("/admin-home", {
           state: { userLoginId: formData.userLoginId },
         });
       } else if (data.role === "SPX_EXAMINEE") {
