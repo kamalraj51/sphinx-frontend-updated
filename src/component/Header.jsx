@@ -52,9 +52,9 @@ const Header = () => {
               Topic Master
             </NavLink>
 
-            {/* <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
+             <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
               Add Admin
-            </NavLink> */}
+            </NavLink> 
 
             <NavLink
               to="/"
