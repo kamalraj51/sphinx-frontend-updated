@@ -276,8 +276,8 @@ const UsersList = () => {
     examId: examId,
     partyId: "",
     noOfAttempts: "0",
-    allowedAttempts: "",
-    timeoutDays: "",
+    allowedAttempts: "3",
+    timeoutDays: "10",
     userLoginId: "",
   });
   const [errors, setErrors] = useState({});
@@ -473,6 +473,7 @@ const UsersList = () => {
                     type="text"
                     name="allowedAttempts"
                     onChange={handleform}
+                     value={formData.allowedAttempts}
                     placeholder="e.g. 3"
                   />
                   {errors.allowedAttempts && <ErrorText>{errors.allowedAttempts}</ErrorText>}
@@ -483,6 +484,7 @@ const UsersList = () => {
                   <StyledInput
                     type="text"
                     name="timeoutDays"
+                    value={formData.timeoutDays}
                     onChange={handleform}
                     placeholder="e.g. 30"
                   />

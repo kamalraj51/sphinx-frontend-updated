@@ -14,6 +14,7 @@ import { RegisterError } from "../styles/SignupStyle";
 import { H2, HeadingTable } from "../styles/AvailableExamStyle";
 import { RedSpan } from "../styles/FontsStyle";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -27,14 +28,15 @@ const CreateUser = () => {
 
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
+  const userId = useSelector((state) => state.auth.user)
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    role: "SPX_USER",
+    role: "SPX_EXAMINEE",
     userName: "",
+    userLoginId: userId
   });
-
   // Regex patterns
   const firstNameRegex = /^[A-Za-z][A-Za-z '\-]{0,49}$/;
   const lastNameRegex = /^[A-Za-z][A-Za-z '\-\.]{0,49}$/;

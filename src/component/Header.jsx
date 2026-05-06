@@ -40,10 +40,9 @@ const Header = () => {
               Manage Questions
             </NavLink>
 
-            {/* <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+             <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
               Add User
-            </NavLink> */}
-
+            </NavLink> 
             <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
               Create Assessment
             </NavLink>
@@ -52,9 +51,9 @@ const Header = () => {
               Topic Master
             </NavLink>
 
-            {/* <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
+             <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
               Add Admin
-            </NavLink> */}
+            </NavLink> 
 
             <NavLink
               to="/"
