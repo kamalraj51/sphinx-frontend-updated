@@ -34,7 +34,7 @@ const PageWrap = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 40%, #d1fae5 100%);
+
 `;
 
 const CenterWrap = styled.div`
@@ -374,7 +374,7 @@ const UserSignin = () => {
           {/* ── Section Label ── */}
           <CardHeader>
             <LogIn size={13} color="#059669" />
-            <CardTitle>Account Login</CardTitle>
+            <CardTitle>Account sign in</CardTitle>
           </CardHeader>
 
           {/* ── Form ── */}

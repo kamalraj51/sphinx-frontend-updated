@@ -357,7 +357,7 @@ const ExamTDetails = (props) => {
           <TableHead>
             <HeadCell>S.No</HeadCell>
             <HeadCell>Topic Name</HeadCell>
-            <HeadCell>Pass %</HeadCell>
+            <HeadCell>Question %</HeadCell>
             <HeadCell style={{ textAlign: "center" }}>Action</HeadCell>
           </TableHead>
 

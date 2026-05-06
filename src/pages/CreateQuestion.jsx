@@ -87,6 +87,7 @@ export const Textarea = styled.textarea`
   border: 1px solid #ddd;
   min-height: 120px;
   background: ${({ theme }) => theme.colors?.background || "#f9fafb"};
+   padding-top: 45px; 
 `;
 
 export const OptionsGrid = styled.div`
