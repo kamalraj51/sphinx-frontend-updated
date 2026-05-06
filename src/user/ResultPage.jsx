@@ -279,7 +279,7 @@ const SkelRow = styled.div`
 `;
 
 /* ===================== CERTIFICATE ===================== */
-const buildCertificateHTML = ({ userId, examId, examName, score, correct, total, acc, attempt, date }) => `<!DOCTYPE html>
+const buildCertificateHTML = ({ name, examId, examName, score, correct, total, acc, attempt, date }) => `<!DOCTYPE html>
 <html><head><meta charset="utf-8"/>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -314,7 +314,7 @@ const buildCertificateHTML = ({ userId, examId, examName, score, correct, total,
     <div class="trophy">🏆</div>
     <div class="ct">Certificate of Achievement</div>
     <div class="main">This is to certify that</div>
-    <div class="uid">Name: <strong>${userId}</strong></div>
+    <div class="uid">Name: <strong>${name}</strong></div>
     <div class="div"></div>
     <div class="body">has successfully completed the examination<br/><strong>${examName}</strong><br/>on <strong>${date}</strong></div>
     <div class="pills">
@@ -322,7 +322,7 @@ const buildCertificateHTML = ({ userId, examId, examName, score, correct, total,
       <div class="pi"><div class="pv" style="color:#854F0B">#${attempt}</div><div class="pl">Attempt</div></div>
     </div>
     <div class="footer">
-      <div style="text-align:left"><div class="fl">Performance ID</div><div class="fv">—</div></div>
+
       <div style="display:flex;align-items:center"><div class="logo">✦ SPHINX ✦</div></div>
       <div style="text-align:right"><div class="fl">Issue Date</div><div class="fv">${date}</div></div>
     </div>
@@ -346,7 +346,10 @@ const ResultPage = () => {
           body: JSON.stringify({ examId, userLoginId: userId }),
         });
         const data = await res.json();
-        if (res.ok) setResult(data.result[0]);
+        if (res.ok) setResult({
+  ...data.result,
+  name: data.name
+});
         else toast.error("Result not updated yet — please wait.");
       } catch { toast.error("Could not fetch result."); }
       finally { setLoading(false); }
@@ -372,7 +375,7 @@ const ResultPage = () => {
     try {
       const html2canvas = (await import("html2canvas")).default;
       const certHTML = buildCertificateHTML({
-        userId, examId: result?.examId || examId,
+      name:result?.name , examId: result?.examId || examId,
         examName: result?.examName || "Exam",
         score, correct, total, acc, attempt, date: fmtDate(result?.date),
       });
@@ -511,17 +514,14 @@ const ResultPage = () => {
                   {/* ── Meta Table ── */}
                   <MetaTable>
                     <MetaRow>
-                      <MetaKey>Exam ID</MetaKey>
-                      <MetaVal>{result?.examId || examId}</MetaVal>
+                      <MetaKey>Name</MetaKey>
+                      <MetaVal>{result?.name || "Na"}</MetaVal>
                     </MetaRow>
                     <MetaRow $alt>
                       <MetaKey>Exam Name</MetaKey>
                       <MetaVal>{result?.examName || "—"}</MetaVal>
                     </MetaRow>
-                    <MetaRow>
-                      <MetaKey>Performance ID</MetaKey>
-                      <MetaVal>{result?.performanceId ?? "—"}</MetaVal>
-                    </MetaRow>
+                   
                     <MetaRow $alt>
                       <MetaKey>Date</MetaKey>
                       <MetaVal>{fmtDate(result?.date)}</MetaVal>

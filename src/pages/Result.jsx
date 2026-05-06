@@ -1082,14 +1082,8 @@ const Result = () => {
 
               {/* ── Meta info ── */}
               <MetaSection>
-                <MetaRow>
-                  <MetaKey>Exam ID</MetaKey>
-                  <MetaVal>{result?.examId || examId}</MetaVal>
-                </MetaRow>
-                <MetaRow>
-                  <MetaKey>Performance ID</MetaKey>
-                  <MetaVal>{result?.performanceId ?? "—"}</MetaVal>
-                </MetaRow>
+               
+              
               </MetaSection>
 
               {/* ── Back button ── */}
