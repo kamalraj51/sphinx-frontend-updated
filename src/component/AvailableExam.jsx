@@ -463,8 +463,8 @@ const AvailableExam = () => {
 
                     <TDStyled>
                       <ExamNameBtn
-                        title="Edit Assessment"
-                        onClick={() => navigate("/exam-update", { state: { examData: data } })}
+                        title="Edit Exam"
+                        onClick={() => navigate("/examupdate", { state: { examData: data } })}
                       >
                         {data.examName}
                       </ExamNameBtn>
@@ -501,7 +501,7 @@ const AvailableExam = () => {
                         </DeleteBtn>
 
                         <AssignBtn
-                          title="Assign Users"
+                          title="Assign User"
                           onClick={() => navigate("/get-user", { state: { examId: data.examId } })}
                         >
                           <UserPlus size={15} />
