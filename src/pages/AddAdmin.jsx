@@ -323,7 +323,7 @@ const AddAdmin = () => {
                   <StyledInput
                     id="firstName"
                     onChange={handleChange}
-                    placeholder="e.g. John"
+                    placeholder="e.g. vijay"
                   />
                   {errors.firstName && <ErrorText>{errors.firstName}</ErrorText>}
                 </FieldWrap>
@@ -336,7 +336,7 @@ const AddAdmin = () => {
                   <StyledInput
                     id="lastName"
                     onChange={handleChange}
-                    placeholder="e.g. Doe"
+                    placeholder="e.g. kumar"
                   />
                   {errors.lastName && <ErrorText>{errors.lastName}</ErrorText>}
                 </FieldWrap>
@@ -349,7 +349,7 @@ const AddAdmin = () => {
                   <StyledInput
                     id="userName"
                     onChange={handleChange}
-                    placeholder="e.g. john_admin"
+                    placeholder="e.g. vijay_admin"
                   />
                   {errors.userName && <ErrorText>{errors.userName}</ErrorText>}
                 </FieldWrap>
@@ -377,7 +377,7 @@ const AddAdmin = () => {
                       type="email"
                       id="email"
                       onChange={handleChange}
-                      placeholder="e.g. john.doe@company.com"
+                      placeholder="e.g. vijay@gmail.com"
                     />
                     {errors.email && <ErrorText>{errors.email}</ErrorText>}
                   </FieldWrap>

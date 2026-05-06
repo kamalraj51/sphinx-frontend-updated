@@ -294,7 +294,7 @@ const CreateUser = () => {
                     name="firstName"
                     value={data.firstName}
                     onChange={setValue}
-                    placeholder="e.g. John"
+                    placeholder="e.g. vijay"
                   />
                   {errors.firstName && <ErrorText>{errors.firstName}</ErrorText>}
                 </FieldWrap>
@@ -309,7 +309,7 @@ const CreateUser = () => {
                     name="lastName"
                     value={data.lastName}
                     onChange={setValue}
-                    placeholder="e.g. Doe"
+                    placeholder="e.g. kumar"
                   />
                   {errors.lastName && <ErrorText>{errors.lastName}</ErrorText>}
                 </FieldWrap>
@@ -324,7 +324,7 @@ const CreateUser = () => {
                     name="userName"
                     value={data.userName}
                     onChange={setValue}
-                    placeholder="e.g. john_doe"
+                    placeholder="e.g. vijay1"
                   />
                   {errors.userName && <ErrorText>{errors.userName}</ErrorText>}
                 </FieldWrap>
@@ -340,7 +340,7 @@ const CreateUser = () => {
                       name="email"
                       value={data.email}
                       onChange={setValue}
-                      placeholder="e.g. john.doe@example.com"
+                      placeholder="e.g. vijay@gmail.com"
                     />
                     {errors.email && <ErrorText>{errors.email}</ErrorText>}
                   </FieldWrap>

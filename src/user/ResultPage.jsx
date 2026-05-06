@@ -319,8 +319,7 @@ const buildCertificateHTML = ({ name, examId, examName, score, correct, total, a
     <div class="body">has successfully completed the examination<br/><strong>${examName}</strong><br/>on <strong>${date}</strong></div>
     <div class="pills">
       <div class="pi"><div class="pv" style="color:#3B6D11">${score}%</div><div class="pl">Score</div></div>
-      <div class="pi"><div class="pv" style="color:#854F0B">#${attempt}</div><div class="pl">Attempt</div></div>
-    </div>
+      </div>
     <div class="footer">
 
       <div style="display:flex;align-items:center"><div class="logo">✦ SPHINX ✦</div></div>
