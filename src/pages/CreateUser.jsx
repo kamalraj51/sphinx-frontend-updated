@@ -6,17 +6,11 @@ import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import { UserPlus, User, Mail, AtSign, Shield, ChevronRight } from "lucide-react";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE WRAP
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
@@ -25,9 +19,6 @@ const PageWrap = styled.div`
   gap: 24px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   align-items: center;
@@ -48,6 +39,7 @@ const HeroBar = styled.div`
     pointer-events: none;
   }
 `;
+
 const HeroIconRing = styled.div`
   width: 52px; height: 52px; border-radius: 16px;
   background: rgba(16,185,129,0.2);
@@ -56,20 +48,19 @@ const HeroIconRing = styled.div`
   color: #34d399; flex-shrink: 0;
   position: relative; z-index: 1;
 `;
+
 const HeroTitle = styled.h1`
   color: #fff; font-size: 20px; font-weight: 800;
   margin: 0; letter-spacing: -0.4px;
   position: relative; z-index: 1;
 `;
+
 const HeroSub = styled.p`
   color: rgba(255,255,255,0.6); font-size: 13px;
   margin: 2px 0 0; font-weight: 500;
   position: relative; z-index: 1;
 `;
 
-/* ═══════════════════════════════════════════
-   CARD
-═══════════════════════════════════════════ */
 const Card = styled.div`
   background: #fff; border-radius: 20px;
   box-shadow: 0 4px 30px rgba(0,0,0,0.10), 0 1px 6px rgba(0,0,0,0.05);
@@ -77,24 +68,24 @@ const Card = styled.div`
   animation: ${fadeUp} 0.45s ease both;
   animation-delay: 0.05s;
 `;
+
 const CardHeader = styled.div`
   display: flex; align-items: center; gap: 10px;
   padding: 16px 24px;
   border-bottom: 2px solid #d1fae5;
   background: #f0fdf4;
 `;
+
 const CardTitle = styled.h2`
   font-size: 13px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 0.8px;
   color: #059669; margin: 0;
 `;
+
 const CardBody = styled.div`
   padding: 28px 32px;
 `;
 
-/* ═══════════════════════════════════════════
-   FORM GRID
-═══════════════════════════════════════════ */
 const FormGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -104,16 +95,15 @@ const FormGrid = styled.div`
     grid-template-columns: 1fr;
   }
 `;
+
 const FullSpan = styled.div`
   grid-column: 1 / -1;
 `;
 
-/* ═══════════════════════════════════════════
-   FIELD
-═══════════════════════════════════════════ */
 const FieldWrap = styled.div`
   display: flex; flex-direction: column; gap: 6px;
 `;
+
 const FieldLabel = styled.label`
   font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.6px;
@@ -122,9 +112,11 @@ const FieldLabel = styled.label`
 
   svg { color: #10b981; }
 `;
+
 const RedStar = styled.span`
   color: #ef4444; font-size: 13px; line-height: 1;
 `;
+
 const StyledInput = styled.input`
   width: 100%;
   padding: 11px 14px;
@@ -141,6 +133,7 @@ const StyledInput = styled.input`
   }
   &::placeholder { color: #94a3b8; }
 `;
+
 const StyledSelect = styled.select`
   width: 100%;
   padding: 11px 14px;
@@ -158,18 +151,17 @@ const StyledSelect = styled.select`
     background: #fff;
   }
 `;
+
 const ErrorText = styled.p`
   font-size: 11.5px; color: #ef4444; margin: 0; font-weight: 600;
 `;
 
-/* ═══════════════════════════════════════════
-   FOOTER / SUBMIT
-═══════════════════════════════════════════ */
 const FormFooter = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
 `;
+
 const SubmitBtn = styled.button`
   display: flex; align-items: center; gap: 8px;
   padding: 11px 28px;
@@ -186,9 +178,6 @@ const SubmitBtn = styled.button`
   &:active { transform: scale(0.97); }
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const CreateUser = () => {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user);
@@ -262,7 +251,6 @@ const CreateUser = () => {
     <Layout>
       <PageWrap>
 
-        {/* ── Hero Bar ── */}
         <HeroBar>
           <HeroIconRing>
             <UserPlus size={24} strokeWidth={1.8} />
@@ -273,7 +261,6 @@ const CreateUser = () => {
           </div>
         </HeroBar>
 
-        {/* ── Form Card ── */}
         <Card>
           <CardHeader>
             <User size={15} color="#059669" />
@@ -284,7 +271,6 @@ const CreateUser = () => {
             <form onSubmit={handleSubmit}>
               <FormGrid>
 
-                {/* First Name */}
                 <FieldWrap>
                   <FieldLabel>
                     <User size={13} />
@@ -299,7 +285,6 @@ const CreateUser = () => {
                   {errors.firstName && <ErrorText>{errors.firstName}</ErrorText>}
                 </FieldWrap>
 
-                {/* Last Name */}
                 <FieldWrap>
                   <FieldLabel>
                     <User size={13} />
@@ -314,7 +299,6 @@ const CreateUser = () => {
                   {errors.lastName && <ErrorText>{errors.lastName}</ErrorText>}
                 </FieldWrap>
 
-                {/* Username */}
                 <FieldWrap>
                   <FieldLabel>
                     <AtSign size={13} />
@@ -329,22 +313,19 @@ const CreateUser = () => {
                   {errors.userName && <ErrorText>{errors.userName}</ErrorText>}
                 </FieldWrap>
 
-                {/* Email — full width */}
-               
-                  <FieldWrap>
-                    <FieldLabel>
-                      <Mail size={13} />
-                      Email Address <RedStar>*</RedStar>
-                    </FieldLabel>
-                    <StyledInput
-                      name="email"
-                      value={data.email}
-                      onChange={setValue}
-                      placeholder="e.g. vijay@gmail.com"
-                    />
-                    {errors.email && <ErrorText>{errors.email}</ErrorText>}
-                  </FieldWrap>
-               
+                <FieldWrap>
+                  <FieldLabel>
+                    <Mail size={13} />
+                    Email Address <RedStar>*</RedStar>
+                  </FieldLabel>
+                  <StyledInput
+                    name="email"
+                    value={data.email}
+                    onChange={setValue}
+                    placeholder="e.g. vijay@gmail.com"
+                  />
+                  {errors.email && <ErrorText>{errors.email}</ErrorText>}
+                </FieldWrap>
 
               </FormGrid>
 

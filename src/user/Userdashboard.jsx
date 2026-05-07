@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import Layout from "../component/Layout";
 import { NavLink } from "react-router-dom";
 
-/* ─── Inline styles (no external CSS file needed) ─── */
 const styles = {
   page: {
     minHeight: "100vh",
@@ -13,7 +12,6 @@ const styles = {
     padding: "0 0 60px",
   },
 
-  /* ── Hero Header ── */
   hero: {
     position: "relative",
     padding: "56px 48px 40px",
@@ -84,7 +82,6 @@ const styles = {
     fontWeight: 400,
   },
 
-  /* ── Grid ── */
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
@@ -92,7 +89,6 @@ const styles = {
     padding: "0 48px",
   },
 
-  /* ── Card ── */
   card: {
     background: "rgba(255,255,255,0.04)",
     border: "1px solid rgba(255,255,255,0.08)",
@@ -161,7 +157,6 @@ const styles = {
     flexGrow: 1,
   },
 
-  /* ── Meta row ── */
   metaRow: {
     display: "flex",
     gap: "12px",
@@ -217,7 +212,6 @@ const styles = {
   },
   emptySubtext: { fontSize: "13px", color: "#334155", margin: 0 },
 
-  /* ── Loader ── */
   loaderWrap: {
     display: "flex",
     flexDirection: "column",
@@ -270,48 +264,23 @@ const ACCENTS = [
 ];
 
 const IconClock = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <polyline points="12 6 12 12 16 14" />
   </svg>
 );
+
 const IconRepeat = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="17 1 21 5 17 9" />
     <path d="M3 11V9a4 4 0 0 1 4-4h14" />
     <polyline points="7 23 3 19 7 15" />
     <path d="M21 13v2a4 4 0 0 1-4 4H3" />
   </svg>
 );
+
 const IconArrow = () => (
-  <svg
-    width="13"
-    height="13"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="5" y1="12" x2="19" y2="12" />
     <polyline points="12 5 19 12 12 19" />
   </svg>
@@ -326,6 +295,7 @@ const Userdashboard = () => {
     injectKeyframes();
     getExamData();
   }, []);
+
   console.log(data.duration);
 
   const getExamData = async () => {
@@ -355,7 +325,6 @@ const Userdashboard = () => {
   return (
     <Layout>
       <div style={styles.page}>
-        {/* ── Hero ── */}
         <div style={styles.hero}>
           <div style={styles.heroGlow} />
           <div style={styles.heroGlow2} />
@@ -375,7 +344,6 @@ const Userdashboard = () => {
           </p>
         </div>
 
-        {/* ── Content ── */}
         {loading ? (
           <div style={styles.loaderWrap}>
             <div style={styles.spinner} />
@@ -401,7 +369,6 @@ const Userdashboard = () => {
                     animationDelay: `${i * 0.07}s`,
                   }}
                 >
-                  {/* colour stripe */}
                   <div
                     style={{
                       ...styles.cardStripe,
@@ -409,7 +376,6 @@ const Userdashboard = () => {
                     }}
                   />
 
-                  {/* top row */}
                   <div style={styles.cardTopRow}>
                     <span style={styles.examIdPill}>#{exam.examId}</span>
                     <span style={styles.attemptsChip}>
@@ -418,14 +384,11 @@ const Userdashboard = () => {
                     </span>
                   </div>
 
-                  {/* title & description */}
                   <h3 style={styles.cardTitle}>{exam.examName}</h3>
                   <p style={styles.cardDesc}>
-                    {exam.description ||
-                      "No description provided for this exam."}
+                    {exam.description || "No description provided for this exam."}
                   </p>
 
-                  {/* meta chips */}
                   <div style={styles.metaRow}>
                     {exam.duration && (
                       <span style={styles.metaChip}>
@@ -445,7 +408,6 @@ const Userdashboard = () => {
                     )}
                     {exam.scheduledDate && (
                       <span style={styles.metaChip}>
-                        {" "}
                         {new Date(exam.scheduledDate).toLocaleDateString(
                           "en-IN",
                           { day: "numeric", month: "short", year: "numeric" },

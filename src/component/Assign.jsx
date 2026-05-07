@@ -33,14 +33,13 @@ const Assign = ({ examId, assignedUsers }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ allData: assign }),
-        },
+        }
       );
 
       const data = await response.json();
 
       if (response.ok) {
         toast.success(data.success);
-        // getAll();
       } else {
         toast.error(data.error);
       }

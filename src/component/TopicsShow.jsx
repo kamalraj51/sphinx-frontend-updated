@@ -8,9 +8,6 @@ import Pagination from "./Pagination";
 import { FileQuestion, UploadCloud, BookMarked, Layers, ChevronRight } from "lucide-react";
 import { HeadingTable } from "../styles/AvailableExamStyle";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -26,18 +23,12 @@ const slideIn = keyframes`
   to   { opacity: 1; transform: translateX(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE SHELL
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   min-height: 100vh;
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO HEADER  ← blue palette
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: row;
@@ -52,7 +43,6 @@ const HeroBar = styled.div`
   position: relative;
   overflow: hidden;
 
-  /* Glow blob */
   &::before {
     content: '';
     position: absolute;
@@ -123,7 +113,6 @@ const HeroDot = styled.span`
   display: inline-block;
 `;
 
-/* Upload button — amber accent */
 const UploadBtn = styled.button`
   display: flex;
   align-items: center;
@@ -151,9 +140,6 @@ const UploadBtn = styled.button`
   &:active { transform: scale(0.97); }
 `;
 
-/* ═══════════════════════════════════════════
-   CONTENT AREA
-═══════════════════════════════════════════ */
 const ContentArea = styled.div`
   position: relative;
   z-index: 2;
@@ -161,9 +147,6 @@ const ContentArea = styled.div`
   animation: ${fadeUp} 0.45s ease both;
 `;
 
-/* ═══════════════════════════════════════════
-   TABLE CARD
-═══════════════════════════════════════════ */
 const TableCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -173,7 +156,6 @@ const TableCard = styled.div`
   margin: 0 auto;
 `;
 
-/* Stats strip */
 const StatsStrip = styled.div`
   display: flex;
   align-items: center;
@@ -190,7 +172,6 @@ const StatItem = styled.div`
   strong { color: #1e293b; font-weight: 800; }
 `;
 
-/* Table header row — blue tint */
 const TableHead = styled.div`
   display: grid;
   grid-template-columns: 60px 1fr 160px;
@@ -208,7 +189,6 @@ const HeadCell = styled.span`
   &:last-child { text-align: center; }
 `;
 
-/* Topic row */
 const TopicRow = styled.div`
   display: grid;
   grid-template-columns: 60px 1fr 160px;
@@ -236,7 +216,6 @@ const TopicInfo = styled.div`
   gap: 12px;
 `;
 
-/* Icon dot — blue tint */
 const TopicIconDot = styled.div`
   width: 36px;
   height: 36px;
@@ -257,7 +236,6 @@ const TopicLabel = styled.span`
   line-height: 1.3;
 `;
 
-/* Action button — blue gradient */
 const ShowBtn = styled.button`
   display: flex;
   align-items: center;
@@ -289,7 +267,6 @@ const ShowBtn = styled.button`
   }
 `;
 
-/* Empty state */
 const EmptyState = styled.div`
   padding: 64px 32px;
   text-align: center;
@@ -302,17 +279,14 @@ const EmptyState = styled.div`
   svg { opacity: 0.3; }
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT  — logic untouched
-═══════════════════════════════════════════ */
 const TopicsShow = () => {
-  const [topics, setTopics]           = useState([]);
-  const [loading, setLoading]         = useState(false);
+  const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [popup, setPopup]             = useState(false);
-  const navigate    = useNavigate();
-  const apiRefresh  = useSelector((state) => state.api.value);
-  const userId      = useSelector((state) => state.auth.user);
+  const [popup, setPopup] = useState(false);
+  const navigate = useNavigate();
+  const apiRefresh = useSelector((state) => state.api.value);
+  const userId = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -336,8 +310,6 @@ const TopicsShow = () => {
   return (
     <Layout>
       <PageWrap>
-
-        {/* ── Hero ── */}
         <HeroBar>
           <HeroInner>
             <HeroLeft>
@@ -360,13 +332,10 @@ const TopicsShow = () => {
           </UploadBtn>
         </HeroBar>
 
-        {/* ── Upload Popup ── */}
         {popup && <QuestionUpload handlePop={() => setPopup(false)} />}
 
-        {/* ── Main Content ── */}
         <ContentArea>
           <TableCard>
-            {/* Stats strip */}
             <StatsStrip>
               <StatItem>
                 Showing <strong>{paginatedTopics.length}</strong> of <strong>{topics.length}</strong> topics
@@ -376,14 +345,12 @@ const TopicsShow = () => {
               </StatItem>
             </StatsStrip>
 
-            {/* Header */}
             <TableHead>
               <HeadCell>S.No</HeadCell>
               <HeadCell>Topic Name</HeadCell>
               <HeadCell style={{ textAlign: "center" }}>Action</HeadCell>
             </TableHead>
 
-            {/* Rows */}
             {topics.length === 0 ? (
               <EmptyState>
                 <BookMarked size={48} />
@@ -416,7 +383,6 @@ const TopicsShow = () => {
             )}
           </TableCard>
 
-          {/* Pagination */}
           <div style={{ maxWidth: 960, margin: "20px auto 0" }}>
             <Pagination
               currentPage={currentPage}
@@ -426,7 +392,6 @@ const TopicsShow = () => {
             />
           </div>
         </ContentArea>
-
       </PageWrap>
     </Layout>
   );

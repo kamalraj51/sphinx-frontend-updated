@@ -7,25 +7,16 @@ import { toast } from "sonner";
 import styled, { keyframes } from "styled-components";
 import { Layers, PlusCircle, ExternalLink } from "lucide-react";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE WRAP
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: row;
@@ -101,9 +92,6 @@ const HeroDot = styled.span`
   display: inline-block;
 `;
 
-/* ═══════════════════════════════════════════
-   FORM CARD
-═══════════════════════════════════════════ */
 const FormCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -231,9 +219,6 @@ const CreateLink = styled.p`
   }
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const ExamTopic = () => {
   const apiRefresh = useSelector((state) => state.api.value);
   const [topics, setTopics] = useState([]);
@@ -305,7 +290,6 @@ const ExamTopic = () => {
 
   return (
     <PageWrap>
-      {/* ── Hero Bar ── */}
       <HeroBar>
         <HeroLeft>
           <HeroIconRing>
@@ -321,7 +305,6 @@ const ExamTopic = () => {
         </HeroLeft>
       </HeroBar>
 
-      {/* ── Add Topic Form Card ── */}
       <FormCard>
         <FormCardHeader>Add Topic to Exam</FormCardHeader>
 
@@ -363,7 +346,6 @@ const ExamTopic = () => {
         </FormCardBody>
       </FormCard>
 
-      {/* ── Exam Topics List ── */}
       <ExamTDetails examId={examId} />
     </PageWrap>
   );

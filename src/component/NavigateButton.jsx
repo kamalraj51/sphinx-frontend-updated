@@ -15,15 +15,14 @@ export const NavWrapper = styled.div`
 
 `;
 
-
 function NaviButton() {
-      const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <>
       <NavigateContainer>
         <button style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
-          <div 
-          title="Back Page"
+          <div
+            title="Back Page"
             style={{
               padding: "3px",
               borderRadius: "50%",
@@ -33,23 +32,6 @@ function NaviButton() {
             <ArrowBigLeft />
           </div>
         </button>
-{/* 
-        <button
-          style={{ margin: "0 0 0 15px", cursor: "pointer" }}
-          onClick={() => navigate(1)}
-          title="Forword Page"
-        >
-          <div
-            style={{
-                
-              padding: "3px",
-              borderRadius: "50%",
-              border: "2px solid black",
-            }}
-          >
-            <ArrowBigRight />
-          </div>
-        </button> */}
       </NavigateContainer>
     </>
   );

@@ -7,9 +7,6 @@ import ConfirmModal from "../component/ConfirmModal";
 import styled, { keyframes } from "styled-components";
 import { UserPlus, Users, CheckCircle2, Trash2 } from "lucide-react";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -19,9 +16,6 @@ const slideIn = keyframes`
   to   { opacity: 1; transform: translateX(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE WRAP
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
   padding-bottom: 60px;
@@ -30,9 +24,6 @@ const PageWrap = styled.div`
   gap: 24px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: row;
@@ -109,9 +100,6 @@ const HeroDot = styled.span`
   display: inline-block;
 `;
 
-/* ═══════════════════════════════════════════
-   CARD
-═══════════════════════════════════════════ */
 const Card = styled.div`
   background: #fff;
   border-radius: 20px;
@@ -142,9 +130,6 @@ const CardBody = styled.div`
   padding: 20px 24px;
 `;
 
-/* ═══════════════════════════════════════════
-   ASSIGN FORM
-═══════════════════════════════════════════ */
 const AssignGrid = styled.div`
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr auto;
@@ -248,9 +233,6 @@ const AssignSubmitBtn = styled.button`
   }
 `;
 
-/* ═══════════════════════════════════════════
-   STATS STRIP
-═══════════════════════════════════════════ */
 const StatsStrip = styled.div`
   display: flex;
   align-items: center;
@@ -271,9 +253,6 @@ const StatItem = styled.div`
   }
 `;
 
-/* ═══════════════════════════════════════════
-   TABLE
-═══════════════════════════════════════════ */
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -352,9 +331,6 @@ const Pill = styled.span`
     `background:#f1f5f9;border:1px solid #cbd5e1;color:#475569;`}
 `;
 
-/* ═══════════════════════════════════════════
-   ICON BUTTONS
-═══════════════════════════════════════════ */
 const IconBtn = styled.button`
   display: flex;
   align-items: center;
@@ -380,9 +356,6 @@ const DeleteBtn = styled(IconBtn)`
   }
 `;
 
-/* ═══════════════════════════════════════════
-   EMPTY STATE
-═══════════════════════════════════════════ */
 const EmptyState = styled.div`
   padding: 48px 32px;
   text-align: center;
@@ -394,15 +367,11 @@ const EmptyState = styled.div`
   gap: 12px;
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT — EXACT ORIGINAL LOGIC
-═══════════════════════════════════════════ */
 const UsersList = () => {
   const location = useLocation();
   const examId = location.state?.examId;
 
   const [user, setUser] = useState([]);
-  const [assignedUsers, setAssignedUsers] = useState([]);
   const [alreadyAssignedUsers, setAlreadyAssignedUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -418,12 +387,6 @@ const UsersList = () => {
 
   const numberRegex = /^[0-9]+$/;
 
-  useEffect(() => {
-    if (examId) {
-      setFormData((prev) => ({ ...prev, examId }));
-    }
-  }, [examId]);
-
   const handleUser = async () => {
     try {
       const response = await fetch(
@@ -437,11 +400,9 @@ const UsersList = () => {
           }),
         },
       );
-      if (!response.ok) throw new Error("Failed");
       const data = await response.json();
       setUser(data.allUser || []);
     } catch (err) {
-      console.log("Retrying...");
       setTimeout(handleUser, 1000);
     }
   };
@@ -452,12 +413,6 @@ const UsersList = () => {
       getAll();
     }
   }, [formData.examId]);
-
-  const [deleteData, setDeleteData] = useState({});
-  const handleModalDelete = (data) => {
-    setModalOpen(true);
-    setDeleteData(data);
-  };
 
   const handleform = (e) => {
     const { name, value } = e.target;
@@ -479,25 +434,20 @@ const UsersList = () => {
     e.preventDefault();
     let err = {};
     let flag = true;
-    if (!formData.allowedAttempts) {
-      err.allowedAttempts = "Allowed attempts is mandatory";
-      flag = false;
-    } else if (!numberRegex.test(formData.allowedAttempts)) {
-      err.allowedAttempts = "Must be a valid number";
+
+    if (!formData.allowedAttempts || !numberRegex.test(formData.allowedAttempts)) {
+      err.allowedAttempts = "Invalid allowed attempts";
       flag = false;
     }
-    if (!formData.timeoutDays) {
-      err.timeoutDays = "Timeout days is mandatory";
-      flag = false;
-    } else if (!numberRegex.test(formData.timeoutDays)) {
-      err.timeoutDays = "Must be a valid number";
+    if (!formData.timeoutDays || !numberRegex.test(formData.timeoutDays)) {
+      err.timeoutDays = "Invalid timeout days";
       flag = false;
     }
     if (!flag) {
       setErrors(err);
       return;
     }
-    setErrors({});
+
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/user/partyExamCreate",
@@ -507,22 +457,14 @@ const UsersList = () => {
           body: JSON.stringify(formData),
         },
       );
-      if (response.ok) {
-        const data = await response.json();
-        console.log("veera");
-        toast.success(data.success);
-        handleUser();
-        getAll();
-      } else {
-        console.log("RESPONSE => ", response);
-        toast.error(data.error || "Failed to Load Data!");
-      }
+      const data = await response.json();
+      toast.success(data.success);
+      handleUser();
+      getAll();
     } catch (err) {
       console.log(err);
     }
   };
-
-  if (!assignedUsers) return <p>No users assigned</p>;
 
   const getAll = async () => {
     try {
@@ -531,62 +473,45 @@ const UsersList = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ examId: examId }),
+          body: JSON.stringify({ examId }),
         },
       );
-      if (response.ok) {
-        const value = await response.json();
-        setAlreadyAssignedUsers(value.allData || []);
-      } else {
-        setAlreadyAssignedUsers([]);
-      }
-    } catch (err) {
-      console.error(err);
+      const data = await response.json();
+      setAlreadyAssignedUsers(data.allData || []);
+    } catch {
       setAlreadyAssignedUsers([]);
     }
   };
 
   const handleDeleteExam = async () => {
-    console.log("hai inside delete");
     try {
       const res = await fetch(
         "https://localhost:8443/sphinx/api/user/deleteExamRelationship",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ examId, partyId: deleteData.partyId }),
+          body: JSON.stringify({ examId, partyId: selectedUser?.partyId }),
         },
       );
       const data = await res.json();
-      if (res.ok) {
-        console.log("hii");
-        toast.success(data.success);
-        getAll();
-        handleUser();
-      } else {
-        toast.error(data.error);
-      }
-    } catch (err) {
-      console.error(err);
+      toast.success(data.success);
+      getAll();
+    } catch {
       toast.error("Delete failed");
     } finally {
       setModalOpen(false);
     }
   };
 
-  /* ─── JSX ─── */
   return (
     <Layout>
       <PageWrap>
-        {/* ── Hero Bar ── */}
         <HeroBar>
           <HeroLeft>
             <HeroIconRing>
-              <Users size={24} strokeWidth={1.8} />
+              <Users size={24} />
             </HeroIconRing>
-            <div>
-              <HeroTitle>Assign Users to Assessment</HeroTitle>
-            </div>
+            <HeroTitle>Assign Users to Assessment</HeroTitle>
           </HeroLeft>
           <HeroBadge>
             <HeroDot />
@@ -594,12 +519,12 @@ const UsersList = () => {
           </HeroBadge>
         </HeroBar>
 
-        {/* ── Assign Form Card ── */}
         <Card $delay="0.05s">
           <CardHeader>
             <UserPlus size={15} color="#059669" />
             <CardTitle>Assign New User</CardTitle>
           </CardHeader>
+
           <CardBody>
             <form onSubmit={handleSubmit}>
               <AssignGrid>
@@ -618,11 +543,9 @@ const UsersList = () => {
                 <FieldWrap>
                   <FieldLabel>Allowed Attempts</FieldLabel>
                   <StyledInput
-                    type="text"
                     name="allowedAttempts"
                     value={formData.allowedAttempts}
                     onChange={handleform}
-                    placeholder="e.g. 3"
                   />
                   {errors.allowedAttempts && (
                     <ErrorText>{errors.allowedAttempts}</ErrorText>
@@ -632,30 +555,23 @@ const UsersList = () => {
                 <FieldWrap>
                   <FieldLabel>Timeout Days</FieldLabel>
                   <StyledInput
-                    type="text"
                     name="timeoutDays"
                     value={formData.timeoutDays}
                     onChange={handleform}
-                    placeholder="e.g. 10"
                   />
                   {errors.timeoutDays && (
                     <ErrorText>{errors.timeoutDays}</ErrorText>
                   )}
                 </FieldWrap>
 
-                <FieldWrap>
-                  <FieldLabel style={{ visibility: "hidden" }}>_</FieldLabel>
-                  <AssignSubmitBtn type="submit">
-                    <UserPlus size={15} />
-                    Assign
-                  </AssignSubmitBtn>
-                </FieldWrap>
+                <AssignSubmitBtn type="submit">
+                  <UserPlus size={15} /> Assign
+                </AssignSubmitBtn>
               </AssignGrid>
             </form>
           </CardBody>
         </Card>
 
-        {/* ── Assigned Users Table ── */}
         <Card $delay="0.10s">
           <CardHeader>
             <CheckCircle2 size={15} color="#059669" />
@@ -664,26 +580,26 @@ const UsersList = () => {
 
           <StatsStrip>
             <StatItem>
-              <strong>{alreadyAssignedUsers.length}</strong> user
-              {alreadyAssignedUsers.length !== 1 ? "s" : ""} assigned
+              <strong>{alreadyAssignedUsers.length}</strong> users assigned
             </StatItem>
           </StatsStrip>
 
           {alreadyAssignedUsers.length === 0 ? (
             <EmptyState>
-              <Users size={44} style={{ opacity: 0.22 }} />
-              <span>No assigned users found.</span>
+              <Users size={44} />
+              No assigned users found.
             </EmptyState>
           ) : (
             <Table>
               <THeadStyled>
                 <tr>
                   <THStyled>User Name</THStyled>
-                  <THStyled $center>Allowed Attempts</THStyled>
-                  <THStyled $center>Timeout Days</THStyled>
+                  <THStyled $center>Attempts</THStyled>
+                  <THStyled $center>Timeout</THStyled>
                   <THStyled $center>Action</THStyled>
                 </tr>
               </THeadStyled>
+
               <tbody>
                 {alreadyAssignedUsers.map((item, index) => (
                   <TRStyled key={item.partyId} $index={index}>
@@ -693,17 +609,17 @@ const UsersList = () => {
                         <UserSubText>{item.partyId}</UserSubText>
                       </UserNameBtn>
                     </TDStyled>
+
                     <TDStyled style={{ textAlign: "center" }}>
                       <Pill $color="indigo">{item.allowedAttempts}</Pill>
                     </TDStyled>
+
                     <TDStyled style={{ textAlign: "center" }}>
                       <Pill $color="slate">{item.timeoutDays}d</Pill>
                     </TDStyled>
+
                     <TDStyled style={{ textAlign: "center" }}>
-                      <DeleteBtn
-                        title="Delete"
-                        onClick={() => handleModalDelete(item)}
-                      >
+                      <DeleteBtn onClick={() => setModalOpen(true)}>
                         <Trash2 size={15} />
                       </DeleteBtn>
                     </TDStyled>
@@ -713,6 +629,7 @@ const UsersList = () => {
             </Table>
           )}
         </Card>
+
         {selectedUser && (
           <Assignexamtempoaryupdate
             item={selectedUser}

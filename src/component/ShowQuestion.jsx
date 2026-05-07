@@ -18,9 +18,6 @@ import { Edit as EditIcon, Trash2 } from "lucide-react";
 import styled, { keyframes } from "styled-components";
 import { FileQuestion, PlusCircle, UploadCloud, Layers, BookMarked, ChevronRight } from "lucide-react";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -31,18 +28,12 @@ const slideIn = keyframes`
   to   { opacity: 1; transform: translateX(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE SHELL
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   min-height: 100vh;
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO HEADER  (mirrors HeadingTable usage in TopicsShow)
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: row;
@@ -120,7 +111,6 @@ const HeroDot = styled.span`
   display: inline-block;
 `;
 
-/* Create Question button — amber accent like UploadBtn in TopicsShow */
 const CreateBtn = styled.button`
   display: flex;
   align-items: center;
@@ -148,18 +138,12 @@ const CreateBtn = styled.button`
   &:active { transform: scale(0.97); }
 `;
 
-/* ═══════════════════════════════════════════
-   CONTENT AREA
-═══════════════════════════════════════════ */
 const ContentArea = styled.div`
   position: relative;
   z-index: 2;
   animation: ${fadeUp} 0.45s ease both;
 `;
 
-/* ═══════════════════════════════════════════
-   TABLE CARD
-═══════════════════════════════════════════ */
 const TableCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -168,7 +152,6 @@ const TableCard = styled.div`
   margin-bottom: 20px;
 `;
 
-/* Stats strip */
 const StatsStrip = styled.div`
   display: flex;
   align-items: center;
@@ -187,7 +170,6 @@ const StatItem = styled.div`
   strong { color: #1e293b; font-weight: 800; }
 `;
 
-/* Toolbar (select-all + bulk delete) */
 const Toolbar = styled.div`
   display: flex;
   justify-content: space-between;
@@ -215,7 +197,6 @@ const Checkbox = styled.input`
   accent-color: #10b981;
 `;
 
-/* Table header row */
 const TableHead = styled.div`
   display: grid;
   grid-template-columns: 48px 52px 1fr 170px 110px;
@@ -234,7 +215,6 @@ const HeadCell = styled.span`
   color: #059669;
 `;
 
-/* Question row */
 const QuesRow = styled.div`
   display: grid;
   grid-template-columns: 48px 52px 1fr 170px 110px;
@@ -278,7 +258,6 @@ const TypeBadge = styled.span`
   white-space: nowrap;
 `;
 
-/* Action buttons */
 const ActionGroup = styled.div`
   display: flex;
   align-items: center;
@@ -298,7 +277,6 @@ const IconBtn = styled.button`
   transition: all 0.18s ease;
 
   &:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-
   &:active { transform: scale(0.95); }
 `;
 
@@ -337,7 +315,6 @@ const BulkDeleteBtn = styled.button`
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 `;
 
-/* Empty state */
 const EmptyState = styled.div`
   padding: 64px 32px;
   text-align: center;
@@ -350,9 +327,6 @@ const EmptyState = styled.div`
   svg { opacity: 0.3; }
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const ShowQuestion = () => {
   const { topicID, tname } = useParams();
   const dispatch = useDispatch();
@@ -362,7 +336,6 @@ const ShowQuestion = () => {
   const refreshapi = useSelector((state) => state.api.value);
   const userId = useSelector((state) => state.auth.user);
 
-  // Pagination & selection & modal state
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -419,9 +392,16 @@ const ShowQuestion = () => {
         toast.success("Question deleted successfully");
         setSelectedIds((prev) => prev.filter((id) => id !== itemToDelete));
       }
-      const remaining = questions.length - (itemToDelete === "bulk" ? selectedIds.length : 1);
+
+      const remaining =
+        questions.length -
+        (itemToDelete === "bulk" ? selectedIds.length : 1);
+
       const newTotalPages = Math.ceil(remaining / 10);
-      if (currentPage > newTotalPages && newTotalPages > 0) setCurrentPage(newTotalPages);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+
       dispatch(toggle());
     } catch (err) {
       toast.error(err.message || "Failed to delete question(s)");
@@ -430,7 +410,8 @@ const ShowQuestion = () => {
     }
   };
 
-  const updateQuestion = (quesId) => navigate(`/update-question/${quesId}`);
+  const updateQuestion = (quesId) =>
+    navigate(`/update-question/${quesId}`);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) setSelectIdsAllPage();
@@ -438,22 +419,29 @@ const ShowQuestion = () => {
   };
 
   const handleSelectOne = (e, quesId) => {
-    if (e.target.checked) setSelectedIds((prev) => [...prev, quesId]);
-    else setSelectedIds((prev) => prev.filter((id) => id !== quesId));
+    if (e.target.checked)
+      setSelectedIds((prev) => [...prev, quesId]);
+    else
+      setSelectedIds((prev) => prev.filter((id) => id !== quesId));
   };
 
-  const paginatedQuestions = questions.slice((currentPage - 1) * 10, currentPage * 10);
+  const paginatedQuestions = questions.slice(
+    (currentPage - 1) * 10,
+    currentPage * 10
+  );
 
-  const setSelectIdsAllPage = () => setSelectedIds(paginatedQuestions.map((q) => q.questionId));
+  const setSelectIdsAllPage = () =>
+    setSelectedIds(paginatedQuestions.map((q) => q.questionId));
 
   const allSelectedOnPage =
     paginatedQuestions.length > 0 &&
-    paginatedQuestions.every((q) => selectedIds.includes(q.questionId));
+    paginatedQuestions.every((q) =>
+      selectedIds.includes(q.questionId)
+    );
 
   return (
     <Layout>
       <PageWrap>
-        {/* ── Hero Bar ── */}
         <HeroBar>
           <HeroLeft>
             <HeroIconRing>
@@ -468,16 +456,16 @@ const ShowQuestion = () => {
             </HeroTitleGroup>
           </HeroLeft>
 
-          <CreateBtn onClick={() => navigate(`/create-question/${topicID}/${tname}`)}>
+          <CreateBtn onClick={() =>
+            navigate(`/create-question/${topicID}/${tname}`)
+          }>
             <PlusCircle size={17} />
             Create Question
           </CreateBtn>
         </HeroBar>
 
-        {/* ── Main Content ── */}
         <ContentArea>
           <TableCard>
-            {/* Stats strip */}
             <StatsStrip>
               <StatItem>
                 Showing <strong>{paginatedQuestions.length}</strong> of{" "}
@@ -489,7 +477,6 @@ const ShowQuestion = () => {
               </StatItem>
             </StatsStrip>
 
-            {/* Toolbar (select-all + bulk delete) */}
             {questions.length > 0 && (
               <Toolbar>
                 <SelectWrap>
@@ -500,8 +487,12 @@ const ShowQuestion = () => {
                   />
                   <span>Select All on Page</span>
                 </SelectWrap>
+
                 {selectedIds.length > 0 && (
-                  <BulkDeleteBtn disabled={loading} onClick={() => handleDeleteClick("bulk")}>
+                  <BulkDeleteBtn
+                    disabled={loading}
+                    onClick={() => handleDeleteClick("bulk")}
+                  >
                     <Trash2 size={15} />
                     Delete Selected ({selectedIds.length})
                   </BulkDeleteBtn>
@@ -509,16 +500,16 @@ const ShowQuestion = () => {
               </Toolbar>
             )}
 
-            {/* Table header */}
             <TableHead>
               <HeadCell></HeadCell>
               <HeadCell>S.No</HeadCell>
               <HeadCell>Question Details</HeadCell>
               <HeadCell>Question Type</HeadCell>
-              <HeadCell style={{ textAlign: "center" }}>Action</HeadCell>
+              <HeadCell style={{ textAlign: "center" }}>
+                Action
+              </HeadCell>
             </TableHead>
 
-            {/* Rows */}
             {questions.length === 0 ? (
               <EmptyState>
                 <FileQuestion size={48} />
@@ -526,29 +517,41 @@ const ShowQuestion = () => {
               </EmptyState>
             ) : (
               paginatedQuestions.map((ques, i) => {
-                const isSelected = selectedIds.includes(ques.questionId);
+                const isSelected =
+                  selectedIds.includes(ques.questionId);
+
                 return (
                   <QuesRow key={ques.questionId || i} $index={i}>
                     <Checkbox
                       type="checkbox"
                       checked={isSelected}
-                      onChange={(e) => handleSelectOne(e, ques.questionId)}
+                      onChange={(e) =>
+                        handleSelectOne(e, ques.questionId)
+                      }
                     />
-                    <RowIndex>{(currentPage - 1) * 10 + i + 1}</RowIndex>
-                    <QuestionText>{ques.questionDetail}</QuestionText>
-                    <TypeBadge>{ques.questionTypeId}</TypeBadge>
+                    <RowIndex>
+                      {(currentPage - 1) * 10 + i + 1}
+                    </RowIndex>
+                    <QuestionText>
+                      {ques.questionDetail}
+                    </QuestionText>
+                    <TypeBadge>
+                      {ques.questionTypeId}
+                    </TypeBadge>
                     <ActionGroup>
                       <EditBtn
-                        title="Update Question"
                         disabled={loading}
-                        onClick={() => updateQuestion(ques.questionId)}
+                        onClick={() =>
+                          updateQuestion(ques.questionId)
+                        }
                       >
                         <EditIcon size={15} />
                       </EditBtn>
                       <DeleteBtn
-                        title="Delete Question"
                         disabled={loading}
-                        onClick={() => handleDeleteClick(ques.questionId)}
+                        onClick={() =>
+                          handleDeleteClick(ques.questionId)
+                        }
                       >
                         <Trash2 size={15} />
                       </DeleteBtn>
@@ -559,7 +562,6 @@ const ShowQuestion = () => {
             )}
           </TableCard>
 
-          {/* Pagination */}
           <Pagination
             currentPage={currentPage}
             totalItems={questions.length}
@@ -572,7 +574,11 @@ const ShowQuestion = () => {
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           onConfirm={executeDelete}
-          title={itemToDelete === "bulk" ? "Bulk Delete Questions" : "Delete Question"}
+          title={
+            itemToDelete === "bulk"
+              ? "Bulk Delete Questions"
+              : "Delete Question"
+          }
           message={
             itemToDelete === "bulk"
               ? `Are you sure you want to delete ${selectedIds.length} questions?`

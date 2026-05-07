@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import UserHeader from "../user/UserHeader";
 
-/* ===================== GLOBAL STYLES ===================== */
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
 
@@ -51,7 +50,6 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-/* ===================== KEYFRAMES ===================== */
 const fadeIn = keyframes`from{opacity:0}to{opacity:1}`;
 const slideUp = keyframes`from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}`;
 const slideIn = keyframes`from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}`;
@@ -60,7 +58,6 @@ const pulse = keyframes`0%,100%{opacity:1}50%{opacity:0.35}`;
 const popIn = keyframes`from{opacity:0;transform:scale(.75)}to{opacity:1;transform:scale(1)}`;
 const timerWarn = keyframes`0%,100%{color:var(--red-600)}50%{color:#c94040}`;
 
-/* ===================== SUBMIT MODAL ===================== */
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
@@ -261,7 +258,6 @@ const SubmitConfirmModal = ({ stats, onConfirm, onCancel, submitting }) => (
   </Overlay>
 );
 
-/* ===================== LAYOUT ===================== */
 const PageWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -372,7 +368,6 @@ const Content = styled.div`
   overflow: hidden;
 `;
 
-/* ===================== QUESTION PANE ===================== */
 const QuestionPane = styled.div`
   flex: 1;
   padding: 28px 32px;
@@ -440,7 +435,6 @@ const QuestionText = styled.h2`
   letter-spacing: -0.1px;
 `;
 
-/* ===================== OPTIONS ===================== */
 const OptionLabel = styled.div`
   display: flex;
   align-items: center;
@@ -535,7 +529,6 @@ const FillInput = styled.input`
   }
 `;
 
-/* ===================== ACTION BAR ===================== */
 const ActionBar = styled.div`
   display: flex;
   gap: 10px;
@@ -571,7 +564,6 @@ const ActionBtn = styled.button`
   }
 `;
 
-/* ===================== PALETTE PANE ===================== */
 const PalettePane = styled.div`
   width: 260px;
   flex-shrink: 0;
@@ -697,7 +689,6 @@ const StatItemVal = styled.span`
   color: ${(p) => p.color};
 `;
 
-/* ===================== COMPONENT ===================== */
 const ExamAttend = () => {
   const navigate = useNavigate();
   const { examId, duration } = useParams();
@@ -716,7 +707,6 @@ const ExamAttend = () => {
   const currentAnswer = answersMap[offSet]?.answer || [];
   const timeWarn = time <= 300;
 
-  /* ── Timer ── */
   useEffect(() => {
     if (timerRef.current) return;
     timerRef.current = setInterval(() => {
@@ -732,7 +722,6 @@ const ExamAttend = () => {
     return () => clearInterval(timerRef.current);
   }, []);
 
-  /* ── Fetch question ── */
   const getQuestion = async (idx) => {
     try {
       const res = await fetch(
@@ -747,18 +736,17 @@ const ExamAttend = () => {
       console.log(e);
     }
   };
+
   useEffect(() => {
     getQuestion(offSet);
   }, [offSet]);
 
-  /* ── Status helper ── */
   const getStatus = (i) => {
     if (answersMap[i]?.status) return answersMap[i].status;
     if (visitedSet.has(i)) return "not_answered";
     return undefined;
   };
 
-  /* ── Navigation ── */
   const markVisited = (i) =>
     setVisitedSet((prev) => {
       if (prev.has(i)) return prev;
@@ -773,7 +761,6 @@ const ExamAttend = () => {
     markVisited(i);
   };
 
-  /* ── Handlers ── */
   const handleAnswer = (val) => {
     const type = question.questionTypeId;
     const updated =
@@ -824,6 +811,7 @@ const ExamAttend = () => {
       markVisited(n);
     }
   };
+
   const handlePrev = async () => {
     await saveAnswer();
     if (offSet > 0) {
@@ -832,6 +820,7 @@ const ExamAttend = () => {
       markVisited(p);
     }
   };
+
   const markReview = () =>
     setAnswersMap((p) => ({
       ...p,
@@ -844,7 +833,6 @@ const ExamAttend = () => {
       [offSet]: { answer: [], status: "not_answered" },
     }));
 
-  /* ── Submit ── */
   const autoSubmitExam = async (msg) => {
     try {
       await saveAnswer();
@@ -991,7 +979,6 @@ const ExamAttend = () => {
           />
         )}
 
-        {/* ── Top Bar ── */}
         <TopBar>
           <ExamLabel>
             Exam <span>#{examId}</span>
@@ -1009,9 +996,7 @@ const ExamAttend = () => {
           <SubmitTopBtn onClick={handleSubmitExam}>Submit Exam</SubmitTopBtn>
         </TopBar>
 
-        {/* ── Main Content ── */}
         <Content>
-          {/* ── Question Pane ── */}
           <QuestionPane>
             <QuestionCard>
               <QuestionMeta>
@@ -1021,7 +1006,6 @@ const ExamAttend = () => {
                     {question.questionTypeId.replace(/_/g, " ")}
                   </QTypeBadge>
                 )}
-              
               </QuestionMeta>
               <QuestionText>
                 {question.questionDetail || "Loading question…"}
@@ -1075,7 +1059,6 @@ const ExamAttend = () => {
             </ActionBar>
           </QuestionPane>
 
-          {/* ── Palette Pane ── */}
           <PalettePane>
             <div>
               <PaletteHeader>Question Map</PaletteHeader>
@@ -1086,7 +1069,6 @@ const ExamAttend = () => {
                     status={getStatus(i)}
                     active={i === offSet}
                     onClick={() => goTo(i)}
-                    title={`Question ${i + 1}`}
                   >
                     {i + 1}
                   </PaletteBtn>
@@ -1098,52 +1080,46 @@ const ExamAttend = () => {
 
             <div>
               <PaletteHeader>Legend</PaletteHeader>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <LegendItem>
-                  <LegendDot bg="var(--green-50)" border="var(--green-100)" />
-                  Answered
-                </LegendItem>
-                <LegendItem>
-                  <LegendDot bg="var(--red-50)" border="var(--red-100)" />
-                  Not Answered
-                </LegendItem>
-                <LegendItem>
-                  <LegendDot bg="var(--amber-50)" border="var(--amber-100)" />
-                  Marked Review
-                </LegendItem>
-                <LegendItem>
-                  <LegendDot bg="var(--gray-100)" border="var(--gray-200)" />
-                  Not Visited
-                </LegendItem>
-              </div>
+              <LegendItem>
+                <LegendDot bg="var(--green-50)" border="var(--green-100)" />
+                Answered
+              </LegendItem>
+              <LegendItem>
+                <LegendDot bg="var(--red-50)" border="var(--red-100)" />
+                Not Answered
+              </LegendItem>
+              <LegendItem>
+                <LegendDot bg="var(--amber-50)" border="var(--amber-100)" />
+                Marked Review
+              </LegendItem>
+              <LegendItem>
+                <LegendDot bg="var(--gray-100)" border="var(--gray-200)" />
+                Not Visited
+              </LegendItem>
             </div>
 
             <PaletteDivider />
 
             <div>
               <PaletteHeader>Progress</PaletteHeader>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <StatItem>
-                  <StatItemLabel>Answered</StatItemLabel>
-                  <StatItemVal color="var(--green-600)">
-                    {attempted}
-                  </StatItemVal>
-                </StatItem>
-                <StatItem>
-                  <StatItemLabel>Skipped</StatItemLabel>
-                  <StatItemVal color="var(--red-600)">{skipped}</StatItemVal>
-                </StatItem>
-                <StatItem>
-                  <StatItemLabel>Review</StatItemLabel>
-                  <StatItemVal color="var(--amber-600)">{review}</StatItemVal>
-                </StatItem>
-                <StatItem>
-                  <StatItemLabel>Not Visited</StatItemLabel>
-                  <StatItemVal color="var(--gray-400)">
-                    {totalQuestions - visitedSet.size}
-                  </StatItemVal>
-                </StatItem>
-              </div>
+              <StatItem>
+                <StatItemLabel>Answered</StatItemLabel>
+                <StatItemVal color="var(--green-600)">{attempted}</StatItemVal>
+              </StatItem>
+              <StatItem>
+                <StatItemLabel>Skipped</StatItemLabel>
+                <StatItemVal color="var(--red-600)">{skipped}</StatItemVal>
+              </StatItem>
+              <StatItem>
+                <StatItemLabel>Review</StatItemLabel>
+                <StatItemVal color="var(--amber-600)">{review}</StatItemVal>
+              </StatItem>
+              <StatItem>
+                <StatItemLabel>Not Visited</StatItemLabel>
+                <StatItemVal color="var(--gray-400)">
+                  {totalQuestions - visitedSet.size}
+                </StatItemVal>
+              </StatItem>
             </div>
           </PalettePane>
         </Content>
