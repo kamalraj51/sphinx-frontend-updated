@@ -464,7 +464,7 @@ const AvailableExam = () => {
                     <TDStyled>
                       <ExamNameBtn
                         title="Edit Exam"
-                        onClick={() => navigate("/examupdate", { state: { examData: data } })}
+                        onClick={() => navigate("/exam-update", { state: { examData: data } })}
                       >
                         {data.examName}
                       </ExamNameBtn>
