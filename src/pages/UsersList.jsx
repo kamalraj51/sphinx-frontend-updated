@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import Layout from "../component/Layout";
 import { useEffect, useMemo, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { toast } from "sonner";
 import Assignexamtempoaryupdate from "../component/Assignexamtempoaryupdate";
 import ConfirmModal from "../component/ConfirmModal";
@@ -11,46 +12,27 @@ import {
   CheckCircle2,
   Trash2,
   Search,
+  EditIcon,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import { ActionGroup, EditBtn } from "../component/Topics";
 
 const fadeUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 `;
 
 const slideIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
 `;
 
 const PageWrap = styled.div`
   font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
   padding-bottom: 60px;
-
   display: flex;
   flex-direction: column;
-
   gap: 34px;
-
-  overflow: visible;
-
-  position: relative;
-  z-index: 1;
 `;
 
 const HeroBar = styled.div`
@@ -59,17 +41,9 @@ const HeroBar = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-
   gap: 16px;
   padding: 20px 32px;
-
-  background: linear-gradient(
-    135deg,
-    #064e3b 0%,
-    #065f46 50%,
-    #047857 100%
-  );
-
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
   border-radius: 16px;
 `;
 
@@ -82,17 +56,12 @@ const HeroLeft = styled.div`
 const HeroIconRing = styled.div`
   width: 52px;
   height: 52px;
-
   border-radius: 16px;
-
   background: rgba(16, 185, 129, 0.2);
-
   border: 1.5px solid rgba(52, 211, 153, 0.35);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #34d399;
 `;
 
@@ -107,18 +76,12 @@ const HeroBadge = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 5px;
-
   background: rgba(16, 185, 129, 0.15);
-
   border: 1px solid rgba(16, 185, 129, 0.3);
-
   color: #34d399;
-
   font-size: 12px;
   font-weight: 600;
-
   padding: 4px 10px;
-
   border-radius: 999px;
 `;
 
@@ -132,30 +95,23 @@ const HeroDot = styled.span`
 const Card = styled.div`
   background: #fff;
   border-radius: 20px;
-
-  overflow: visible !important;
-
-  position: relative;
-
-  z-index: 1;
-
   box-shadow:
     0 4px 30px rgba(0, 0, 0, 0.1),
     0 1px 6px rgba(0, 0, 0, 0.05);
-
+  overflow: hidden;
   animation: ${fadeUp} 0.45s ease both;
+  animation-delay: ${({ $delay }) => $delay || "0s"};
+
 `;
 
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-
   padding: 16px 24px;
-
   border-bottom: 2px solid #d1fae5;
-
   background: #f0fdf4;
+  border-radius: 20px 20px 0 0;
 `;
 
 const CardTitle = styled.h2`
@@ -168,23 +124,17 @@ const CardTitle = styled.h2`
 
 const CardBody = styled.div`
   padding: 20px 24px;
-
-  overflow: visible;
 `;
 
 const AssignGrid = styled.div`
   display: grid;
-
   grid-template-columns: 1.5fr 1fr 1fr auto;
-
   gap: 12px;
-
-  align-items: start;
+  align-items: end;
 
   @media (max-width: 860px) {
     grid-template-columns: 1fr 1fr;
   }
-
   @media (max-width: 520px) {
     grid-template-columns: 1fr;
   }
@@ -194,17 +144,12 @@ const FieldWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-
-  position: relative;
-
-  z-index: 9999;
 `;
 
 const FieldLabel = styled.label`
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-
   color: #64748b;
 `;
 
@@ -212,118 +157,68 @@ const SearchWrapper = styled.div`
   position: relative;
 `;
 
-const SearchIcon = styled.div`
+const SearchIconWrap = styled.div`
   position: absolute;
-
   top: 50%;
   left: 12px;
-
   transform: translateY(-50%);
-
   color: #94a3b8;
-
-  z-index: 5;
+  pointer-events: none;
+  z-index: 1;
 `;
 
 const StyledInput = styled.input`
   width: 100%;
-
-  padding: 10px 12px 10px
-    ${({ $search }) => ($search ? "40px" : "12px")};
-
+  padding: 10px 12px 10px ${({ $search }) => ($search ? "38px" : "12px")};
   border: 1.5px solid #e2e8f0;
-
   border-radius: 10px;
-
   font-size: 13.5px;
-
   color: #1e293b;
-
   background: #f8fafc;
-
-  transition:
-    border-color 0.18s,
-    box-shadow 0.18s;
-
+  transition: border-color 0.18s, box-shadow 0.18s;
   box-sizing: border-box;
+  font-family: "Sora", "DM Sans", sans-serif;
 
   &:focus {
     outline: none;
-
     border-color: #10b981;
-
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
-
     background: #fff;
   }
 `;
 
+/* ── Portal dropdown: rendered into document.body, never clipped by parents ── */
 const SuggestionsBox = styled.div`
   position: absolute;
-
-  top: calc(100% + 8px);
-
-  left: 0;
-
-  width: 100%;
-
   background: #ffffff;
-  
-
   border: 1px solid #dbe4ee;
-
   border-radius: 14px;
-
-  z-index: 999999;
-
-  isolation: isolate;
-
+  z-index: 99999;
   overflow-y: auto;
-
   overflow-x: hidden;
-
-  max-height: 280px;
-
+  max-height: 260px;
   box-shadow:
-    0 20px 45px rgba(15, 23, 42, 0.18),
-    0 8px 20px rgba(15, 23, 42, 0.12);
-
+    0 20px 45px rgba(15, 23, 42, 0.16),
+    0 8px 20px rgba(15, 23, 42, 0.1);
   padding: 4px 0;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-  }
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 20px; }
+  &::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 `;
 
 const SuggestionItem = styled.button`
   width: 100%;
-
   border: none;
-
   background: transparent;
-
-  padding: 12px 14px;
-
+  padding: 11px 14px;
   cursor: pointer;
-
   text-align: left;
-
   border-bottom: 1px solid #f1f5f9;
-
   transition: background 0.15s ease;
 
-  &:hover {
-    background: #f0fdf4;
-  }
+  &:last-child { border-bottom: none; }
+  &:hover { background: #f0fdf4; }
 `;
 
 const SuggestionName = styled.div`
@@ -348,44 +243,31 @@ const AssignSubmitBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 7px;
-
   padding: 10px 20px;
-
   background: linear-gradient(135deg, #10b981, #059669);
-
   color: #fff;
-
   border: none;
-
   border-radius: 10px;
-
   font-size: 13px;
   font-weight: 700;
-
+  font-family: "Sora", "DM Sans", sans-serif;
   cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s ease;
 
-  align-self: flex-end;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
+  &:hover { transform: translateY(-1px); }
 `;
 
 const StatsStrip = styled.div`
   padding: 13px 24px;
-
   border-bottom: 1px solid #e2e8f0;
-
   background: #fafbff;
 `;
 
 const StatItem = styled.div`
   font-size: 13px;
   color: #64748b;
-
-  strong {
-    color: #1e293b;
-  }
+  strong { color: #1e293b; }
 `;
 
 const Table = styled.table`
@@ -399,24 +281,16 @@ const THeadStyled = styled.thead`
 
 const THStyled = styled.th`
   padding: 13px 16px;
-
-  text-align: ${({ $center }) =>
-    $center ? "center" : "left"};
-
+  text-align: ${({ $center }) => ($center ? "center" : "left")};
   font-size: 11px;
   font-weight: 800;
-
   color: #059669;
 `;
 
 const TRStyled = styled.tr`
   border-bottom: 1px solid #f1f5f9;
-
   animation: ${slideIn} 0.3s ease both;
-
-  &:hover {
-    background: #f0fdf4;
-  }
+  &:hover { background: #f0fdf4; }
 `;
 
 const TDStyled = styled.td`
@@ -424,97 +298,115 @@ const TDStyled = styled.td`
   font-size: 13px;
 `;
 
-const UserNameBtn = styled.button`
+const UserNameBtn = styled.span`
   border: none;
   background: none;
-
   color: #059669;
-
   font-weight: 700;
-
-  cursor: pointer;
+  font-family: "Sora", "DM Sans", sans-serif;
+  padding: 0;
+  text-align: left;
 `;
 
 const UserSubText = styled.span`
   display: block;
-
   font-size: 11px;
-
   color: #94a3b8;
 `;
 
 const Pill = styled.span`
   display: inline-flex;
-
   padding: 4px 12px;
-
   border-radius: 999px;
-
   font-size: 12px;
   font-weight: 700;
 
   ${({ $color }) =>
     $color === "indigo" &&
-    `
-    background:#eef2ff;
-    color:#4f46e5;
-  `}
+    `background:#eef2ff; color:#4f46e5;`}
 
   ${({ $color }) =>
     $color === "slate" &&
-    `
-    background:#f1f5f9;
-    color:#475569;
-  `}
+    `background:#f1f5f9; color:#475569;`}
 `;
 
 const DeleteBtn = styled.button`
   width: 34px;
   height: 34px;
-
   border-radius: 9px;
-
   border: none;
-
   cursor: pointer;
-
   background: linear-gradient(135deg, #ef4444, #dc2626);
-
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
 const EmptyState = styled.div`
   padding: 48px 32px;
-
   text-align: center;
-
   color: #94a3b8;
 `;
 
+/* ════════════════════════════════════════════════════
+   Portal Dropdown Component
+   Renders into document.body — completely escapes all
+   parent overflow / stacking context clipping
+   ════════════════════════════════════════════════════ */
+const PortalDropdown = ({ inputRef, children, visible }) => {
+  const [style, setStyle] = useState({});
+
+  useEffect(() => {
+    if (!visible || !inputRef.current) return;
+
+    const updatePosition = () => {
+      const rect = inputRef.current.getBoundingClientRect();
+      setStyle({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    };
+
+    updatePosition();
+
+    // Recalculate on scroll or resize
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [visible, inputRef]);
+
+  if (!visible) return null;
+
+  return ReactDOM.createPortal(
+    <SuggestionsBox style={style}>{children}</SuggestionsBox>,
+    document.body
+  );
+};
+
+/* ════════════════════════════════════════════════════
+   UsersList Component
+   ════════════════════════════════════════════════════ */
 const UsersList = () => {
   const location = useLocation();
-
   const userId = useSelector((state) => state.auth.user);
-
   const examId = location.state?.examId;
 
   const [user, setUser] = useState([]);
-
-  const [alreadyAssignedUsers, setAlreadyAssignedUsers] =
-    useState([]);
-
-  const [selectedUser, setSelectedUser] =
-    useState(null);
-
+  const [alreadyAssignedUsers, setAlreadyAssignedUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const [searchTerm, setSearchTerm] =
-    useState("");
-
-  const [showSuggestions, setShowSuggestions] =
-    useState(false);
-
-  const searchRef = useRef(null);
+  const searchRef = useRef(null);   // wrapper div (for outside-click detection)
+  const inputRef = useRef(null);    // actual <input> (for getBoundingClientRect)
 
   const [formData, setFormData] = useState({
     examId,
@@ -526,52 +418,42 @@ const UsersList = () => {
   });
 
   const [errors, setErrors] = useState({});
-
   const numberRegex = /^[0-9]+$/;
 
-  // FETCH USERS
+  /* ── Fetch all unassigned users ── */
   const handleUser = async () => {
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/user/getAllUser",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             examId: formData.examId,
             servicetype: "not assiggned",
             createdByUserLogin: userId,
-
           }),
         }
       );
-
       const data = await response.json();
-
       setUser(data.allUser || []);
     } catch (err) {
       console.log(err);
     }
   };
 
-  // FETCH ASSIGNED USERS
+  /* ── Fetch assigned users ── */
   const getAll = async () => {
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/user/getPartyExam",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ examId }),
         }
       );
-
       const data = await response.json();
-
       setAlreadyAssignedUsers(data.allData || []);
     } catch {
       setAlreadyAssignedUsers([]);
@@ -585,85 +467,51 @@ const UsersList = () => {
     }
   }, [examId]);
 
-  // CLOSE DROPDOWN ON OUTSIDE CLICK
+  /* ── Close dropdown on outside click ── */
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target)
-      ) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowSuggestions(false);
       }
     };
-
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
-
-    return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // SEARCH LOGIC
+  /* ── Search filter ── */
   const filteredUsers = useMemo(() => {
-    if (!searchTerm.trim()) {
-      return user;
-    }
-
+    if (!searchTerm.trim()) return user;
     const search = searchTerm.toLowerCase();
-
     const startsWith = [];
     const contains = [];
-
     user.forEach((item) => {
-      const username =
-        item.userLoginId.toLowerCase();
-
-      // FIRST PRIORITY
-      if (username.startsWith(search)) {
-        startsWith.push(item);
-      }
-      // SECOND PRIORITY
-      else if (username.includes(search)) {
-        contains.push(item);
-      }
+      const username = item.userLoginId.toLowerCase();
+      if (username.startsWith(search)) startsWith.push(item);
+      else if (username.includes(search)) contains.push(item);
     });
-
     return [...startsWith, ...contains];
   }, [searchTerm, user]);
 
-  // SELECT USER
+  /* ── Select user from dropdown ── */
   const handleSelectUser = (item) => {
     setSearchTerm(item.userLoginId);
-
     setFormData((prev) => ({
       ...prev,
       partyId: item.partyId,
       userLoginId: item.userLoginId,
     }));
-
     setShowSuggestions(false);
   };
 
-  // INPUT CHANGE
+  /* ── Input change ── */
   const handleform = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // SUBMIT
+  /* ── Submit ── */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     let err = {};
     let valid = true;
 
@@ -671,85 +519,50 @@ const UsersList = () => {
       err.partyId = "Please select user";
       valid = false;
     }
-
-    if (
-      !formData.allowedAttempts ||
-      !numberRegex.test(formData.allowedAttempts)
-    ) {
-      err.allowedAttempts =
-        "Allowed attempts must be number";
+    if (!formData.allowedAttempts || !numberRegex.test(formData.allowedAttempts)) {
+      err.allowedAttempts = "Allowed attempts must be a number";
       valid = false;
     }
-
-    if (
-      !formData.timeoutDays ||
-      !numberRegex.test(formData.timeoutDays)
-    ) {
-      err.timeoutDays =
-        "Timeout days must be number";
+    if (!formData.timeoutDays || !numberRegex.test(formData.timeoutDays)) {
+      err.timeoutDays = "Timeout days must be a number";
       valid = false;
     }
-
-    if (!valid) {
-      setErrors(err);
-      return;
-    }
+    if (!valid) { setErrors(err); return; }
 
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/user/partyExamCreate",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         }
       );
-
       const data = await response.json();
-
-      toast.success(
-        data.success || "User Assigned"
-      );
-
+      toast.success(data.success || "User Assigned");
       setSearchTerm("");
-
-      setFormData((prev) => ({
-        ...prev,
-        partyId: "",
-        userLoginId: "",
-      }));
-
+      setErrors({});
+      setFormData((prev) => ({ ...prev, partyId: "", userLoginId: "" }));
       handleUser();
       getAll();
-    } catch (err) {
-      console.log(err);
+    } catch {
       toast.error("Assignment failed");
     }
   };
 
-  // DELETE
+  /* ── Delete ── */
   const handleDeleteExam = async () => {
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/user/deleteExamRelationship",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            examId,
-            partyId: selectedUser?.partyId,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ examId, partyId: selectedUser?.partyId }),
         }
       );
-
       const data = await response.json();
-
       toast.success(data.success);
-
       getAll();
       handleUser();
     } catch {
@@ -762,69 +575,51 @@ const UsersList = () => {
   return (
     <Layout>
       <PageWrap>
-        {/* HERO */}
-
+        {/* ── Hero ── */}
         <HeroBar>
           <HeroLeft>
             <HeroIconRing>
               <Users size={24} />
             </HeroIconRing>
-
-            <HeroTitle>
-              Assign Users to Assessment
-            </HeroTitle>
+            <HeroTitle>Assign Users to Assessment</HeroTitle>
           </HeroLeft>
-
           <HeroBadge>
             <HeroDot />
             {alreadyAssignedUsers.length} Assigned
           </HeroBadge>
         </HeroBar>
 
-        {/* ASSIGN USER CARD */}
-
+        {/* ── Assign User Card ── */}
         <Card>
           <CardHeader>
-            <UserPlus
-              size={15}
-              color="#059669"
-            />
-
-            <CardTitle>
-              Assign New User
-            </CardTitle>
+            <UserPlus size={15} color="#059669" />
+            <CardTitle>Assign New User</CardTitle>
           </CardHeader>
 
           <CardBody>
             <form onSubmit={handleSubmit}>
               <AssignGrid>
-                {/* SEARCH USER */}
 
-                <FieldWrap ref={searchRef}>
-                  <FieldLabel>
-                    Search & Select User
-                  </FieldLabel>
+                {/* Search User */}
+                <FieldWrap>
+                  <FieldLabel>Search &amp; Select User</FieldLabel>
 
-                  <SearchWrapper>
-                    <SearchIcon>
-                      <Search size={16} />
-                    </SearchIcon>
+                  {/* searchRef on wrapper for outside-click; inputRef on input for positioning */}
+                  <SearchWrapper ref={searchRef}>
+                    <SearchIconWrap>
+                      <Search size={15} />
+                    </SearchIconWrap>
 
                     <StyledInput
+                      ref={inputRef}
                       $search
                       type="text"
                       placeholder="Search userLoginId..."
                       value={searchTerm}
-                      onFocus={() =>
-                        setShowSuggestions(true)
-                      }
+                      onFocus={() => setShowSuggestions(true)}
                       onChange={(e) => {
-                        setSearchTerm(
-                          e.target.value
-                        );
-
+                        setSearchTerm(e.target.value);
                         setShowSuggestions(true);
-
                         setFormData((prev) => ({
                           ...prev,
                           partyId: "",
@@ -833,97 +628,57 @@ const UsersList = () => {
                       }}
                     />
 
-                    {showSuggestions &&
-                      filteredUsers.length >
-                        0 && (
-                        <SuggestionsBox>
-                          {filteredUsers
-                            .slice(0, 100)
-                            .map((item) => (
-                              <SuggestionItem
-                                key={
-                                  item.partyId
-                                }
-                                type="button"
-                                onClick={() =>
-                                  handleSelectUser(
-                                    item
-                                  )
-                                }
-                              >
-                                <SuggestionName>
-                                  {
-                                    item.userLoginId
-                                  }
-                                </SuggestionName>
-
-                                <SuggestionSub>
-                                  Party ID :{" "}
-                                  {
-                                    item.partyId
-                                  }
-                                </SuggestionSub>
-                              </SuggestionItem>
-                            ))}
-                        </SuggestionsBox>
-                      )}
+                    {/* Portal renders dropdown directly into document.body */}
+                    <PortalDropdown
+                      inputRef={inputRef}
+                      visible={showSuggestions && filteredUsers.length > 0}
+                    >
+                      {filteredUsers.slice(0, 100).map((item) => (
+                        <SuggestionItem
+                          key={item.partyId}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            handleSelectUser(item);
+                          }}
+                        >
+                          <SuggestionName>{item.userLoginId}</SuggestionName>
+                         
+                        </SuggestionItem>
+                      ))}
+                    </PortalDropdown>
                   </SearchWrapper>
 
-                  {errors.partyId && (
-                    <ErrorText>
-                      {errors.partyId}
-                    </ErrorText>
-                  )}
+                  {errors.partyId && <ErrorText>{errors.partyId}</ErrorText>}
                 </FieldWrap>
 
-                {/* ATTEMPTS */}
-
+                {/* Allowed Attempts */}
                 <FieldWrap>
-                  <FieldLabel>
-                    Allowed Attempts
-                  </FieldLabel>
-
+                  <FieldLabel>Allowed Attempts</FieldLabel>
                   <StyledInput
                     name="allowedAttempts"
-                    value={
-                      formData.allowedAttempts
-                    }
+                    value={formData.allowedAttempts}
                     onChange={handleform}
                   />
-
                   {errors.allowedAttempts && (
-                    <ErrorText>
-                      {
-                        errors.allowedAttempts
-                      }
-                    </ErrorText>
+                    <ErrorText>{errors.allowedAttempts}</ErrorText>
                   )}
                 </FieldWrap>
 
-                {/* TIMEOUT */}
-
+                {/* Timeout Days */}
                 <FieldWrap>
-                  <FieldLabel>
-                    Timeout Days
-                  </FieldLabel>
-
+                  <FieldLabel>Timeout Days</FieldLabel>
                   <StyledInput
                     name="timeoutDays"
-                    value={
-                      formData.timeoutDays
-                    }
+                    value={formData.timeoutDays}
                     onChange={handleform}
                   />
-
                   {errors.timeoutDays && (
-                    <ErrorText>
-                      {errors.timeoutDays}
-                    </ErrorText>
+                    <ErrorText>{errors.timeoutDays}</ErrorText>
                   )}
                 </FieldWrap>
 
-                {/* BUTTON */}
-
+                {/* Submit */}
                 <AssignSubmitBtn type="submit">
                   <UserPlus size={15} />
                   Assign
@@ -933,159 +688,88 @@ const UsersList = () => {
           </CardBody>
         </Card>
 
-        {/* ASSIGNED USERS */}
-
+        {/* ── Assigned Users Table ── */}
         <Card>
           <CardHeader>
-            <CheckCircle2
-              size={15}
-              color="#059669"
-            />
-
-            <CardTitle>
-              Assigned Users
-            </CardTitle>
+            <CheckCircle2 size={15} color="#059669" />
+            <CardTitle>Assigned Users</CardTitle>
           </CardHeader>
 
           <StatsStrip>
             <StatItem>
-              <strong>
-                {
-                  alreadyAssignedUsers.length
-                }
-              </strong>{" "}
-              users assigned
+              <strong>{alreadyAssignedUsers.length}</strong> users assigned
             </StatItem>
           </StatsStrip>
 
-          {alreadyAssignedUsers.length ===
-          0 ? (
-            <EmptyState>
-              No assigned users found.
-            </EmptyState>
+          {alreadyAssignedUsers.length === 0 ? (
+            <EmptyState>No assigned users found.</EmptyState>
           ) : (
             <Table>
               <THeadStyled>
                 <tr>
-                  <THStyled>
-                    USER NAME
-                  </THStyled>
-
-                  <THStyled $center>
-                    ATTEMPTS
-                  </THStyled>
-
-                  <THStyled $center>
-                    TIMEOUT
-                  </THStyled>
-
-                  <THStyled $center>
-                    ACTION
-                  </THStyled>
+                  <THStyled>USER NAME</THStyled>
+                  <THStyled $center>ATTEMPTS</THStyled>
+                  <THStyled $center>TIMEOUT</THStyled>
+                  <THStyled $center>ACTION</THStyled>
                 </tr>
               </THeadStyled>
-
               <tbody>
-                {alreadyAssignedUsers.map(
-                  (item) => (
-                    <TRStyled
-                      key={item.partyId}
+                {alreadyAssignedUsers.map((item) => (
+                  <TRStyled key={item.partyId}>
+                    <TDStyled>
+                      <UserNameBtn onClick={() => setSelectedUsers(item)}>
+                        {item.userLoginId}
+                      </UserNameBtn>
+                    </TDStyled>
+                    <TDStyled style={{ textAlign: "center" }}>
+                      <Pill $color="indigo">{item.allowedAttempts}</Pill>
+                    </TDStyled>
+                    <TDStyled style={{ textAlign: "center" }}>
+                      <Pill $color="slate">{item.timeoutDays}d</Pill>
+                    </TDStyled>
+                    <TDStyled style={{ textAlign: "center",  height:"100px", width:"10%"}}>
+<div style={{display:"flex",  justifyContent:"center",alignItems:"center", width:"101px"}}>
+                     <EditBtn style={{}}
+                      title="Edit Detail"
+                      onClick={() => setSelectedUsers(item)}
                     >
-                      <TDStyled>
-                        <UserNameBtn
-                          onClick={() =>
-                            setSelectedUser(
-                              item
-                            )
-                          }
-                        >
-                          {
-                            item.userLoginId
-                          }
-
-                          <UserSubText>
-                            {item.partyId}
-                          </UserSubText>
-                        </UserNameBtn>
-                      </TDStyled>
-
-                      <TDStyled
-                        style={{
-                          textAlign:
-                            "center",
+                      <EditIcon size={15} />
+                    </EditBtn>
+                   
+                      <DeleteBtn style={{}}
+                      title="Delete"
+                        onClick={() => {
+                          setSelectedUser(item);
+                          setModalOpen(true);
                         }}
                       >
-                        <Pill $color="indigo">
-                          {
-                            item.allowedAttempts
-                          }
-                        </Pill>
-                      </TDStyled>
-
-                      <TDStyled
-                        style={{
-                          textAlign:
-                            "center",
-                        }}
-                      >
-                        <Pill $color="slate">
-                          {
-                            item.timeoutDays
-                          }
-                          d
-                        </Pill>
-                      </TDStyled>
-
-                      <TDStyled
-                        style={{
-                          textAlign:
-                            "center",
-                        }}
-                      >
-                        <DeleteBtn
-                          onClick={() => {
-                            setSelectedUser(
-                              item
-                            );
-
-                            setModalOpen(
-                              true
-                            );
-                          }}
-                        >
-                          <Trash2
-                            size={15}
-                          />
-                        </DeleteBtn>
-                      </TDStyled>
-                    </TRStyled>
-                  )
-                )}
+                        <Trash2 size={15} />
+                      </DeleteBtn>
+                  </div>
+                    </TDStyled>
+                        </TRStyled>
+                ))}
               </tbody>
             </Table>
           )}
         </Card>
 
-        {/* UPDATE MODAL */}
-
-        {selectedUser && !modalOpen && (
+        {/* Update Modal */}
+        {selectedUsers && !modalOpen && (
           <Assignexamtempoaryupdate
-            item={selectedUser}
+            item={selectedUsers}
             onClose={() => {
-              setSelectedUser(null);
+              setSelectedUsers(null);
               getAll();
             }}
           />
         )}
       </PageWrap>
 
-      {/* DELETE MODAL */}
-
+      {/* Delete Confirm Modal */}
       <ConfirmModal
         isOpen={modalOpen}
-        onClose={() =>
-          setModalOpen(false)
-        }
+        onClose={() => setModalOpen(false)}
         onConfirm={handleDeleteExam}
         title="Delete Exam"
         message="Are you sure you want to delete this exam?"

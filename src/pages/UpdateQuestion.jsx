@@ -14,7 +14,7 @@ import {
   TypePill,
   TypePillContainer,
 } from "./CreateQuestion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import { BackBtn } from "./ExamUpdate";
 
 const UpdateQuestion = () => {
@@ -141,7 +141,7 @@ const UpdateQuestion = () => {
 
     try {
       const response = await fetch(
-        "https://localhost:8443/sphinx/api/question/update-question",
+        "https://localhost:8443/sphinx/api/question/edit-question",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -164,7 +164,7 @@ const UpdateQuestion = () => {
     <Layout>
       <PremiumWrapper>
         <HeaderSection>
-          <h1>Update Question</h1>
+          <h1>Edit Question</h1>
         </HeaderSection>
 
         <TypePillContainer>
@@ -257,11 +257,13 @@ const UpdateQuestion = () => {
             />
           </FormGroup>
         )}
+
+        
 <div style={{display:"flex", justifyContent:"space-between", columnGap:"30px"}}>
         <BackBtn style={{backgroundColor:"green", width: "12%",
   padding: "16px",
   borderRadius: "12px",
-  background: "green",
+ background: "linear-gradient(135deg, #10b981, #059669)",
   color: "white",
   border: "none",
   cursor: "pointer",
@@ -270,10 +272,10 @@ const UpdateQuestion = () => {
                         navigate(-1);
                       }}
                     >
-                      Cancel
+                     <ArrowLeft size={14} /> Cancel
                     </BackBtn>
         <SubmitBtn onClick={handleSubmit} disabled={loading}>
-          {loading ? "Updating..." : "Update Question"}
+          {loading ? "Saving..." : "Save Question"}<ChevronRight size={16}/>
         </SubmitBtn>
         </div>
       </PremiumWrapper>

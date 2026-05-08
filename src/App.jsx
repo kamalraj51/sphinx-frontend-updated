@@ -148,7 +148,7 @@ const App = () => {
             }
           />
           <Route
-            path="/update-question/:quesId"
+            path="/edit-question/:quesId"
             element={
               <ProtectedRoute>
                 <UpdateQuestion />

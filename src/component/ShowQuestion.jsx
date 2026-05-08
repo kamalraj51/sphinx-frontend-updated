@@ -458,7 +458,7 @@ const ShowQuestion = () => {
     }
   };
 
-  const updateQuestion = (quesId) => navigate(`/update-question/${quesId}`);
+  const updateQuestion = (quesId) => navigate(`/edit-question/${quesId}`);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) setSelectIdsAllPage();
@@ -580,12 +580,14 @@ const ShowQuestion = () => {
                     <TypeBadge>{ques.questionTypeId}</TypeBadge>
                     <ActionGroup>
                       <EditBtn
+                      title="Edit Question"
                         disabled={loading}
                         onClick={() => updateQuestion(ques.questionId)}
                       >
                         <EditIcon size={15} />
                       </EditBtn>
                       <DeleteBtn
+                      title="Delete Question"
                         disabled={loading}
                         onClick={() => handleDeleteClick(ques.questionId)}
                       >

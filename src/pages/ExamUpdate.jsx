@@ -180,7 +180,7 @@ const ErrorText = styled.p`
   color: #ef4444;
 `;
 
-const SubmitBtn = styled.button`
+export const SubmitBtn = styled.button`
   margin-top: 20px;
   padding: 11px 28px;
   background: linear-gradient(135deg, #10b981, #059669);
@@ -233,7 +233,7 @@ const ExamUpdate = () => {
               <ClipboardEdit size={24} />
             </HeroIconRing>
             <div>
-              <HeroTitle>Update Assessment</HeroTitle>
+              <HeroTitle>Edit Assessment</HeroTitle>
               <HeroSub>Edit your exam details</HeroSub>
             </div>
           </HeroLeft>
@@ -299,7 +299,7 @@ const ExamUpdate = () => {
               </FormGrid>
 <div style={{display:"flex", columnGap:"10px"}}>
                <SubmitBtn type="submit">
-                Cancel
+               <ArrowLeft size={14} /> Cancel
               </SubmitBtn>
               <SubmitBtn type="submit">
                 Save Changes <ChevronRight size={16}/>

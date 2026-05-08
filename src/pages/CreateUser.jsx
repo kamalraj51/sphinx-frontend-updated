@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../component/Layout";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
+
 import styled, { keyframes } from "styled-components";
 import { UserPlus, User, Mail, AtSign, Shield, ChevronRight, ArrowLeft } from "lucide-react";
 import { HeroLeft } from "../component/AddTopic";
 import { BackBtn } from "./ExamUpdate";
+
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -190,15 +192,20 @@ const CreateUser = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const [show, setShow] = useState(false);
+ 
+ 
+
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     role: "SPX_EXAMINEE",
     userName: "",
-    userLoginId: userId,
-  });
 
+    userLoginId: userId
+  });
+  // Regex patterns
   const firstNameRegex = /^[A-Za-z][A-Za-z '\-]{0,49}$/;
   const lastNameRegex = /^[A-Za-z][A-Za-z '\-\.]{0,49}$/;
   const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;

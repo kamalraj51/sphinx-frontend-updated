@@ -154,7 +154,7 @@ const TopicLabel = styled.span`
   line-height: 1.3;
 `;
 
-const ActionGroup = styled.div`
+export const ActionGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -181,7 +181,7 @@ const IconBtn = styled.button`
   }
 `;
 
-const EditBtn = styled(IconBtn)`
+export const EditBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #10b981, #059669);
   color: #fff;
   box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
