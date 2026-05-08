@@ -23,14 +23,14 @@ const AlreadyExam = ({ examId }) => {
             examId,
             partyId: item.partyId,
           }),
-        },
+        }
       );
 
       const data = await res.json();
 
       if (res.ok) {
         toast.success(data.success);
-        getAll(); // refresh
+        getAll();
       } else {
         toast.error(data.error);
       }

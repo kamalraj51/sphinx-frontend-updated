@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -6,7 +5,6 @@ import styled, { keyframes, createGlobalStyle } from "styled-components";
 import Layout from "../component/Layout";
 import UserHeader from "./UserHeader";
 
-/* ===================== GLOBAL ===================== */
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
 
@@ -61,12 +59,10 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-/* ===================== KEYFRAMES ===================== */
 const fadeUp = keyframes`from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}`;
 const pulse = keyframes`0%,100%{opacity:1}50%{opacity:0.4}`;
 const barSlide = keyframes`from{width:0}to{width:var(--bar-w)}`;
 
-/* ===================== PAGE ===================== */
 const Page = styled.div`
   min-height: 100vh;
   background: #f5f4ef;
@@ -79,7 +75,6 @@ const Inner = styled.div`
   margin: 0 auto;
 `;
 
-/* ===================== HEADER ===================== */
 const HeaderWrap = styled.div`
   margin-bottom: 36px;
 `;
@@ -126,7 +121,6 @@ const PageSub = styled.p`
   font-weight: 400;
 `;
 
-/* ===================== SUMMARY STRIP ===================== */
 const SummaryStrip = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -163,14 +157,12 @@ const SummaryLabel = styled.div`
   font-weight: 600;
 `;
 
-/* ===================== GRID ===================== */
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
 `;
 
-/* ===================== CARD ===================== */
 const Card = styled.div`
   background: #fff;
   border: 1px solid var(--gray-200);
@@ -178,10 +170,7 @@ const Card = styled.div`
   padding: 24px;
   cursor: pointer;
   animation: ${fadeUp} 0.5s ${(p) => p.$delay || "0s"} both;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s,
-    border-color 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   position: relative;
   overflow: hidden;
 
@@ -213,7 +202,6 @@ const CardHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-/* ── Score Ring ── */
 const RingWrap = styled.div`
   position: relative;
   width: 80px;
@@ -266,7 +254,6 @@ const RingSub = styled.span`
   margin-top: 2px;
 `;
 
-/* ── Card Title Area ── */
 const CardMeta = styled.div`
   flex: 1;
   padding-top: 2px;
@@ -298,12 +285,10 @@ const PassBadge = styled.div`
   font-weight: 700;
   letter-spacing: 0.04em;
   background: ${(p) => (p.$pass ? "var(--green-50)" : "var(--red-50)")};
-  border: 1.5px solid
-    ${(p) => (p.$pass ? "var(--green-100)" : "var(--red-100)")};
+  border: 1.5px solid ${(p) => (p.$pass ? "var(--green-100)" : "var(--red-100)")};
   color: ${(p) => (p.$pass ? "var(--green-600)" : "var(--red-600)")};
 `;
 
-/* ── Stats Row ── */
 const StatsRow = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -336,7 +321,6 @@ const StatLabel = styled.div`
   font-weight: 600;
 `;
 
-/* ── Accuracy Bar ── */
 const BarSection = styled.div`
   margin-bottom: 16px;
 `;
@@ -371,12 +355,11 @@ const BarFill = styled.div`
     p.$pct >= 70
       ? "linear-gradient(90deg, var(--green-600), var(--teal-600))"
       : p.$pct >= 40
-        ? "linear-gradient(90deg, var(--amber-600), #c48012)"
-        : "linear-gradient(90deg, var(--red-600), #c94040)"};
+      ? "linear-gradient(90deg, var(--amber-600), #c48012)"
+      : "linear-gradient(90deg, var(--red-600), #c94040)"};
   transition: width 1s 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
-/* ── Card Footer ── */
 const CardFooter = styled.div`
   display: flex;
   justify-content: space-between;
@@ -400,6 +383,7 @@ const ViewBtn = styled.div`
   border-radius: 99px;
   padding: 5px 14px;
   transition: all 0.15s;
+
   ${Card}:hover & {
     background: var(--blue-100);
     border-color: var(--blue-200);
@@ -420,7 +404,6 @@ const AttemptBadge = styled.div`
   padding: 3px 10px;
 `;
 
-/* ── Empty / Loading ── */
 const Empty = styled.div`
   text-align: center;
   padding: 80px 20px;
@@ -432,8 +415,6 @@ const EmptyIcon = styled.div`
   font-size: 36px;
   margin-bottom: 12px;
 `;
-
-/* ═══════════════════════════════════════════════ */
 
 const ExamReport = () => {
   const { userId } = useParams();
@@ -449,7 +430,7 @@ const ExamReport = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userLoginId: userId }),
-        },
+        }
       );
       const data = await response.json();
       if (response.ok) {
@@ -475,7 +456,6 @@ const ExamReport = () => {
       year: "numeric",
     });
 
-  /* Summary aggregates */
   const totalExams = records.length;
   const totalPassed = records.filter((r) => r.userPassed === 1).length;
   const avgScore = totalExams
@@ -492,7 +472,6 @@ const ExamReport = () => {
       <UserHeader />
       <GlobalStyle />
 
-      {/* SVG gradient defs */}
       <svg style={{ position: "absolute", width: 0, height: 0 }}>
         <defs>
           <linearGradient id="ringGradPass" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -508,7 +487,6 @@ const ExamReport = () => {
 
       <Page>
         <Inner>
-          {/* ── Header ── */}
           <HeaderWrap>
             <Breadcrumb>
               <BreadDot /> My Reports
@@ -519,7 +497,6 @@ const ExamReport = () => {
             <PageSub>Click any card to view the full result breakdown.</PageSub>
           </HeaderWrap>
 
-          {/* ── Summary strip ── */}
           {!loading && records.length > 0 && (
             <SummaryStrip>
               <SummaryTile>
@@ -530,11 +507,9 @@ const ExamReport = () => {
                 <SummaryVal color="var(--green-600)">{totalPassed}</SummaryVal>
                 <SummaryLabel>Passed</SummaryLabel>
               </SummaryTile>
-              
             </SummaryStrip>
           )}
 
-          {/* ── Cards ── */}
           {loading ? (
             <Empty>
               <EmptyIcon>⏳</EmptyIcon>
@@ -562,9 +537,8 @@ const ExamReport = () => {
                     $pass={passed}
                     onClick={() => navigate(`/result/${r.examId}/${userId}`)}
                   >
-                    <AttemptBadge>#{(r.attemptNo ?? 0) }</AttemptBadge>
+                    <AttemptBadge>#{r.attemptNo ?? 0}</AttemptBadge>
 
-                    {/* ── Ring + meta ── */}
                     <CardHeader>
                       <RingWrap>
                         <RingSvg width="80" height="80" viewBox="0 0 80 80">
@@ -592,7 +566,6 @@ const ExamReport = () => {
                       </CardMeta>
                     </CardHeader>
 
-                    {/* ── Stats ── */}
                     <StatsRow>
                       <StatTile bg="var(--gray-50)" border="var(--gray-100)">
                         <StatVal color="var(--gray-800)">{total}</StatVal>
@@ -616,7 +589,6 @@ const ExamReport = () => {
                       </StatTile>
                     </StatsRow>
 
-                    {/* ── Accuracy bar ── */}
                     <BarSection>
                       <BarHead>
                         <span>Accuracy</span>
@@ -627,7 +599,6 @@ const ExamReport = () => {
                       </BarTrack>
                     </BarSection>
 
-                    {/* ── Footer ── */}
                     <CardFooter>
                       <FooterDate>📅 {fmtDate(r.date)}</FooterDate>
                       <ViewBtn>View Details →</ViewBtn>

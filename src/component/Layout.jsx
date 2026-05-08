@@ -16,13 +16,8 @@ function Layout({ children }) {
   return (
     <>
       <Header />
-      {/* <UserHeader/> */}
       <MainContainer>
-        {/* <Toaster /> */}
         <LayoutContainer>{children}</LayoutContainer>
-        
-
-
         <Footer />
       </MainContainer>
     </>

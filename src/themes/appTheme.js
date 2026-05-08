@@ -1,21 +1,21 @@
 export const appTheme = {
   colors: {
-  primary: "#10B981",       // vibrant indigo
-    secondary: "#FFFFFF",     // bright white 
-    accent: "#06B6D4",        // cyan highlight
+    primary: "#10B981",
+    secondary: "#FFFFFF",
+    accent: "#06B6D4",
 
-    background: "#D7DAE1  ",    // soft gray background
-    surface: "rgba(255, 255, 255, 0.7)",       // glass surface
+    background: "#D7DAE1  ",
+    surface: "rgba(255, 255, 255, 0.7)",
 
-    textPrimary: "#111827",   // strong dark text
-    textSecondary: "#6B7280", // soft gray text
+    textPrimary: "#111827",
+    textSecondary: "#6B7280",
 
     border: "#C5C8CF",
 
-    success: "#10B981",       // emerald green
-    error: "#EF4444",         // vibrant red
-    warning: "#F59E0B",       // amber
-    info: "#3B82F6",          // bright blue
+    success: "#10B981",
+    error: "#EF4444",
+    warning: "#F59E0B",
+    info: "#3B82F6",
 
     gradientAction: "linear-gradient(135deg, #10B981 0%, #22C55E 50%, #4ADE80 100%)",
     shadowMain: "0 10px 25px rgba(0, 0, 0, 0.05)",
@@ -27,15 +27,15 @@ export const appTheme = {
 
 export const darkTheme = {
   colors: {
-    primary: "#6366F1",       // bright indigo for dark mode
-    secondary: "#1F2937",     // deep slate
-    accent: "#22D3EE",        // bright cyan
+    primary: "#6366F1",
+    secondary: "#1F2937",
+    accent: "#22D3EE",
 
-    background: "#0F172A",    // very deep slate background
-    surface: "rgba(30, 41, 59, 0.7)",       // dark glass
+    background: "#0F172A",
+    surface: "rgba(30, 41, 59, 0.7)",
 
-    textPrimary: "#F9FAFB",   // brilliant white
-    textSecondary: "#9CA3AF", // cool gray text
+    textPrimary: "#F9FAFB",
+    textSecondary: "#9CA3AF",
 
     border: "rgba(255, 255, 255, 0.08)",
 

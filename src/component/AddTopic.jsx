@@ -19,17 +19,11 @@ import { PlusCircle, Layers, ArrowLeft } from "lucide-react";
 import { BackBtn } from "../pages/ExamUpdate";
 import { useNavigate } from "react-router-dom";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR  (matches TopicsShow HeadingTable style)
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: row;
@@ -55,7 +49,7 @@ const HeroBar = styled.div`
   }
 `;
 
-const HeroLeft = styled.div`
+export const HeroLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 18px;
@@ -106,9 +100,6 @@ const HeroDot = styled.span`
   display: inline-block;
 `;
 
-/* ═══════════════════════════════════════════
-   FORM CARD  (white card like TableCard)
-═══════════════════════════════════════════ */
 const FormCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -215,20 +206,12 @@ const SubmitBtn = styled.button`
   &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE WRAP
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const AddTopic = () => {
-  
-
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user);
   const [topicName, setTopicName] = useState("");
@@ -263,6 +246,7 @@ const AddTopic = () => {
     setLoading(true);
     setSucess("");
     if (!validate()) return;
+
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/topic/createtopic",
@@ -272,11 +256,14 @@ const AddTopic = () => {
           body: JSON.stringify({ topicName, userId }),
         }
       );
+
       const data = await response.json();
+
       if (!response.ok) {
         toast.error(data.error);
         return;
       }
+
       toast.success(data.successMessage);
       setTopicName("");
     } catch (err) {
@@ -289,28 +276,31 @@ const AddTopic = () => {
 
   return (
     <PageWrap>
-      {/* ── Hero Bar ── */}
       <HeroBar>
         <HeroLeft>
           <HeroIconRing>
             <Layers size={24} />
           </HeroIconRing>
+
           <div>
             <HeroTitle>Topic Management</HeroTitle>
+
             <HeroBadge>
               <HeroDot />
               Add &amp; Manage Topics
             </HeroBadge>
           </div>
         </HeroLeft>
-                   <BackBtn onClick={() => {
-  navigate(-1);
-}}>
-            <ArrowLeft size={14} /> Back
-          </BackBtn>
+
+        <BackBtn
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <ArrowLeft size={14} /> Back
+        </BackBtn>
       </HeroBar>
 
-      {/* ── Add Topic Form Card ── */}
       <FormCard>
         <FormCardHeader>New Topic</FormCardHeader>
 
@@ -321,6 +311,7 @@ const AddTopic = () => {
             <StyledLabel htmlFor="topicName">
               Enter the Topic <RedSpan>*</RedSpan>
             </StyledLabel>
+
             <StyledInput
               type="text"
               id="topicName"
@@ -328,6 +319,7 @@ const AddTopic = () => {
               onChange={handleChange}
               placeholder="e.g. Data Structures"
             />
+
             {error && <ErrorText>{error}</ErrorText>}
           </FieldGroup>
 
@@ -338,7 +330,6 @@ const AddTopic = () => {
         </FormCardBody>
       </FormCard>
 
-      {/* ── Topics List ── */}
       <Topics />
     </PageWrap>
   );

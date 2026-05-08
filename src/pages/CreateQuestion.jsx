@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "sonner";
-import { CheckCircle2, ChevronDown } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown } from "lucide-react";
 import { H2 } from "../styles/ExamTDetails.style";
 import { useSelector } from "react-redux";
+import { BackBtn } from "./ExamUpdate";
 
 export const PremiumWrapper = styled.div`
   max-width: 900px;
@@ -101,7 +102,7 @@ export const OptionCard = styled.div`
   align-items: center;
   gap: 12px;
 `;
-
+ 
 export const SubmitBtn = styled.button`
   width: 100%;
   padding: 16px;
@@ -323,10 +324,26 @@ const CreateQuestion = () => {
               />
             </FormGroup>
           )}
+<div style={{display:"flex", justifyContent:"space-between", columnGap:"30px"}}>
+        <BackBtn style={{backgroundColor:"green", width: "12%",
 
+  padding: "16px",
+  borderRadius: "12px",
+  background: "green",
+  color: "white",
+  border: "none",
+  cursor: "pointer",
+  marginTop: "40px"}}
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                    >
+                     Cancel
+                    </BackBtn>
         <SubmitBtn onClick={handleSubmit} disabled={loading}>
           {loading ? "Creating..." : "Save Question"}
         </SubmitBtn>
+        </div>
       </PremiumWrapper>
     </Layout>
   );

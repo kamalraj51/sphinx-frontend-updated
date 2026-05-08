@@ -55,6 +55,9 @@ const Header = () => {
              <NavLink to="/add-admin" onClick={() => setIsOpen(false)}>
               Add Admin
             </NavLink> 
+            <NavLink to="/users" onClick={() => setIsOpen(false)}>
+              Users
+            </NavLink> 
 
             <NavLink
               to="/"

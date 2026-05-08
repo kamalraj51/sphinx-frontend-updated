@@ -52,6 +52,7 @@ const CancelIconBtn = styled.button`
   padding: 4px;
   border-radius: 50%;
   display: flex;
+
   &:hover {
     background: rgba(0,0,0,0.05);
   }
@@ -67,6 +68,7 @@ const CancelBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 6px;
+
   &:hover {
     background: rgba(0,0,0,0.05);
   }
@@ -82,6 +84,7 @@ const ConfirmBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 6px;
+
   &:hover {
     opacity: 0.9;
   }
@@ -96,11 +99,23 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
         <CancelIconBtn onClick={onClose} aria-label="Cancel">
           <X size={20} />
         </CancelIconBtn>
-        <Title><Trash2 size={24} /> {title || "Confirm Delete"}</Title>
-        <Message>{message || "Are you sure you want to delete this item? This action cannot be undone."}</Message>
+
+        <Title>
+          <Trash2 size={24} /> {title || "Confirm Delete"}
+        </Title>
+
+        <Message>
+          {message || "Are you sure you want to delete this item? This action cannot be undone."}
+        </Message>
+
         <ActionButtons>
-          <CancelBtn onClick={onClose}><X size={16} /> Cancel</CancelBtn>
-          <ConfirmBtn onClick={onConfirm}><Trash2 size={16} /> Delete</ConfirmBtn>
+          <CancelBtn onClick={onClose}>
+            <X size={16} /> Cancel
+          </CancelBtn>
+
+          <ConfirmBtn onClick={onConfirm}>
+            <Trash2 size={16} /> Delete
+          </ConfirmBtn>
         </ActionButtons>
       </ModalContent>
     </Overlay>
