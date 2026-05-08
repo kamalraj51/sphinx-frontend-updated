@@ -296,7 +296,7 @@ const SkeletonRow = styled.div`
    CompletedExamList Component
    Route: /completed-exams/:userId/:userName
    ═══════════════════════════════════════════════════ */
-export const CompletedExamList = () => {
+const CompletedExamList = () => {
   const { userId, userName } = useParams();
   const decodedUserId = decodeURIComponent(userId);
   const decodedUserName = decodeURIComponent(userName);
