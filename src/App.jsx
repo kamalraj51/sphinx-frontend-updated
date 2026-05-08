@@ -57,7 +57,7 @@ const ProtectedRoute = ({ children }) => {
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
   if (isAuthenticated && role === "SPX_ADMIN") {
-    return <Navigate to="/adminhome" replace />;
+    return <Navigate to="/admin-home" replace />;
   } else if (isAuthenticated && role === "SPX_EXAMINEE") {
     return <Navigate to="/userdashboard" replace />;
   }
@@ -90,11 +90,9 @@ const App = () => {
             }
           />
 
-          
-
           {/* Protected Routes (Require Authentication) */}
           <Route
-            path="/adminhome"
+            path="/admin-home"
             element={
               <ProtectedRoute>
                 <Admindashboard />
@@ -126,12 +124,11 @@ const App = () => {
             }
           />
           <Route
-            path="/Create-User"
+            path="/add-user"
             element={
               <ProtectedRoute>
                 <CreateUser />
               </ProtectedRoute>
-                
             }
           />
           <Route
@@ -231,7 +228,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examupdate"
+            path="/exam-update"
             element={
               <ProtectedRoute>
                 <ExamUpdate />
@@ -249,7 +246,7 @@ const App = () => {
           />
 
           <Route
-            path="/exam-attend/:examId"
+            path="/exam-attend/:examId/:duration"
             element={
               <ProtectedRoute>
                 <ExamAttend />
@@ -257,7 +254,7 @@ const App = () => {
             }
           />
           <Route
-            path="/examresult/:examId/:userId"
+            path="/examresult/:examId/:userId/:skipped"
             element={
               <ProtectedRoute>
                 <Result />

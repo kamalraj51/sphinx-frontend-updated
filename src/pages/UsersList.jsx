@@ -23,7 +23,7 @@ const slideIn = keyframes`
    PAGE WRAP
 ═══════════════════════════════════════════ */
 const PageWrap = styled.div`
-  font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
+  font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
   padding-bottom: 60px;
   display: flex;
   flex-direction: column;
@@ -46,63 +46,97 @@ const HeroBar = styled.div`
   position: relative;
   overflow: hidden;
   &::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: -60px; right: -60px;
-    width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%);
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(
+      circle,
+      rgba(16, 185, 129, 0.18) 0%,
+      transparent 70%
+    );
     border-radius: 50%;
     pointer-events: none;
   }
 `;
 const HeroLeft = styled.div`
-  display: flex; align-items: center; gap: 18px;
-  position: relative; z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
 `;
 const HeroIconRing = styled.div`
-  width: 52px; height: 52px; border-radius: 16px;
-  background: rgba(16,185,129,0.2);
-  border: 1.5px solid rgba(52,211,153,0.35);
-  display: flex; align-items: center; justify-content: center;
-  color: #34d399; flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1.5px solid rgba(52, 211, 153, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  flex-shrink: 0;
 `;
 const HeroTitle = styled.h1`
-  color: #fff; font-size: 20px; font-weight: 800;
-  margin: 0; letter-spacing: -0.4px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.4px;
 `;
 const HeroBadge = styled.span`
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(16,185,129,0.15);
-  border: 1px solid rgba(16,185,129,0.3);
-  color: #34d399; font-size: 12px; font-weight: 600;
-  padding: 4px 10px; border-radius: 999px;
-  position: relative; z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  position: relative;
+  z-index: 1;
 `;
 const HeroDot = styled.span`
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #34d399; display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  display: inline-block;
 `;
 
 /* ═══════════════════════════════════════════
    CARD
 ═══════════════════════════════════════════ */
 const Card = styled.div`
-  background: #fff; border-radius: 20px;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.10), 0 1px 6px rgba(0,0,0,0.05);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.1),
+    0 1px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   animation: ${fadeUp} 0.45s ease both;
-  animation-delay: ${({ $delay }) => $delay || '0s'};
+  animation-delay: ${({ $delay }) => $delay || "0s"};
 `;
 const CardHeader = styled.div`
-  display: flex; align-items: center; gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 16px 24px;
   border-bottom: 2px solid #d1fae5;
   background: #f0fdf4;
 `;
 const CardTitle = styled.h2`
-  font-size: 13px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  color: #059669; margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #059669;
+  margin: 0;
 `;
 const CardBody = styled.div`
   padding: 20px 24px;
@@ -116,92 +150,146 @@ const AssignGrid = styled.div`
   grid-template-columns: 1.5fr 1fr 1fr auto;
   gap: 12px;
   align-items: start;
-  @media (max-width: 860px) { grid-template-columns: 1fr 1fr; }
-  @media (max-width: 520px) { grid-template-columns: 1fr; }
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
 `;
 const FieldWrap = styled.div`
-  display: flex; flex-direction: column; gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 `;
 const FieldLabel = styled.label`
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
   color: #64748b;
 `;
 const StyledSelect = styled.select`
   width: 100%;
   padding: 10px 32px 10px 12px;
-  border: 1.5px solid #e2e8f0; border-radius: 10px;
-  font-size: 13.5px; color: #1e293b;
-  font-family: inherit; background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: #1e293b;
+  font-family: inherit;
+  background: #f8fafc;
   cursor: pointer;
-  transition: border-color 0.18s, box-shadow 0.18s;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   &:focus {
-    outline: none; border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
     background-color: #fff;
   }
 `;
 const StyledInput = styled.input`
   width: 100%;
   padding: 10px 12px;
-  border: 1.5px solid #e2e8f0; border-radius: 10px;
-  font-size: 13.5px; color: #1e293b;
-  font-family: inherit; background: #f8fafc;
-  transition: border-color 0.18s, box-shadow 0.18s;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: #1e293b;
+  font-family: inherit;
+  background: #f8fafc;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
   box-sizing: border-box;
   &:focus {
-    outline: none; border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
     background: #fff;
   }
-  &::placeholder { color: #94a3b8; }
+  &::placeholder {
+    color: #94a3b8;
+  }
 `;
 const ErrorText = styled.p`
-  font-size: 11.5px; color: #ef4444; margin: 0; font-weight: 600;
+  font-size: 11.5px;
+  color: #ef4444;
+  margin: 0;
+  font-weight: 600;
 `;
 const AssignSubmitBtn = styled.button`
-  display: flex; align-items: center; gap: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
   padding: 10px 20px;
   background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff; border: none; border-radius: 10px;
-  font-size: 13.5px; font-weight: 700; font-family: inherit;
-  cursor: pointer; box-shadow: 0 3px 8px rgba(16,185,129,0.28);
-  transition: all 0.18s ease; white-space: nowrap; align-self: flex-end;
-  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(16,185,129,0.4); }
-  &:active { transform: scale(0.97); }
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.28);
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  align-self: flex-end;
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(16, 185, 129, 0.4);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
 `;
 
 /* ═══════════════════════════════════════════
    STATS STRIP
 ═══════════════════════════════════════════ */
 const StatsStrip = styled.div`
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 24px; border-bottom: 1px solid #e2e8f0;
-  background: #fafbff; flex-wrap: wrap; gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #fafbff;
+  flex-wrap: wrap;
+  gap: 10px;
 `;
 const StatItem = styled.div`
-  font-size: 12.5px; color: #64748b; font-weight: 500;
-  strong { color: #1e293b; font-weight: 800; }
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 500;
+  strong {
+    color: #1e293b;
+    font-weight: 800;
+  }
 `;
 
 /* ═══════════════════════════════════════════
    TABLE
 ═══════════════════════════════════════════ */
 const Table = styled.table`
-  width: 100%; border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 `;
 const THeadStyled = styled.thead`
-  background: #f0fdf4; border-bottom: 2px solid #d1fae5;
+  background: #f0fdf4;
+  border-bottom: 2px solid #d1fae5;
 `;
 const THStyled = styled.th`
-  font-size: 11px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  color: #059669; padding: 13px 16px;
-  text-align: ${({ $center }) => ($center ? 'center' : 'left')};
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #059669;
+  padding: 13px 16px;
+  text-align: ${({ $center }) => ($center ? "center" : "left")};
   white-space: nowrap;
 `;
 const TRStyled = styled.tr`
@@ -209,55 +297,101 @@ const TRStyled = styled.tr`
   transition: background 0.18s ease;
   animation: ${slideIn} 0.3s ease both;
   animation-delay: ${({ $index }) => ($index || 0) * 0.04}s;
-  &:last-child { border-bottom: none; }
-  &:hover { background: #f0fdf4; }
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: #f0fdf4;
+  }
 `;
 const TDStyled = styled.td`
-  padding: 14px 16px; font-size: 13.5px;
-  color: #1e293b; vertical-align: middle;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: #1e293b;
+  vertical-align: middle;
 `;
 const UserNameBtn = styled.button`
-  border: none; cursor: pointer; background: none;
-  color: #059669; font-weight: 700; font-size: 14px;
-  text-align: left; padding: 0; font-family: inherit; line-height: 1.4;
-  text-decoration: underline; text-decoration-color: transparent;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: #059669;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: left;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-decoration-color: transparent;
   transition: text-decoration-color 0.18s;
-  &:hover { text-decoration-color: #059669; }
+  &:hover {
+    text-decoration-color: #059669;
+  }
 `;
 const UserSubText = styled.span`
-  display: block; font-size: 11.5px; color: #94a3b8; font-weight: 400; margin-top: 2px;
+  display: block;
+  font-size: 11.5px;
+  color: #94a3b8;
+  font-weight: 400;
+  margin-top: 2px;
 `;
 const Pill = styled.span`
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 4px 12px; border-radius: 999px;
-  font-size: 12.5px; font-weight: 700; white-space: nowrap;
-  ${({ $color }) => $color === 'indigo' && `background:#eef2ff;border:1px solid #c7d2fe;color:#4f46e5;`}
-  ${({ $color }) => $color === 'slate'  && `background:#f1f5f9;border:1px solid #cbd5e1;color:#475569;`}
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  ${({ $color }) =>
+    $color === "indigo" &&
+    `background:#eef2ff;border:1px solid #c7d2fe;color:#4f46e5;`}
+  ${({ $color }) =>
+    $color === "slate" &&
+    `background:#f1f5f9;border:1px solid #cbd5e1;color:#475569;`}
 `;
 
 /* ═══════════════════════════════════════════
    ICON BUTTONS
 ═══════════════════════════════════════════ */
 const IconBtn = styled.button`
-  display: flex; align-items: center; justify-content: center;
-  width: 34px; height: 34px; border-radius: 9px;
-  border: none; cursor: pointer; font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
   transition: all 0.18s ease;
-  &:active { transform: scale(0.95); }
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 const DeleteBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: #fff; box-shadow: 0 3px 8px rgba(239,68,68,0.22);
-  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(239,68,68,0.35); }
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(239, 68, 68, 0.22);
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);
+  }
 `;
 
 /* ═══════════════════════════════════════════
    EMPTY STATE
 ═══════════════════════════════════════════ */
 const EmptyState = styled.div`
-  padding: 48px 32px; text-align: center;
-  color: #94a3b8; font-size: 15px;
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 `;
 
 /* ═══════════════════════════════════════════
@@ -301,7 +435,7 @@ const UsersList = () => {
             examId: formData.examId,
             servicetype: "not assiggned",
           }),
-        }
+        },
       );
       if (!response.ok) throw new Error("Failed");
       const data = await response.json();
@@ -343,12 +477,26 @@ const UsersList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let err = {}; let flag = true;
-    if (!formData.allowedAttempts) { err.allowedAttempts = "Allowed attempts is mandatory"; flag = false; }
-    else if (!numberRegex.test(formData.allowedAttempts)) { err.allowedAttempts = "Must be a valid number"; flag = false; }
-    if (!formData.timeoutDays) { err.timeoutDays = "Timeout days is mandatory"; flag = false; }
-    else if (!numberRegex.test(formData.timeoutDays)) { err.timeoutDays = "Must be a valid number"; flag = false; }
-    if (!flag) { setErrors(err); return; }
+    let err = {};
+    let flag = true;
+    if (!formData.allowedAttempts) {
+      err.allowedAttempts = "Allowed attempts is mandatory";
+      flag = false;
+    } else if (!numberRegex.test(formData.allowedAttempts)) {
+      err.allowedAttempts = "Must be a valid number";
+      flag = false;
+    }
+    if (!formData.timeoutDays) {
+      err.timeoutDays = "Timeout days is mandatory";
+      flag = false;
+    } else if (!numberRegex.test(formData.timeoutDays)) {
+      err.timeoutDays = "Must be a valid number";
+      flag = false;
+    }
+    if (!flag) {
+      setErrors(err);
+      return;
+    }
     setErrors({});
     try {
       const response = await fetch(
@@ -357,7 +505,7 @@ const UsersList = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
-        }
+        },
       );
       if (response.ok) {
         const data = await response.json();
@@ -369,7 +517,9 @@ const UsersList = () => {
         console.log("RESPONSE => ", response);
         toast.error(data.error || "Failed to Load Data!");
       }
-    } catch (err) { console.log(err); }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   if (!assignedUsers) return <p>No users assigned</p>;
@@ -382,7 +532,7 @@ const UsersList = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ examId: examId }),
-        }
+        },
       );
       if (response.ok) {
         const value = await response.json();
@@ -405,7 +555,7 @@ const UsersList = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ examId, partyId: deleteData.partyId }),
-        }
+        },
       );
       const data = await res.json();
       if (res.ok) {
@@ -428,7 +578,6 @@ const UsersList = () => {
   return (
     <Layout>
       <PageWrap>
-
         {/* ── Hero Bar ── */}
         <HeroBar>
           <HeroLeft>
@@ -454,7 +603,6 @@ const UsersList = () => {
           <CardBody>
             <form onSubmit={handleSubmit}>
               <AssignGrid>
-
                 <FieldWrap>
                   <FieldLabel>Select User</FieldLabel>
                   <StyledSelect onChange={handleform} name="partyId">
@@ -472,11 +620,14 @@ const UsersList = () => {
                   <StyledInput
                     type="text"
                     name="allowedAttempts"
+                    value={formData.allowedAttempts}
                     onChange={handleform}
                      value={formData.allowedAttempts}
                     placeholder="e.g. 3"
                   />
-                  {errors.allowedAttempts && <ErrorText>{errors.allowedAttempts}</ErrorText>}
+                  {errors.allowedAttempts && (
+                    <ErrorText>{errors.allowedAttempts}</ErrorText>
+                  )}
                 </FieldWrap>
 
                 <FieldWrap>
@@ -486,9 +637,11 @@ const UsersList = () => {
                     name="timeoutDays"
                     value={formData.timeoutDays}
                     onChange={handleform}
-                    placeholder="e.g. 30"
+                    placeholder="e.g. 10"
                   />
-                  {errors.timeoutDays && <ErrorText>{errors.timeoutDays}</ErrorText>}
+                  {errors.timeoutDays && (
+                    <ErrorText>{errors.timeoutDays}</ErrorText>
+                  )}
                 </FieldWrap>
 
                 <FieldWrap>
@@ -498,7 +651,6 @@ const UsersList = () => {
                     Assign
                   </AssignSubmitBtn>
                 </FieldWrap>
-
               </AssignGrid>
             </form>
           </CardBody>
@@ -513,7 +665,8 @@ const UsersList = () => {
 
           <StatsStrip>
             <StatItem>
-              <strong>{alreadyAssignedUsers.length}</strong> user{alreadyAssignedUsers.length !== 1 ? "s" : ""} assigned
+              <strong>{alreadyAssignedUsers.length}</strong> user
+              {alreadyAssignedUsers.length !== 1 ? "s" : ""} assigned
             </StatItem>
           </StatsStrip>
 
@@ -560,15 +713,16 @@ const UsersList = () => {
               </tbody>
             </Table>
           )}
-
         </Card>
-          {selectedUser && (
-            <Assignexamtempoaryupdate
-              item={selectedUser}
-              onClose={() => { setSelectedUser(null); getAll(); }}
-            />
-          )}
-
+        {selectedUser && (
+          <Assignexamtempoaryupdate
+            item={selectedUser}
+            onClose={() => {
+              setSelectedUser(null);
+              getAll();
+            }}
+          />
+        )}
       </PageWrap>
 
       <ConfirmModal

@@ -15,8 +15,8 @@ const UserHeader = () => {
   return (
     <HeaderMain>
       <div style={{ display: "flex", columnGap: "30px", alignItems: "center" }}>
-        <img src="src/assets/letter-s.png"  width={"50px"} alt="" />
-        <NaviButton />
+        <img src="src/assets/letter-s.png"  width={"50px"} alt="S" />
+        
       </div>
       {isAuthenticated ? (
         <>
@@ -25,13 +25,13 @@ const UserHeader = () => {
           </MenuToggle>
 
           <Menu $isOpen={isOpen}>
-            <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
+            <NavLink to="/admin-home" onClick={() => setIsOpen(false)}>
               Home
             </NavLink>
             <NavLink to="/show-all-topic" onClick={() => setIsOpen(false)}>
               Manage Question
             </NavLink>
-            <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+            <NavLink to="/add-user" onClick={() => setIsOpen(false)}>
               Add User
             </NavLink>
 

@@ -1,95 +1,170 @@
-// Userdashboard.jsx — Rewritten with massive UI upgrade
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Layout from "../component/Layout";
-import { NavLink } from "react-router-dom";
+import { GlobalStyle } from "../pages/ExamAttend";
+import UserHeader from "../user/UserHeader";
 
-/* ─── Keyframe & font injection ─── */
+/* ─── Palette ─── */
+const PALETTE = [
+  {
+    bar: "#185fa5",
+    id: { color: "#185fa5", bg: "#e6f1fb", border: "#b5d4f4" },
+    btn: "#185fa5",
+  },
+  {
+    bar: "#639922",
+    id: { color: "#3b6d11", bg: "#eaf3de", border: "#c0dd97" },
+    btn: "#3b6d11",
+  },
+  {
+    bar: "#993556",
+    id: { color: "#993556", bg: "#fbeaf0", border: "#f4c0d1" },
+    btn: "#72243e",
+  },
+  {
+    bar: "#533ab7",
+    id: { color: "#533ab7", bg: "#eeedfe", border: "#cecbf6" },
+    btn: "#3c3489",
+  },
+  {
+    bar: "#854f0b",
+    id: { color: "#854f0b", bg: "#faeeda", border: "#fac775" },
+    btn: "#633806",
+  },
+  {
+    bar: "#0f6e56",
+    id: { color: "#0f6e56", bg: "#e1f5ee", border: "#9fe1cb" },
+    btn: "#085041",
+  },
+];
+
+/* ─── Style injection ─── */
 const injectStyles = () => {
-  if (document.getElementById("udash-v2-styles")) return;
+  if (document.getElementById("ud-v3-styles")) return;
   const s = document.createElement("style");
-  s.id = "udash-v2-styles";
+  s.id = "ud-v3-styles";
   s.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap');
 
-    *, *::before, *::after { box-sizing: border-box; }
+    @keyframes ud-fadein { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes ud-shimmer { 0% { opacity: .6; } 50% { opacity: 1; } 100% { opacity: .6; } }
+    @keyframes ud-pulsedot { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+    @keyframes modal-in { from { opacity: 0; transform: scale(0.93) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    @keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+    @keyframes otp-success { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes beam { 0% { opacity:0; transform: scaleX(0); } 60% { opacity:1; } 100% { opacity:0; transform: scaleX(1); } }
 
-    @keyframes spin       { to { transform: rotate(360deg); } }
-    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes shimmer    { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
-    @keyframes floatBob   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-    @keyframes orbitGlow  { 0%{opacity:.3;transform:scale(1)} 50%{opacity:.7;transform:scale(1.08)} 100%{opacity:.3;transform:scale(1)} }
-    @keyframes pulseDot   { 0%,100%{box-shadow:0 0 0 0 rgba(99,243,176,0.7)} 70%{box-shadow:0 0 0 8px rgba(99,243,176,0)} }
-    @keyframes borderRun  { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
-    @keyframes countUp    { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    .ud-card-anim { animation: ud-fadein .35s cubic-bezier(.22,.68,0,1.2) both; }
+    .ud-card-hover { transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease; }
+    .ud-card-hover:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.11); border-color: rgba(0,0,0,0.16) !important; transform: translateY(-2px); }
 
-    .udv2-card {
-      animation: fadeSlideUp .45s cubic-bezier(.22,.68,0,1.2) both;
-      position: relative;
-      transition: transform .3s cubic-bezier(.22,.68,0,1.2), box-shadow .3s ease;
+    .otp-input {
+      width: 52px !important;
+      height: 60px !important;
+      border-radius: 12px !important;
+      border: 1.5px solid rgba(0,0,0,0.12) !important;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      outline: none !important;
+      background: #f8f9fa !important;
+      color: #0f1117 !important;
+      transition: border-color .15s, box-shadow .15s, background .15s !important;
+      caret-color: transparent !important;
+      font-family: 'DM Sans', sans-serif !important;
     }
-    .udv2-card::after {
-      content:'';
-      position:absolute;
-      inset:-1px;
-      border-radius:22px;
-      background: linear-gradient(135deg, rgba(99,243,176,0.0), rgba(99,243,176,0.0));
-      transition: background .3s ease;
-      pointer-events:none;
-      z-index:0;
+    .otp-input:focus {
+      border-color: #185fa5 !important;
+      background: #fff !important;
+      box-shadow: 0 0 0 3px rgba(24,95,165,0.13) !important;
     }
-    .udv2-card:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 28px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,243,176,0.2) !important;
+    .otp-input.filled {
+      background: #eef6ff !important;
+      border-color: #185fa5 !important;
+      color: #185fa5 !important;
     }
-    .udv2-card:hover::after {
-      background: linear-gradient(135deg, rgba(99,243,176,0.06), rgba(99,102,241,0.06));
+    .otp-input.error {
+      border-color: #e03131 !important;
+      background: #fff5f5 !important;
+      animation: shake .35s ease !important;
+    }
+    .otp-input.success {
+      border-color: #3b6d11 !important;
+      background: #eaf3de !important;
+      color: #3b6d11 !important;
+      animation: otp-success .3s ease !important;
     }
 
-    .udv2-cta {
-      position: relative;
-      overflow: hidden;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .udv2-cta::before {
-      content:'';
-      position:absolute;
-      inset:0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
-      opacity:0;
-      transition:opacity .2s;
-    }
-    .udv2-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(99,243,176,0.35) !important; }
-    .udv2-cta:hover::before { opacity:1; }
-
-    .udv2-card-inner { position:relative; z-index:1; }
-
-    .udv2-skeleton {
-      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
-      background-size: 400px 100%;
-      animation: shimmer 1.4s ease infinite;
+    .verify-btn {
+      background: #185fa5;
+      color: #fff;
+      border: none;
       border-radius: 10px;
+      padding: 13px 28px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background .15s, transform .15s, box-shadow .15s;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
+    .verify-btn:hover:not(:disabled) { background: #1451891; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(24,95,165,.3); }
+    .verify-btn:active:not(:disabled) { transform: translateY(0); }
+    .verify-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888780;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 6px;
+      transition: background .15s, color .15s;
+    }
+    .close-btn:hover { background: #f3f4f6; color: #0f1117; }
+
+    .start-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: 9px;
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 16px;
+      transition: opacity .15s, transform .15s, box-shadow .2s;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.2px;
+    }
+    .start-btn:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+    .start-btn:active { transform: translateY(0); }
+
+    * { box-sizing: border-box; }
   `;
   document.head.appendChild(s);
 };
 
-/* ─── Accent palette ─── */
-const PALETTE = [
-  { from: "#63f3b0", to: "#3b82f6", glow: "rgba(99,243,176,0.25)" },
-  { from: "#f472b6", to: "#a78bfa", glow: "rgba(244,114,182,0.25)" },
-  { from: "#fbbf24", to: "#f97316", glow: "rgba(251,191,36,0.25)" },
-  { from: "#38bdf8", to: "#818cf8", glow: "rgba(56,189,248,0.25)" },
-  { from: "#fb7185", to: "#e879f9", glow: "rgba(251,113,133,0.25)" },
-  { from: "#34d399", to: "#059669", glow: "rgba(52,211,153,0.25)" },
-];
-
 /* ─── Icons ─── */
 const IconClock = () => (
   <svg
-    width="13"
-    height="13"
+    width="12"
+    height="12"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -103,8 +178,8 @@ const IconClock = () => (
 );
 const IconTarget = () => (
   <svg
-    width="13"
-    height="13"
+    width="12"
+    height="12"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -119,8 +194,8 @@ const IconTarget = () => (
 );
 const IconRepeat = () => (
   <svg
-    width="13"
-    height="13"
+    width="11"
+    height="11"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -136,8 +211,8 @@ const IconRepeat = () => (
 );
 const IconArrow = () => (
   <svg
-    width="14"
-    height="14"
+    width="13"
+    height="13"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -151,8 +226,8 @@ const IconArrow = () => (
 );
 const IconCalendar = () => (
   <svg
-    width="13"
-    height="13"
+    width="12"
+    height="12"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -166,59 +241,386 @@ const IconCalendar = () => (
     <line x1="3" y1="10" x2="21" y2="10" />
   </svg>
 );
+const IconLock = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+);
+const IconClose = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+const IconShield = () => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <polyline points="9 12 11 14 15 10" />
+  </svg>
+);
 
-/* ─── Skeleton loader card ─── */
+/* ─── Skeleton ─── */
+const Skel = ({ w, h }) => (
+  <div
+    style={{
+      width: w,
+      height: h,
+      borderRadius: 6,
+      background: "rgba(0,0,0,0.07)",
+      animation: "ud-shimmer 1.4s ease infinite",
+    }}
+  />
+);
 const SkeletonCard = ({ delay }) => (
   <div
     style={{
-      background: "rgba(255,255,255,0.03)",
-      border: "1px solid rgba(255,255,255,0.06)",
-      borderRadius: 22,
-      padding: 28,
+      ...St.card,
       animationDelay: `${delay}s`,
-      animation: "fadeSlideUp .4s ease both",
+      animation: "ud-fadein .35s ease both",
     }}
   >
     <div
       style={{
         display: "flex",
         justifyContent: "space-between",
-        marginBottom: 20,
+        marginBottom: 16,
       }}
     >
-      <div className="udv2-skeleton" style={{ width: 80, height: 22 }} />
-      <div className="udv2-skeleton" style={{ width: 90, height: 22 }} />
+      <Skel w={70} h={20} />
+      <Skel w={80} h={20} />
     </div>
-    <div
-      className="udv2-skeleton"
-      style={{ width: "70%", height: 22, marginBottom: 12 }}
-    />
-    <div
-      className="udv2-skeleton"
-      style={{ width: "90%", height: 14, marginBottom: 6 }}
-    />
-    <div
-      className="udv2-skeleton"
-      style={{ width: "60%", height: 14, marginBottom: 24 }}
-    />
-    <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
-      {[60, 80, 70].map((w, i) => (
-        <div
-          key={i}
-          className="udv2-skeleton"
-          style={{ width: w, height: 28 }}
-        />
+    <Skel w="65%" h={18} />
+    <div style={{ height: 8 }} />
+    <Skel w="90%" h={13} />
+    <div style={{ height: 4 }} />
+    <Skel w="70%" h={13} />
+    <div style={{ height: 16 }} />
+    <div style={{ display: "flex", gap: 8 }}>
+      {[72, 72, 72].map((w, i) => (
+        <Skel key={i} w={w} h={56} />
       ))}
     </div>
-    <div className="udv2-skeleton" style={{ width: "100%", height: 44 }} />
+    <div style={{ height: 16 }} />
+    <Skel w="100%" h={42} />
   </div>
 );
+
+/* ─── OTP Modal ─── */
+const OtpModal = ({ exam, palBtn, onClose, onSuccess }) => {
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [status, setStatus] = useState("idle"); // idle | verifying | error | success
+  const [errMsg, setErrMsg] = useState("");
+  const inputRefs = useRef([]);
+  const userId = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    setTimeout(() => inputRefs.current[0]?.focus(), 120);
+  }, []);
+
+  // Prevent body scroll while modal open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  const handleKey = (e, idx) => {
+    if (e.key === "Backspace") {
+      if (otp[idx]) {
+        const next = [...otp];
+        next[idx] = "";
+        setOtp(next);
+      } else if (idx > 0) {
+        inputRefs.current[idx - 1]?.focus();
+        const next = [...otp];
+        next[idx - 1] = "";
+        setOtp(next);
+      }
+    } else if (e.key === "ArrowLeft" && idx > 0) {
+      inputRefs.current[idx - 1]?.focus();
+    } else if (e.key === "ArrowRight" && idx < 5) {
+      inputRefs.current[idx + 1]?.focus();
+    }
+  };
+
+  const handleChange = (e, idx) => {
+    const val = e.target.value.replace(/\D/g, "").slice(-1);
+    if (!val) return;
+    const next = [...otp];
+    next[idx] = val;
+    setOtp(next);
+    if (idx < 5) inputRefs.current[idx + 1]?.focus();
+  };
+
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
+    if (!pasted) return;
+    const next = pasted.split("").concat(Array(6).fill("")).slice(0, 6);
+    setOtp(next);
+    const focusIdx = Math.min(pasted.length, 5);
+    setTimeout(() => inputRefs.current[focusIdx]?.focus(), 10);
+    e.preventDefault();
+  };
+
+  const handleVerify = async () => {
+    const otpStr = otp.join("");
+    if (otpStr.length < 6) {
+      setStatus("error");
+      setErrMsg("Please enter all 6 digits.");
+      setTimeout(() => setStatus("idle"), 700);
+      return;
+    }
+    setStatus("verifying");
+    try {
+      const res = await fetch(
+        "https://localhost:8443/sphinx/api/exam/check-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            otpIn: otpStr,
+            partyId: userId,
+            examId: exam.examId,
+          }),
+        },
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setStatus("success");
+        setTimeout(() => {
+          onSuccess();
+        }, 700);
+      } else {
+        setStatus("error");
+        setErrMsg(data.error || "Invalid OTP. Please try again.");
+        toast.error(data.error || "Invalid OTP. Please try again.");
+        setTimeout(() => {
+          setStatus("idle");
+          setOtp(["", "", "", "", "", ""]);
+          inputRefs.current[0]?.focus();
+        }, 800);
+      }
+    } catch {
+      setStatus("error");
+      setErrMsg("Network error. Please try again.");
+      toast.error("Network error. Please try again.");
+      setTimeout(() => setStatus("idle"), 800);
+    }
+  };
+
+  const otpComplete = otp.every((d) => d !== "");
+  const inputClass = (i) => {
+    if (status === "error") return "otp-input error";
+    if (status === "success") return "otp-input success";
+    if (otp[i]) return "otp-input filled";
+    return "otp-input";
+  };
+
+  return (
+    <div
+      style={St.overlay}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div style={St.modal}>
+        {/* Close */}
+        <button
+          className="close-btn"
+          style={{ position: "absolute", top: 14, right: 14 }}
+          onClick={onClose}
+        >
+          <IconClose />
+        </button>
+
+        {/* Icon header */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: 24,
+          }}
+        >
+          <div
+            style={{
+              ...St.shieldWrap,
+              background: palBtn + "18",
+              border: `1.5px solid ${palBtn}30`,
+            }}
+          >
+            <div style={{ color: palBtn }}>
+              <IconShield />
+            </div>
+          </div>
+          <h2 style={St.modalTitle}>Assessment Verification</h2>
+          <p style={St.modalSub}>Enter the 6-digit OTP to unlock</p>
+          <div
+            style={{
+              ...St.examTag,
+              background: palBtn + "12",
+              color: palBtn,
+              border: `1px solid ${palBtn}30`,
+            }}
+          >
+            {exam.examName}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div
+          style={{
+            height: "0.5px",
+            background: "rgba(0,0,0,0.08)",
+            marginBottom: 24,
+          }}
+        />
+
+        {/* OTP label */}
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            color: "#888780",
+            textTransform: "uppercase",
+            letterSpacing: "1px",
+            marginBottom: 12,
+            textAlign: "center",
+          }}
+        >
+          One-Time Password
+        </div>
+
+        {/* OTP inputs */}
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            justifyContent: "center",
+            marginBottom: 8,
+          }}
+          onPaste={handlePaste}
+        >
+          {otp.map((digit, i) => (
+            <input
+              key={i}
+              ref={(el) => (inputRefs.current[i] = el)}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={digit}
+              className={inputClass(i)}
+              onChange={(e) => handleChange(e, i)}
+              onKeyDown={(e) => handleKey(e, i)}
+              disabled={status === "verifying" || status === "success"}
+            />
+          ))}
+        </div>
+
+        {/* Error message */}
+        <div style={{ minHeight: 22, textAlign: "center", marginBottom: 20 }}>
+          {status === "error" && errMsg && (
+            <span style={{ fontSize: 12, color: "#e03131", fontWeight: 500 }}>
+              ⚠ {errMsg}
+            </span>
+          )}
+          {status === "success" && (
+            <span style={{ fontSize: 12, color: "#3b6d11", fontWeight: 500 }}>
+              ✓ Verified! Launching exam…
+            </span>
+          )}
+        </div>
+
+        {/* Verify button */}
+        <button
+          className="verify-btn"
+          style={{ background: status === "success" ? "#3b6d11" : palBtn }}
+          onClick={handleVerify}
+          disabled={status === "verifying" || status === "success"}
+        >
+          {status === "verifying" ? (
+            <>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                style={{ animation: "spin 0.8s linear infinite" }}
+              >
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+              Verifying…
+            </>
+          ) : status === "success" ? (
+            <>
+              <span>✓</span> Verified!
+            </>
+          ) : (
+            <>
+              <IconLock /> Verify & Start
+            </>
+          )}
+        </button>
+
+        {/* Footer note */}
+        <p
+          style={{
+            fontSize: 11,
+            color: "#aaa",
+            textAlign: "center",
+            marginTop: 16,
+            marginBottom: 0,
+            lineHeight: 1.6,
+          }}
+        >
+          Contact your instructor if you haven't received your OTP.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 /* ─── Main Component ─── */
 const Userdashboard = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalExam, setModalExam] = useState(null);
+  const [modalPalBtn, setModalPalBtn] = useState("#185fa5");
   const userId = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     injectStyles();
@@ -249,573 +651,511 @@ const Userdashboard = () => {
     }
   };
 
+  const openModal = (exam, palBtn) => {
+    setModalExam(exam);
+    setModalPalBtn(palBtn);
+  };
+
+  const closeModal = () => {
+    setModalExam(null);
+  };
+
+  const handleOtpSuccess = useCallback(() => {
+    if (!modalExam) return;
+    navigate(`/exam-attend/${modalExam.examId}/${modalExam.duration}`, {
+      state: { duration: modalExam.duration, examName: modalExam.examName },
+    });
+  }, [modalExam, navigate]);
+
   return (
-    <Layout>
+    <>
+    <UserHeader />
+    <div
+      style={{
+        backgroundColor: "transparent",
+        padding: "40px",
+        margin: "0 auto",
+        maxWidth: "1280px",
+        width: "100%",
+        flex: 1,
+      }}
+    >
+
+      <GlobalStyle />
+
       <div style={St.page}>
-        {/* ── Ambient background blobs ── */}
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            pointerEvents: "none",
-            overflow: "hidden",
-            zIndex: 0,
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: "-15%",
-              left: "-10%",
-              width: 600,
-              height: 600,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(99,243,176,0.06) 0%, transparent 65%)",
-              animation: "orbitGlow 7s ease-in-out infinite",
-            }}
+        {/* OTP Modal */}
+        {modalExam && (
+          <OtpModal
+            exam={modalExam}
+            palBtn={modalPalBtn}
+            onClose={closeModal}
+            onSuccess={handleOtpSuccess}
           />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "-20%",
-              right: "-5%",
-              width: 500,
-              height: 500,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 65%)",
-              animation: "orbitGlow 9s ease-in-out infinite reverse",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "40%",
-              left: "40%",
-              width: 300,
-              height: 300,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(244,114,182,0.04) 0%, transparent 65%)",
-              animation: "orbitGlow 11s ease-in-out infinite",
-            }}
-          />
-        </div>
+        )}
 
         {/* ── Header ── */}
-        <header style={St.header}>
-          <div style={St.headerContent}>
-            <div style={St.statusPill}>
-              <span style={St.statusDot} />
-              Assessment Portal
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: 16,
-              }}
-            >
-              <div>
-                <h1 style={St.heroTitle}>
-                  Your <span style={St.heroGradient}>Assigned</span>
-                  <br />
-                  Examinations
-                </h1>
-                <p style={St.heroSub}>
-                  {loading
-                    ? "Fetching your assignments…"
-                    : data.length > 0
-                      ? `${data.length} exam${data.length > 1 ? "s" : ""} ready for you`
-                      : "No exams assigned yet"}
-                </p>
-              </div>
-              {!loading && data.length > 0 && (
-                <div style={St.statBadge} key="count">
-                  <span
-                    style={{
-                      fontSize: 36,
-                      fontWeight: 900,
-                      color: "#63f3b0",
-                      fontFamily: "'Cabinet Grotesk', sans-serif",
-                      animation: "countUp .5s ease .2s both",
-                      display: "block",
-                    }}
-                  >
-                    {data.length}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "#475569",
-                      fontWeight: 600,
-                      letterSpacing: "1px",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Total Exams
-                  </span>
-                </div>
-              )}
-            </div>
+        <div style={St.header}>
+          <div style={St.pill}>
+            <span style={St.pillDot} />
+            Assessment Portal
           </div>
-          {/* Decorative line */}
           <div
             style={{
-              height: 1,
-              background:
-                "linear-gradient(90deg, transparent, rgba(99,243,176,0.3), transparent)",
-              margin: "0 48px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              flexWrap: "wrap",
+              gap: 12,
             }}
-          />
-        </header>
-
-        {/* ── Content ── */}
-        <div
-          style={{ position: "relative", zIndex: 1, padding: "40px 48px 80px" }}
-        >
-          {loading ? (
-            <div style={St.grid}>
-              {[0, 0.1, 0.2, 0.3].map((d, i) => (
-                <SkeletonCard key={i} delay={d} />
-              ))}
-            </div>
-          ) : data.length === 0 ? (
-            <div style={St.empty}>
-              <div
-                style={{
-                  fontSize: 72,
-                  animation: "floatBob 3s ease-in-out infinite",
-                }}
-              >
-                📭
-              </div>
-              <h3
-                style={{
-                  fontSize: 22,
-                  fontWeight: 800,
-                  color: "#e2e8f0",
-                  fontFamily: "'Cabinet Grotesk', sans-serif",
-                  margin: 0,
-                }}
-              >
-                Nothing here yet
-              </h3>
-              <p
-                style={{
-                  fontSize: 14,
-                  color: "#475569",
-                  margin: 0,
-                  maxWidth: 300,
-                  textAlign: "center",
-                  lineHeight: 1.7,
-                }}
-              >
-                Your assigned exams will appear here. Contact your instructor if
-                you think this is a mistake.
+          >
+            <div>
+              <h1 style={St.heroTitle}>
+                Your <span style={St.heroAccent}>Assigned</span> Assessments
+              </h1>
+              <p style={St.heroSub}>
+                {loading
+                  ? "Fetching your assignments…"
+                  : data.length > 0
+                    ? `${data.length} exam${data.length > 1 ? "s" : ""} ready for you`
+                    : "No exams assigned yet"}
               </p>
             </div>
-          ) : (
-            <div style={St.grid}>
-              {data.map((exam, i) => {
-                const pal = PALETTE[i % PALETTE.length];
-                return (
-                  <div
-                    key={exam.examId}
-                    className="udv2-card"
-                    style={{ ...St.card, animationDelay: `${i * 0.08}s` }}
-                  >
-                    {/* Glow behind card */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        borderRadius: 22,
-                        background: `radial-gradient(ellipse at 20% 20%, ${pal.glow}, transparent 60%)`,
-                        pointerEvents: "none",
-                      }}
-                    />
-
-                    <div className="udv2-card-inner">
-                      {/* Top accent bar */}
-                      <div
-                        style={{
-                          height: 3,
-                          borderRadius: "22px 22px 0 0",
-                          background: `linear-gradient(90deg, ${pal.from}, ${pal.to})`,
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                        }}
-                      />
-
-                      {/* Header row */}
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: 20,
-                          paddingTop: 8,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: 10,
-                            fontWeight: 500,
-                            color: pal.from,
-                            background: `rgba(99,243,176,0.08)`,
-                            border: `1px solid rgba(99,243,176,0.15)`,
-                            borderRadius: 8,
-                            padding: "3px 10px",
-                            letterSpacing: "1px",
-                          }}
-                        >
-                          {exam.examId}
-                        </span>
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 5,
-                            fontSize: 11,
-                            fontWeight: 600,
-                            color:
-                              exam.noOfAttempts === 0 ? "#63f3b0" : "#94a3b8",
-                            background:
-                              exam.noOfAttempts === 0
-                                ? "rgba(99,243,176,0.08)"
-                                : "rgba(255,255,255,0.05)",
-                            border:
-                              exam.noOfAttempts === 0
-                                ? "1px solid rgba(99,243,176,0.2)"
-                                : "1px solid rgba(255,255,255,0.07)",
-                            borderRadius: 8,
-                            padding: "4px 10px",
-                          }}
-                        >
-                          <IconRepeat />
-                          {exam.noOfAttempts ?? 0} /{" "}
-                          {exam.allowedAttempts ?? "∞"} used
-                        </span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 style={St.cardTitle}>{exam.examName}</h3>
-                      <p style={St.cardDesc}>
-                        {exam.description ||
-                          "No description provided for this exam."}
-                      </p>
-
-                      {/* Divider */}
-                      <div
-                        style={{
-                          height: 1,
-                          background: "rgba(255,255,255,0.06)",
-                          margin: "16px 0",
-                        }}
-                      />
-
-                      {/* Meta grid */}
-                      <div style={St.metaGrid}>
-                        {exam.duration && (
-                          <div style={St.metaTile}>
-                            <span style={{ ...St.metaIcon, color: pal.from }}>
-                              <IconClock />
-                            </span>
-                            <span style={St.metaVal}>
-                              {exam.duration}
-                              <span
-                                style={{
-                                  fontSize: 10,
-                                  color: "#475569",
-                                  marginLeft: 2,
-                                }}
-                              >
-                                min
-                              </span>
-                            </span>
-                            <span style={St.metaKey}>Duration</span>
-                          </div>
-                        )}
-                        {exam.totalMarks && (
-                          <div style={St.metaTile}>
-                            <span style={{ ...St.metaIcon, color: "#fbbf24" }}>
-                              <IconTarget />
-                            </span>
-                            <span style={St.metaVal}>{exam.totalMarks}</span>
-                            <span style={St.metaKey}>Total Marks</span>
-                          </div>
-                        )}
-                        {exam.passingMarks && (
-                          <div style={St.metaTile}>
-                            <span style={{ ...St.metaIcon, color: "#34d399" }}>
-                              ✓
-                            </span>
-                            <span style={St.metaVal}>{exam.passingMarks}</span>
-                            <span style={St.metaKey}>Pass Marks</span>
-                          </div>
-                        )}
-                        {exam.scheduledDate && (
-                          <div style={St.metaTile}>
-                            <span style={{ ...St.metaIcon, color: "#818cf8" }}>
-                              <IconCalendar />
-                            </span>
-                            <span style={{ ...St.metaVal, fontSize: 12 }}>
-                              {new Date(exam.scheduledDate).toLocaleDateString(
-                                "en-IN",
-                                { day: "numeric", month: "short" },
-                              )}
-                            </span>
-                            <span style={St.metaKey}>Scheduled</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* CTA — passes duration (minutes) via route state so the exam timer works */}
-                      <NavLink
-                        to={`/exam-attend/${exam.examId}`}
-                        state={{
-                          duration: exam.duration,
-                          examName: exam.examName,
-                        }}
-                        className="udv2-cta"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 10,
-                          background: `linear-gradient(135deg, ${pal.from}, ${pal.to})`,
-                          color: "#0f1117",
-                          borderRadius: 14,
-                          padding: "14px 24px",
-                          fontWeight: 800,
-                          fontSize: 13,
-                          letterSpacing: ".3px",
-                          textDecoration: "none",
-                          marginTop: 20,
-                          boxShadow: `0 8px 24px ${pal.glow}`,
-                          fontFamily: "'Cabinet Grotesk', sans-serif",
-                        }}
-                      >
-                        Start Examination <IconArrow />
-                      </NavLink>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+            {!loading && data.length > 0 && (
+              <div style={St.statBadge}>
+                <div
+                  style={{
+                    fontSize: 30,
+                    fontWeight: 600,
+                    color: "#185fa5",
+                    lineHeight: 1,
+                  }}
+                >
+                  {data.length}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: "#888780",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.8px",
+                    marginTop: 3,
+                  }}
+                >
+                  Total Assessments
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            style={{
+              height: "0.5px",
+              background: "rgba(0,0,0,0.1)",
+              marginTop: 20,
+            }}
+          />
         </div>
+
+        {/* ── Content ── */}
+        {loading ? (
+          <div style={St.grid}>
+            {[0, 0.08, 0.16, 0.24].map((d, i) => (
+              <SkeletonCard key={i} delay={d} />
+            ))}
+          </div>
+        ) : data.length === 0 ? (
+          <div style={St.empty}>
+            <div style={St.emptyIconWrap}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#888780"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+            </div>
+            <p
+              style={{
+                fontSize: 15,
+                fontWeight: 500,
+                margin: 0,
+                color: "#1a1a1a",
+              }}
+            >
+              Nothing here yet
+            </p>
+            <p
+              style={{
+                fontSize: 13,
+                color: "#888780",
+                margin: 0,
+                maxWidth: 280,
+                textAlign: "center",
+                lineHeight: 1.6,
+              }}
+            >
+              Your assigned exams will appear here. Contact your instructor if
+              you think this is a mistake.
+            </p>
+          </div>
+        ) : (
+          <div style={St.grid}>
+            {data.map((exam, i) => {
+              const pal = PALETTE[i % PALETTE.length];
+              return (
+                <div
+                  key={exam.examId}
+                  className="ud-card-anim ud-card-hover"
+                  style={{ ...St.card, animationDelay: `${i * 0.08}s` }}
+                >
+                  {/* Top accent bar */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 3,
+                      background: pal.bar,
+                      borderRadius: "12px 12px 0 0",
+                    }}
+                  />
+
+                  {/* Header row */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 16,
+                      paddingTop: 4,
+                    }}
+                  >
+                    <span
+                      style={{
+                        ...St.examId,
+                        color: pal.id.color,
+                        background: pal.id.bg,
+                        borderColor: pal.id.border,
+                      }}
+                    >
+                      {exam.examId}
+                    </span>
+                    <span style={St.attempts}>
+                      <IconRepeat />
+                      {exam.noOfAttempts ?? 0} / {exam.allowedAttempts ?? "∞"}{" "}
+                      used
+                    </span>
+                  </div>
+
+                  {/* Title & description */}
+                  <h3 style={St.cardTitle}>{exam.examName}</h3>
+                  <p style={St.cardDesc}>
+                    {exam.description ||
+                      "No description provided for this exam."}
+                  </p>
+
+                  {/* Divider */}
+                  <div
+                    style={{
+                      height: "0.5px",
+                      background: "rgba(0,0,0,0.07)",
+                      margin: "14px 0",
+                    }}
+                  />
+
+                  {/* Meta tiles */}
+                  <div style={St.metaGrid}>
+                    {exam.duration && (
+                      <div style={St.metaTile}>
+                        <span
+                          style={{
+                            color: "#185fa5",
+                            display: "flex",
+                            marginBottom: 3,
+                          }}
+                        >
+                          <IconClock />
+                        </span>
+                        <div style={St.metaVal}>
+                          {exam.duration}
+                          <span
+                            style={{
+                              fontSize: 10,
+                              color: "#aaa",
+                              marginLeft: 2,
+                            }}
+                          >
+                            min
+                          </span>
+                        </div>
+                        <div style={St.metaKey}>Duration</div>
+                      </div>
+                    )}
+                    {exam.totalMarks && (
+                      <div style={St.metaTile}>
+                        <span
+                          style={{
+                            color: "#ba7517",
+                            display: "flex",
+                            marginBottom: 3,
+                          }}
+                        >
+                          <IconTarget />
+                        </span>
+                        <div style={St.metaVal}>{exam.totalMarks}</div>
+                        <div style={St.metaKey}>Total Marks</div>
+                      </div>
+                    )}
+                    {exam.passingMarks && (
+                      <div style={St.metaTile}>
+                        <span
+                          style={{
+                            color: "#3b6d11",
+                            fontSize: 13,
+                            marginBottom: 3,
+                            display: "block",
+                          }}
+                        >
+                          ✓
+                        </span>
+                        <div style={St.metaVal}>{exam.passingMarks}</div>
+                        <div style={St.metaKey}>Pass Marks</div>
+                      </div>
+                    )}
+                    {exam.scheduledDate && (
+                      <div style={St.metaTile}>
+                        <span
+                          style={{
+                            color: "#533ab7",
+                            display: "flex",
+                            marginBottom: 3,
+                          }}
+                        >
+                          <IconCalendar />
+                        </span>
+                        <div style={{ ...St.metaVal, fontSize: 12 }}>
+                          {new Date(exam.scheduledDate).toLocaleDateString(
+                            "en-IN",
+                            { day: "numeric", month: "short" },
+                          )}
+                        </div>
+                        <div style={St.metaKey}>Scheduled</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* CTA button — opens OTP modal instead of navigating directly */}
+                  <button
+                    className="start-btn"
+                    style={{ background: pal.btn, color: "#fff" }}
+                    onClick={() => openModal(exam, pal.btn)}
+                  >
+                    Start Assessment <IconArrow />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </Layout>
+    </div>
+    </>
   );
 };
 
 /* ─── Styles ─── */
 const St = {
-  page: {
-    minHeight: "100vh",
-    background:
-      "linear-gradient(160deg, #070b14 0%, #0d1220 50%, #0a1019 100%)",
-    fontFamily: "'Cabinet Grotesk', 'Segoe UI', sans-serif",
-    position: "relative",
-  },
-  header: {
-    position: "relative",
-    zIndex: 1,
-    paddingTop: 56,
-    paddingBottom: 36,
-  },
-  headerContent: {
-    padding: "0 48px 36px",
-  },
-  statusPill: {
+  page: { fontFamily: "'DM Sans', sans-serif" },
+  header: { marginBottom: "2rem" },
+  pill: {
     display: "inline-flex",
     alignItems: "center",
-    gap: 8,
-    background: "rgba(99,243,176,0.07)",
-    border: "1px solid rgba(99,243,176,0.2)",
+    gap: 6,
+    background: "#eaf3de",
+    border: "0.5px solid #c0dd97",
     borderRadius: 100,
-    padding: "5px 14px",
+    padding: "4px 12px",
     fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "1.5px",
-    textTransform: "uppercase",
-    color: "#63f3b0",
-    marginBottom: 20,
+    fontWeight: 500,
+    color: "#3b6d11",
+    marginBottom: 12,
+    letterSpacing: "0.5px",
   },
-  statusDot: {
-    width: 7,
-    height: 7,
+  pillDot: {
+    width: 6,
+    height: 6,
     borderRadius: "50%",
-    background: "#63f3b0",
-    animation: "pulseDot 2s ease infinite",
+    background: "#639922",
+    animation: "ud-pulsedot 2s ease infinite",
   },
   heroTitle: {
-    fontSize: "clamp(32px, 4.5vw, 54px)",
-    fontWeight: 900,
-    color: "#f1f5f9",
-    margin: "0 0 12px",
-    letterSpacing: "-2px",
-    lineHeight: 1.05,
-    fontFamily: "'Cabinet Grotesk', sans-serif",
+    fontSize: "clamp(22px, 3vw, 32px)",
+    fontWeight: 700,
+    margin: "0 0 6px",
+    letterSpacing: "-0.5px",
+    lineHeight: 1.2,
+    color: "#0f1117",
+    fontFamily: "'Syne', sans-serif",
   },
-  heroGradient: {
-    background: "linear-gradient(90deg, #63f3b0, #38bdf8)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  },
-  heroSub: { fontSize: 14, color: "#475569", margin: 0, fontWeight: 500 },
+  heroAccent: { color: "#185fa5" },
+  heroSub: { fontSize: 14, color: "#888780", margin: 0 },
   statBadge: {
-    background: "rgba(99,243,176,0.06)",
-    border: "1px solid rgba(99,243,176,0.15)",
-    borderRadius: 16,
-    padding: "16px 28px",
+    background: "#f3f4f6",
+    border: "0.5px solid rgba(0,0,0,0.1)",
+    borderRadius: 10,
+    padding: "12px 22px",
     textAlign: "center",
-    animation: "fadeSlideUp .5s ease .3s both",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-    gap: 24,
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gap: 16,
   },
   card: {
-    background: "rgba(255,255,255,0.025)",
-    border: "1px solid rgba(255,255,255,0.07)",
-    borderRadius: 22,
-    padding: 28,
-    backdropFilter: "blur(20px)",
+    background: "#ffffff",
+    border: "0.5px solid rgba(0,0,0,0.1)",
+    borderRadius: 12,
+    padding: 20,
+    position: "relative",
     overflow: "hidden",
   },
+  examId: {
+    fontSize: 11,
+    fontWeight: 500,
+    border: "0.5px solid",
+    borderRadius: 6,
+    padding: "3px 8px",
+    fontFamily: "monospace",
+  },
+  attempts: {
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    fontSize: 11,
+    fontWeight: 500,
+    color: "#888780",
+    background: "#f3f4f6",
+    border: "0.5px solid rgba(0,0,0,0.08)",
+    borderRadius: 6,
+    padding: "3px 8px",
+  },
   cardTitle: {
-    fontSize: 19,
-    fontWeight: 800,
-    color: "#f1f5f9",
-    margin: "0 0 8px",
+    fontSize: 16,
+    fontWeight: 600,
+    color: "#0f1117",
+    margin: "0 0 6px",
     lineHeight: 1.3,
-    letterSpacing: "-0.5px",
-    fontFamily: "'Cabinet Grotesk', sans-serif",
     textTransform: "capitalize",
   },
-  cardDesc: { fontSize: 13, color: "#475569", margin: 0, lineHeight: 1.7 },
+  cardDesc: { fontSize: 13, color: "#888780", margin: 0, lineHeight: 1.6 },
   metaGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
-    gap: 10,
-    marginTop: 4,
+    gridTemplateColumns: "repeat(auto-fill, minmax(72px, 1fr))",
+    gap: 8,
+    marginBottom: 4,
   },
   metaTile: {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.06)",
-    borderRadius: 12,
-    padding: "10px 12px",
+    background: "#f8f9fa",
+    borderRadius: 8,
+    padding: "8px 10px",
     display: "flex",
     flexDirection: "column",
-    gap: 3,
   },
-  metaIcon: { display: "flex", marginBottom: 2 },
-  metaVal: {
-    fontSize: 15,
-    fontWeight: 800,
-    color: "#e2e8f0",
-    lineHeight: 1,
-    fontFamily: "'Cabinet Grotesk', sans-serif",
-  },
+  metaVal: { fontSize: 15, fontWeight: 600, color: "#0f1117", lineHeight: 1 },
   metaKey: {
     fontSize: 10,
-    color: "#334155",
-    fontWeight: 600,
-    letterSpacing: ".8px",
+    color: "#aaa",
+    marginTop: 3,
     textTransform: "uppercase",
+    letterSpacing: "0.6px",
   },
   empty: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "100px 20px",
-    gap: 16,
+    padding: "80px 20px",
+    gap: 12,
+    textAlign: "center",
+    background: "#ffffff",
+    border: "0.5px solid rgba(0,0,0,0.1)",
+    borderRadius: 12,
+  },
+  emptyIconWrap: {
+    width: 52,
+    height: 52,
+    background: "#f3f4f6",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  /* Modal */
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(10,14,23,0.55)",
+    backdropFilter: "blur(6px)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000,
+    animation: "overlay-in .2s ease",
+  },
+  modal: {
+    background: "#fff",
+    borderRadius: 18,
+    padding: "32px 28px 24px",
+    width: "100%",
+    maxWidth: 420,
+    position: "relative",
+    animation: "modal-in .3s cubic-bezier(.22,.68,0,1.2) both",
+    boxShadow: "0 24px 64px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)",
+    border: "0.5px solid rgba(0,0,0,0.08)",
+    margin: "0 16px",
+  },
+  shieldWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 700,
+    color: "#0f1117",
+    margin: "0 0 6px",
+    fontFamily: "'Syne', sans-serif",
+    letterSpacing: "-0.3px",
+  },
+  modalSub: {
+    fontSize: 13,
+    color: "#888780",
+    margin: "0 0 12px",
+    textAlign: "center",
+  },
+  examTag: {
+    fontSize: 12,
+    fontWeight: 500,
+    borderRadius: 8,
+    padding: "5px 14px",
+    maxWidth: "100%",
+    textAlign: "center",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
 };
 
 export default Userdashboard;
-
-// import React, { Fragment, useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { toast } from "sonner";
-// import {
-//   ActionRow,
-//   Attempts,
-//   Card,
-//   Container,
-//   Description,
-//   ExamId,
-//   Heading,
-//   StyledLink,
-//   Title,
-// } from "../styles/UserDashboar.style";
-// import Layout from "../component/Layout";
-// import { NavLink } from "react-router-dom";
-
-// const Userdashboard = () => {
-//   const [data, setData] = useState([]);
-//   useEffect(() => {
-//     getExamData();
-//   }, []);
-
-//   const userId = useSelector((state) => state.auth.user);
-//   console.log(userId);
-//   const getExamData = async () => {
-//     const response = await fetch(
-//       "https://localhost:8443/sphinx/api/user/getAssignUserExam",
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ userLoginId: userId }),
-//       },
-//     );
-//     const value = await response.json();
-//     if (response.ok) {
-//       setData(value.userExam);
-//     } else {
-//       toast.error(value.error);
-//     }
-//   };
-
-//   return (
-//     <Layout>
-//       <Heading>
-//         <h1>Available Exam</h1>
-//       </Heading>
-//       <Container>
-//         {data &&
-//           data.map((e, i) => {
-//             return (
-//               <Card>
-//                 <ExamId>{e.examId}</ExamId>
-//                 <Title>{e.examName}</Title>
-//                 <Description>{e.description}</Description>
-
-//                 <Attempts>{e.noOfAttempts}</Attempts>
-//                 <ActionRow>
-//                   <StyledLink to={`/exam-attend/${e.examId}`}>
-//                     attend
-//                   </StyledLink>
-//                 </ActionRow>
-//               </Card>
-//             );
-//           })}
-//       </Container>
-//     </Layout>
-//   );
-// };
-
-// export default Userdashboard;

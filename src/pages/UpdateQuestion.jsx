@@ -1,14 +1,23 @@
 import Layout from "../component/Layout";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
 import { toast } from "sonner";
-import { CheckCircle2 } from "lucide-react";
-import { FormGroup, HeaderSection, Input, OptionCard, OptionsGrid, PremiumWrapper, SubmitBtn, Textarea, TypePill, TypePillContainer } from "./CreateQuestion";
-import { H2 } from "../styles/ExamTDetails.style";
+import {
+  FormGroup,
+  HeaderSection,
+  Input,
+  OptionCard,
+  OptionsGrid,
+  PremiumWrapper,
+  SubmitBtn,
+  Textarea,
+  TypePill,
+  TypePillContainer,
+} from "./CreateQuestion";
 
 const UpdateQuestion = () => {
   const { quesId } = useParams();
+
   const [questionType, setQuestionType] = useState("SINGLE_CHOICE");
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [singleAnswer, setSingleAnswer] = useState("A");
@@ -25,9 +34,6 @@ const UpdateQuestion = () => {
     answer: "",
     numAnswers: 1,
     questionTypeId: "SINGLE_CHOICE",
-    difficultyLevel: 1,
-    answerValue: 1,
-    negativeMarkValue: 0,
   });
 
   const navigate = useNavigate();
@@ -35,30 +41,48 @@ const UpdateQuestion = () => {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const res = await fetch("https://localhost:8443/sphinx/api/question/get-ques-by-id", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ questionId: quesId }),
-        });
-        if (!res.ok) throw new Error("Network response was not ok");
-        const data = await res.json();
-
-        if (data && data.question && data.question.question) {
-          const fetchedQuestion = data.question.question;
-          setFormData(fetchedQuestion);
-          setQuestionType(fetchedQuestion.questionTypeId);
-
-          const ans = fetchedQuestion.answer || "";
-          if (fetchedQuestion.questionTypeId === "MULTI_CHOICE") {
-            setSelectedAnswers(ans.split(","));
-          } else if (fetchedQuestion.questionTypeId === "SINGLE_CHOICE" || fetchedQuestion.questionTypeId === "TRUE_FALSE") {
-            setSingleAnswer(ans);
-          } else {
-            setTextAnswer(ans);
+        const res = await fetch(
+          "https://localhost:8443/sphinx/api/question/get-ques-by-id",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ questionId: quesId }),
           }
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch");
+
+        const data = await res.json();
+        const fetched = data?.question?.question;
+
+        if (!fetched) return;
+
+        let updatedForm = { ...fetched };
+
+        if (fetched.questionTypeId === "TRUE_FALSE") {
+          updatedForm.optionA = "True";
+          updatedForm.optionB = "False";
+          updatedForm.optionC = "";
+          updatedForm.optionD = "";
+        }
+
+        setFormData(updatedForm);
+        setQuestionType(fetched.questionTypeId);
+
+        const ans = fetched.answer || "";
+
+        if (fetched.questionTypeId === "MULTI_CHOICE") {
+          setSelectedAnswers(ans.split(","));
+        } else if (
+          fetched.questionTypeId === "SINGLE_CHOICE" ||
+          fetched.questionTypeId === "TRUE_FALSE"
+        ) {
+          setSingleAnswer(ans || "A");
+        } else {
+          setTextAnswer(ans);
         }
       } catch (err) {
-        toast.error("Failed to fetch this question's data.");
+        toast.error("Failed to fetch question");
       }
     };
 
@@ -71,12 +95,30 @@ const UpdateQuestion = () => {
 
   const handleCheckboxChange = (value) => {
     setSelectedAnswers((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
     );
   };
 
+  const handleTypeChange = (type) => {
+    setQuestionType(type);
+
+    if (type === "TRUE_FALSE") {
+      setFormData((prev) => ({
+        ...prev,
+        optionA: "True",
+        optionB: "False",
+        optionC: "",
+        optionD: "",
+      }));
+
+      setSingleAnswer((prev) => prev || "A");
+    }
+  };
+
   const handleSubmit = async () => {
-    if (!formData.questionDetail || !formData.questionDetail.trim()) {
+    if (!formData.questionDetail.trim()) {
       toast.error("Question detail is required");
       return;
     }
@@ -89,24 +131,28 @@ const UpdateQuestion = () => {
       answer:
         questionType === "MULTI_CHOICE"
           ? selectedAnswers.join(",")
-          : questionType === "FILL_BLANKS" || questionType === "DETAILED_ANSWER"
-            ? textAnswer
-            : singleAnswer,
+          : questionType === "FILL_BLANKS" ||
+            questionType === "DETAILED_ANSWER"
+          ? textAnswer
+          : singleAnswer,
     };
 
     try {
-      const response = await fetch("https://localhost:8443/sphinx/api/question/update-question", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(finalData),
-      });
+      const response = await fetch(
+        "https://localhost:8443/sphinx/api/question/update-question",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(finalData),
+        }
+      );
 
-      if (!response.ok) throw new Error("Failed to update question");
+      if (!response.ok) throw new Error("Failed");
 
-      toast.success("Question Updated Successfully!");
+      toast.success("Question updated successfully!");
       navigate(-1);
     } catch (err) {
-      toast.error(err.message || "Failed to update question");
+      toast.error("Failed to update question");
     } finally {
       setLoading(false);
     }
@@ -115,17 +161,22 @@ const UpdateQuestion = () => {
   return (
     <Layout>
       <PremiumWrapper>
-        {/* <H2 style={{ fontWeight: 600, fontSize: "16px" }}>Topic Name: {}</H2> */}
         <HeaderSection>
           <h1>Update Question</h1>
         </HeaderSection>
 
         <TypePillContainer>
-          {["SINGLE_CHOICE", "MULTI_CHOICE", "TRUE_FALSE", "FILL_BLANKS", "DETAILED_ANSWER"].map((type) => (
+          {[
+            "SINGLE_CHOICE",
+            "MULTI_CHOICE",
+            "TRUE_FALSE",
+            "FILL_BLANKS",
+            "DETAILED_ANSWER",
+          ].map((type) => (
             <TypePill
               key={type}
               active={questionType === type}
-              onClick={() => setQuestionType(type)}
+              onClick={() => handleTypeChange(type)}
             >
               {type.replace("_", " ")}
             </TypePill>
@@ -138,53 +189,69 @@ const UpdateQuestion = () => {
             id="questionDetail"
             value={formData.questionDetail}
             onChange={handleChange}
-            placeholder="Type your question here..."
           />
         </FormGroup>
 
-        {questionType !== "FILL_BLANKS" && questionType !== "DETAILED_ANSWER" && (
-          <FormGroup>
-            <label>Options</label>
-            <OptionsGrid>
-              {["A", "B", ...(questionType !== "TRUE_FALSE" ? ["C", "D"] : [])].map((opt) => {
-                const isActive = questionType === "MULTI_CHOICE" ? selectedAnswers.includes(opt) : singleAnswer === opt;
-                return (
-                  <OptionCard key={opt} active={isActive}>
-                    {questionType === "MULTI_CHOICE" ? (
-                      <input
-                        type="checkbox"
-                        checked={isActive}
-                        onChange={() => handleCheckboxChange(opt)}
-                      />
-                    ) : (
-                      <input
-                        type="radio"
-                        checked={isActive}
-                        onChange={() => setSingleAnswer(opt)}
-                      />
-                    )}
-                    <Input
-                      style={{ background: 'transparent', padding: '8px', boxShadow: 'none' }}
-                      id={`option${opt}`}
-                      value={formData[`option${opt}`] || ''}
-                      onChange={handleChange}
-                      placeholder={`Option ${opt}`}
-                    />
-                  </OptionCard>
-                )
-              })}
-            </OptionsGrid>
-          </FormGroup>
-        )}
+        {questionType !== "FILL_BLANKS" &&
+          questionType !== "DETAILED_ANSWER" && (
+            <FormGroup>
+              <label>Options</label>
+              <OptionsGrid>
+                {[
+                  "A",
+                  "B",
+                  ...(questionType !== "TRUE_FALSE" ? ["C", "D"] : []),
+                ].map((opt) => {
+                  const isActive =
+                    questionType === "MULTI_CHOICE"
+                      ? selectedAnswers.includes(opt)
+                      : singleAnswer === opt;
 
-        {(questionType === "FILL_BLANKS" || questionType === "DETAILED_ANSWER") && (
+                  return (
+                    <OptionCard key={opt}>
+                      {questionType === "MULTI_CHOICE" ? (
+                        <input
+                          type="checkbox"
+                          checked={isActive}
+                          onChange={() => handleCheckboxChange(opt)}
+                        />
+                      ) : (
+                        <input
+                          type="radio"
+                          checked={isActive}
+                          onChange={() => setSingleAnswer(opt)}
+                        />
+                      )}
+
+                      {questionType === "TRUE_FALSE" ? (
+                        <Input
+                          value={opt === "A" ? "True" : "False"}
+                          disabled
+                          readOnly
+                        />
+                      ) : (
+                        <Input
+                          id={`option${opt}`}
+                          value={formData[`option${opt}`] || ""}
+                          onChange={handleChange}
+                          placeholder={`Option ${opt}`}
+                        />
+                      )}
+                    </OptionCard>
+                  );
+                })}
+              </OptionsGrid>
+            </FormGroup>
+          )}
+
+      
+        {(questionType === "FILL_BLANKS" ||
+          questionType === "DETAILED_ANSWER") && (
           <FormGroup>
             <label>Answer</label>
             <Textarea
               value={textAnswer}
               onChange={(e) => setTextAnswer(e.target.value)}
-              placeholder="Enter correct answer..."
-              style={{ minHeight: '80px' }}
             />
           </FormGroup>
         )}
@@ -193,7 +260,7 @@ const UpdateQuestion = () => {
           {loading ? "Updating..." : "Update Question"}
         </SubmitBtn>
       </PremiumWrapper>
-    </Layout >
+    </Layout>
   );
 };
 

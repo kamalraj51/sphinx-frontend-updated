@@ -15,7 +15,9 @@ import { toggle } from "../reducer/apiReduce";
 import { RedSpan } from "../styles/FontsStyle";
 import { toast } from "sonner";
 import styled, { keyframes } from "styled-components";
-import { PlusCircle, Layers } from "lucide-react";
+import { PlusCircle, Layers, ArrowLeft } from "lucide-react";
+import { BackBtn } from "../pages/ExamUpdate";
+import { useNavigate } from "react-router-dom";
 
 /* ═══════════════════════════════════════════
    ANIMATIONS
@@ -225,6 +227,9 @@ const PageWrap = styled.div`
    COMPONENT
 ═══════════════════════════════════════════ */
 const AddTopic = () => {
+  
+
+  const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user);
   const [topicName, setTopicName] = useState("");
   const [error, setError] = useState("");
@@ -298,6 +303,11 @@ const AddTopic = () => {
             </HeroBadge>
           </div>
         </HeroLeft>
+                   <BackBtn onClick={() => {
+  navigate(-1);
+}}>
+            <ArrowLeft size={14} /> Back
+          </BackBtn>
       </HeroBar>
 
       {/* ── Add Topic Form Card ── */}

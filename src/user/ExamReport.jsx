@@ -1,221 +1,247 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// const ExamReport = () => {
-//   const { userId } = useParams();
-//   const [record, setRecord] = useState([]);
-//   const getAllReport = async () => {
-//     const response = await fetch(
-//       "https://localhost:8443/sphinx/api/user/getUserReport",
-//       {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ userLoginId: userId }),
-//       },
-//     );
-//     const data = await response.json();
-//     if (response.ok) {
-//       setRecord(data);
-//     } else {
-//       toast.error = data.error;
-//     }
-//   };
-//   useEffect(() => {
-//     getAllReport();
-//   });
 
-//   return <>{record.map((e, i) => {
-
-//   })}</>;
-// };
-
-// export default ExamReport;
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import styled, { keyframes, createGlobalStyle } from "styled-components";
 import Layout from "../component/Layout";
+import UserHeader from "./UserHeader";
 
-/* ─── Global Fonts ─── */
+/* ===================== GLOBAL ===================== */
 const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --blue-50:   #E6F1FB;
+    --blue-100:  #B5D4F4;
+    --blue-200:  #85B7EB;
+    --blue-400:  #378ADD;
+    --blue-600:  #185FA5;
+    --blue-800:  #0C447C;
+
+    --green-50:  #EAF3DE;
+    --green-100: #C0DD97;
+    --green-600: #3B6D11;
+    --green-800: #27500A;
+
+    --amber-50:  #FAEEDA;
+    --amber-100: #FAC775;
+    --amber-600: #854F0B;
+
+    --red-50:    #FCEBEB;
+    --red-100:   #F7C1C1;
+    --red-200:   #F09595;
+    --red-600:   #A32D2D;
+
+    --teal-50:   #E1F5EE;
+    --teal-100:  #9FE1CB;
+    --teal-600:  #0F6E56;
+
+    --gray-50:   #F7F6F2;
+    --gray-100:  #EEEDE8;
+    --gray-200:  #D3D1C7;
+    --gray-400:  #888780;
+    --gray-600:  #5F5E5A;
+    --gray-800:  #2C2C2A;
+
+    --font: 'Sora', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+  }
+
+  body {
+    font-family: var(--font);
+    background: #F5F4EF;
+    margin: 0;
+    padding: 0;
+  }
 `;
 
-/* ─── Animations ─── */
-const fadeUp = keyframes`
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-`;
-const pulse = keyframes`
-  0%,100% { box-shadow: 0 0 0 0 rgba(99,102,241,.35); }
-  50%      { box-shadow: 0 0 0 10px rgba(99,102,241,0); }
-`;
-const shimmer = keyframes`
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-`;
+/* ===================== KEYFRAMES ===================== */
+const fadeUp = keyframes`from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}`;
+const pulse = keyframes`0%,100%{opacity:1}50%{opacity:0.4}`;
+const barSlide = keyframes`from{width:0}to{width:var(--bar-w)}`;
 
-/* ─── Layout ─── */
+/* ===================== PAGE ===================== */
 const Page = styled.div`
   min-height: 100vh;
-  background: #0a0a14;
-  padding: 40px 16px;
-  font-family: "DM Sans", sans-serif;
+  background: #f5f4ef;
+  padding: 40px 20px 60px;
+  font-family: var(--font);
 `;
-const Glow = styled.div`
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 60% 50% at 20% 20%,
-      rgba(99, 102, 241, 0.18) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 50% 40% at 80% 80%,
-      rgba(236, 72, 153, 0.12) 0%,
-      transparent 70%
-    );
-`;
+
 const Inner = styled.div`
-  position: relative;
-  max-width: 680px;
+  max-width: 780px;
   margin: 0 auto;
 `;
 
-/* ─── Header ─── */
-const Chip = styled.div`
+/* ===================== HEADER ===================== */
+const HeaderWrap = styled.div`
+  margin-bottom: 36px;
+`;
+
+const Breadcrumb = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 50px;
-  padding: 6px 14px;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: 99px;
+  padding: 5px 14px;
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--blue-600);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #a5b4fc;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 `;
-const ChipDot = styled.span`
+
+const BreadDot = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #6366f1;
-  animation: ${pulse} 2s infinite;
-`;
-const PageTitle = styled.h1`
-  font-family: "Syne", sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #a5b4fc, #f0abfc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
-`;
-const PageSub = styled.p`
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.38);
-  margin-bottom: 32px;
+  background: var(--blue-400);
+  animation: ${pulse} 2s ease infinite;
 `;
 
-/* ─── Grid ─── */
+const PageTitle = styled.h1`
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--gray-800);
+  letter-spacing: -0.8px;
+  margin: 0 0 6px;
+  span {
+    color: var(--blue-600);
+  }
+`;
+
+const PageSub = styled.p`
+  font-size: 13.5px;
+  color: var(--gray-400);
+  margin: 0;
+  font-weight: 400;
+`;
+
+/* ===================== SUMMARY STRIP ===================== */
+const SummaryStrip = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const SummaryTile = styled.div`
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 16px 14px;
+  text-align: center;
+`;
+
+const SummaryVal = styled.div`
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--mono);
+  color: ${(p) => p.color || "var(--gray-800)"};
+  line-height: 1;
+  margin-bottom: 5px;
+`;
+
+const SummaryLabel = styled.div`
+  font-size: 10px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+`;
+
+/* ===================== GRID ===================== */
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
 `;
 
-/* ─── Card ─── */
+/* ===================== CARD ===================== */
 const Card = styled.div`
-  position: relative;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 24px;
-  padding: 28px 24px 22px;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: 24px;
   cursor: pointer;
-  overflow: hidden;
-  animation: ${fadeUp} 0.6s ${(p) => p.$delay || "0s"} both;
+  animation: ${fadeUp} 0.5s ${(p) => p.$delay || "0s"} both;
   transition:
     transform 0.2s,
-    border-color 0.2s,
-    background 0.2s,
-    box-shadow 0.2s;
+    box-shadow 0.2s,
+    border-color 0.2s;
+  position: relative;
+  overflow: hidden;
 
   &::before {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: 24px;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      rgba(99, 102, 241, 0.4),
-      rgba(236, 72, 153, 0.25),
-      transparent 60%
-    );
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: ${(p) =>
+      p.$pass
+        ? "linear-gradient(90deg, var(--green-600), var(--teal-600))"
+        : "linear-gradient(90deg, var(--red-600), #c94040)"};
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
+
   &:hover {
     transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(99, 102, 241, 0.35);
-    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
-  }
-  &:hover::before {
-    opacity: 1;
+    box-shadow: 0 16px 48px rgba(44, 44, 42, 0.12);
+    border-color: var(--blue-200);
   }
 `;
 
-const ClickHint = styled.span`
-  position: absolute;
-  bottom: 12px;
-  right: 16px;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.2);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0;
-  transition: opacity 0.2s;
-  ${Card}:hover & {
-    opacity: 1;
-  }
+const CardHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
 `;
 
-/* ─── Ring ─── */
+/* ── Score Ring ── */
 const RingWrap = styled.div`
   position: relative;
-  width: 90px;
-  height: 90px;
-  margin: 0 auto 18px;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
 `;
+
 const RingSvg = styled.svg`
   transform: rotate(-90deg);
 `;
+
 const RingBg = styled.circle`
   fill: none;
-  stroke: rgba(255, 255, 255, 0.06);
-  stroke-width: 10;
+  stroke: var(--gray-100);
+  stroke-width: 9;
 `;
+
 const RingFg = styled.circle`
   fill: none;
-  stroke: url(#ringGradReport);
-  stroke-width: 10;
+  stroke: ${(p) => (p.$pass ? "url(#ringGradPass)" : "url(#ringGradFail)")};
+  stroke-width: 9;
   stroke-linecap: round;
-  stroke-dasharray: 220;
-  stroke-dashoffset: ${(p) => 220 - (220 * p.$pct) / 100};
+  stroke-dasharray: 195;
+  stroke-dashoffset: ${(p) => 195 - (195 * Math.min(p.$pct, 100)) / 100};
   transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 `;
-const RingLabel = styled.div`
+
+const RingCenter = styled.div`
   position: absolute;
   inset: 0;
   display: flex;
@@ -223,113 +249,188 @@ const RingLabel = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
 const RingScore = styled.span`
-  font-family: "Syne", sans-serif;
-  font-size: 20px;
-  font-weight: 800;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gray-800);
   line-height: 1;
-  background: linear-gradient(135deg, #a5b4fc, #f0abfc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 `;
+
 const RingSub = styled.span`
   font-size: 9px;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--gray-400);
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-top: 2px;
 `;
 
-/* ─── Badge ─── */
-const BadgePill = styled.div`
+/* ── Card Title Area ── */
+const CardMeta = styled.div`
+  flex: 1;
+  padding-top: 2px;
+`;
+
+const ExamIdLabel = styled.div`
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+`;
+
+const ExamName = styled.div`
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-800);
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+`;
+
+const PassBadge = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 12px;
-  border-radius: 50px;
-  margin-bottom: 16px;
-  font-family: "Syne", sans-serif;
+  padding: 4px 11px;
+  border-radius: 99px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  background: ${(p) =>
-    p.$pass
-      ? "linear-gradient(135deg,#064e3b,#065f46)"
-      : "linear-gradient(135deg,#7f1d1d,#991b1b)"};
-  border: 1px solid
-    ${(p) => (p.$pass ? "rgba(52,211,153,.3)" : "rgba(248,113,113,.3)")};
-  color: ${(p) => (p.$pass ? "#34d399" : "#f87171")};
+  letter-spacing: 0.04em;
+  background: ${(p) => (p.$pass ? "var(--green-50)" : "var(--red-50)")};
+  border: 1.5px solid
+    ${(p) => (p.$pass ? "var(--green-100)" : "var(--red-100)")};
+  color: ${(p) => (p.$pass ? "var(--green-600)" : "var(--red-600)")};
 `;
 
-/* ─── Stats Row ─── */
+/* ── Stats Row ── */
 const StatsRow = styled.div`
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
   margin-bottom: 18px;
 `;
-const Stat = styled.div`
+
+const StatTile = styled.div`
+  background: ${(p) => p.bg || "var(--gray-50)"};
+  border: 1px solid ${(p) => p.border || "var(--gray-100)"};
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
   text-align: center;
 `;
+
 const StatVal = styled.div`
-  font-family: "Syne", sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: ${(p) => p.$color || "#fff"};
-`;
-const StatLabel = styled.div`
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.35);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-top: 2px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: ${(p) => p.color || "var(--gray-800)"};
+  line-height: 1;
+  margin-bottom: 4px;
 `;
 
-/* ─── Bar ─── */
-const BarWrap = styled.div`
+const StatLabel = styled.div`
+  font-size: 9.5px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+`;
+
+/* ── Accuracy Bar ── */
+const BarSection = styled.div`
   margin-bottom: 16px;
 `;
+
 const BarHead = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.38);
-  margin-bottom: 6px;
-`;
-const BarTrack = styled.div`
-  height: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 50px;
-  overflow: hidden;
-`;
-const BarFill = styled.div`
-  height: 100%;
-  width: ${(p) => p.$pct}%;
-  border-radius: 50px;
-  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
-  background-size: 200%;
-  animation: ${shimmer} 2s linear infinite;
-  transition: width 1s 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 11.5px;
+  color: var(--gray-400);
+  font-weight: 500;
+  margin-bottom: 7px;
 `;
 
-/* ─── Meta ─── */
-const MetaRow = styled.div`
+const BarHeadVal = styled.span`
+  color: var(--gray-800);
+  font-weight: 700;
+  font-family: var(--mono);
+`;
+
+const BarTrack = styled.div`
+  height: 6px;
+  background: var(--gray-100);
+  border-radius: 99px;
+  overflow: hidden;
+`;
+
+const BarFill = styled.div`
+  height: 100%;
+  border-radius: 99px;
+  width: ${(p) => p.$pct}%;
+  background: ${(p) =>
+    p.$pct >= 70
+      ? "linear-gradient(90deg, var(--green-600), var(--teal-600))"
+      : p.$pct >= 40
+        ? "linear-gradient(90deg, var(--amber-600), #c48012)"
+        : "linear-gradient(90deg, var(--red-600), #c94040)"};
+  transition: width 1s 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+`;
+
+/* ── Card Footer ── */
+const CardFooter = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.35);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  align-items: center;
   padding-top: 14px;
+  border-top: 1px solid var(--gray-100);
 `;
-const MetaVal = styled.span`
-  color: rgba(255, 255, 255, 0.7);
+
+const FooterDate = styled.div`
+  font-size: 11.5px;
+  color: var(--gray-400);
   font-weight: 500;
 `;
 
-/* ─── Empty ─── */
+const ViewBtn = styled.div`
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--blue-600);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: 99px;
+  padding: 5px 14px;
+  transition: all 0.15s;
+  ${Card}:hover & {
+    background: var(--blue-100);
+    border-color: var(--blue-200);
+  }
+`;
+
+const AttemptBadge = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: var(--amber-600);
+  background: var(--amber-50);
+  border: 1px solid var(--amber-100);
+  border-radius: 99px;
+  padding: 3px 10px;
+`;
+
+/* ── Empty / Loading ── */
 const Empty = styled.div`
   text-align: center;
-  padding: 60px 20px;
-  color: rgba(255, 255, 255, 0.3);
+  padding: 80px 20px;
+  color: var(--gray-400);
   font-size: 14px;
+`;
+
+const EmptyIcon = styled.div`
+  font-size: 36px;
+  margin-bottom: 12px;
 `;
 
 /* ═══════════════════════════════════════════════ */
@@ -352,7 +453,7 @@ const ExamReport = () => {
       );
       const data = await response.json();
       if (response.ok) {
-        setRecords(data.data ?? data); // handle { data: [...] } or plain array
+        setRecords(data.data ?? data);
       } else {
         toast.error(data.error || "Failed to load reports.");
       }
@@ -374,44 +475,81 @@ const ExamReport = () => {
       year: "numeric",
     });
 
+  /* Summary aggregates */
+  const totalExams = records.length;
+  const totalPassed = records.filter((r) => r.userPassed === 1).length;
+  const avgScore = totalExams
+    ? (
+        records.reduce((s, r) => s + parseFloat(r.score || 0), 0) / totalExams
+      ).toFixed(1)
+    : "—";
+  const bestScore = totalExams
+    ? Math.max(...records.map((r) => parseFloat(r.score || 0))).toFixed(1)
+    : "—";
+
   return (
-    <Layout>
+    <>
+      <UserHeader />
       <GlobalStyle />
+
+      {/* SVG gradient defs */}
+      <svg style={{ position: "absolute", width: 0, height: 0 }}>
+        <defs>
+          <linearGradient id="ringGradPass" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#3B6D11" />
+            <stop offset="100%" stopColor="#0F6E56" />
+          </linearGradient>
+          <linearGradient id="ringGradFail" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#A32D2D" />
+            <stop offset="100%" stopColor="#c94040" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <Page>
-        <Glow />
-        {/* SVG gradient definition (shared across all rings) */}
-        <svg style={{ position: "absolute", width: 0, height: 0 }}>
-          <defs>
-            <linearGradient
-              id="ringGradReport"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#6366f1" />
-              <stop offset="50%" stopColor="#a855f7" />
-              <stop offset="100%" stopColor="#ec4899" />
-            </linearGradient>
-          </defs>
-        </svg>
-
         <Inner>
-          <Chip>
-            <ChipDot /> My Reports
-          </Chip>
-          <PageTitle>Exam History</PageTitle>
-          <PageSub>Click any card to view the full result breakdown</PageSub>
+          {/* ── Header ── */}
+          <HeaderWrap>
+            <Breadcrumb>
+              <BreadDot /> My Reports
+            </Breadcrumb>
+            <PageTitle>
+              Exam <span>History</span>
+            </PageTitle>
+            <PageSub>Click any card to view the full result breakdown.</PageSub>
+          </HeaderWrap>
 
+          {/* ── Summary strip ── */}
+          {!loading && records.length > 0 && (
+            <SummaryStrip>
+              <SummaryTile>
+                <SummaryVal color="var(--blue-600)">{totalExams}</SummaryVal>
+                <SummaryLabel>Exams Taken</SummaryLabel>
+              </SummaryTile>
+              <SummaryTile>
+                <SummaryVal color="var(--green-600)">{totalPassed}</SummaryVal>
+                <SummaryLabel>Passed</SummaryLabel>
+              </SummaryTile>
+              
+            </SummaryStrip>
+          )}
+
+          {/* ── Cards ── */}
           {loading ? (
-            <Empty>Loading reports…</Empty>
+            <Empty>
+              <EmptyIcon>⏳</EmptyIcon>
+              Loading your reports…
+            </Empty>
           ) : records.length === 0 ? (
-            <Empty>No exam records found.</Empty>
+            <Empty>
+              <EmptyIcon>📋</EmptyIcon>
+              No exam records found yet.
+            </Empty>
           ) : (
             <Grid>
               {records.map((r, i) => {
                 const passed = r.userPassed === 1;
-                const score = parseFloat(r.score).toFixed(1);
+                const score = parseFloat(r.score || 0).toFixed(1);
                 const total = r.noOfQuestions ?? r.totalCorrect + r.totalWrong;
                 const acc = total
                   ? Math.round((r.totalCorrect / total) * 100)
@@ -419,72 +557,81 @@ const ExamReport = () => {
 
                 return (
                   <Card
-                    key={r.performanceId}
-                    $delay={`${i * 0.1}s`}
+                    key={r.performanceId ?? i}
+                    $delay={`${i * 0.07}s`}
+                    $pass={passed}
                     onClick={() => navigate(`/result/${r.examId}/${userId}`)}
                   >
-                    {/* Ring */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
+                    <AttemptBadge>#{(r.attemptNo ?? 0) }</AttemptBadge>
+
+                    {/* ── Ring + meta ── */}
+                    <CardHeader>
                       <RingWrap>
-                        <RingSvg width="90" height="90" viewBox="0 0 90 90">
-                          <RingBg cx="45" cy="45" r="35" />
-                          <RingFg cx="45" cy="45" r="35" $pct={score} />
+                        <RingSvg width="80" height="80" viewBox="0 0 80 80">
+                          <RingBg cx="40" cy="40" r="31" />
+                          <RingFg
+                            cx="40"
+                            cy="40"
+                            r="31"
+                            $pct={parseFloat(score)}
+                            $pass={passed}
+                          />
                         </RingSvg>
-                        <RingLabel>
+                        <RingCenter>
                           <RingScore>{score}%</RingScore>
-                          <RingSub>SCORE</RingSub>
-                        </RingLabel>
+                          <RingSub>Score</RingSub>
+                        </RingCenter>
                       </RingWrap>
 
-                      <BadgePill $pass={passed}>
-                        {passed ? "🏆 PASSED" : "📋 FAILED"}
-                      </BadgePill>
-                    </div>
+                      <CardMeta>
+                        <ExamIdLabel>Exam ID: {r.examId}</ExamIdLabel>
+                        <ExamName>{r.examName || `Exam #${r.examId}`}</ExamName>
+                        <PassBadge $pass={passed}>
+                          {passed ? "✓ Passed" : "✕ Failed"}
+                        </PassBadge>
+                      </CardMeta>
+                    </CardHeader>
 
-                    {/* Stats */}
+                    {/* ── Stats ── */}
                     <StatsRow>
-                      <Stat>
-                        <StatVal>{total}</StatVal>
+                      <StatTile bg="var(--gray-50)" border="var(--gray-100)">
+                        <StatVal color="var(--gray-800)">{total}</StatVal>
                         <StatLabel>Total</StatLabel>
-                      </Stat>
-                      <Stat>
-                        <StatVal $color="#34d399">{r.totalCorrect}</StatVal>
+                      </StatTile>
+                      <StatTile bg="var(--green-50)" border="var(--green-100)">
+                        <StatVal color="var(--green-600)">
+                          {r.totalCorrect}
+                        </StatVal>
                         <StatLabel>Correct</StatLabel>
-                      </Stat>
-                      <Stat>
-                        <StatVal $color="#f87171">{r.totalWrong}</StatVal>
+                      </StatTile>
+                      <StatTile bg="var(--red-50)" border="var(--red-100)">
+                        <StatVal color="var(--red-600)">{r.totalWrong}</StatVal>
                         <StatLabel>Wrong</StatLabel>
-                      </Stat>
-                      <Stat>
-                        <StatVal $color="#fbbf24">#{r.attemptNo + 1}</StatVal>
-                        <StatLabel>Attempt</StatLabel>
-                      </Stat>
+                      </StatTile>
+                      <StatTile bg="var(--amber-50)" border="var(--amber-100)">
+                        <StatVal color="var(--amber-600)">
+                          {total - r.totalCorrect - r.totalWrong}
+                        </StatVal>
+                        <StatLabel>Skipped</StatLabel>
+                      </StatTile>
                     </StatsRow>
 
-                    {/* Accuracy bar */}
-                    <BarWrap>
+                    {/* ── Accuracy bar ── */}
+                    <BarSection>
                       <BarHead>
                         <span>Accuracy</span>
-                        <span>{acc}%</span>
+                        <BarHeadVal>{acc}%</BarHeadVal>
                       </BarHead>
                       <BarTrack>
                         <BarFill $pct={acc} />
                       </BarTrack>
-                    </BarWrap>
+                    </BarSection>
 
-                    {/* Meta */}
-                    <MetaRow>
-                      <span>{r.examId}</span>
-                      <MetaVal>{fmtDate(r.date)}</MetaVal>
-                    </MetaRow>
-
-                    <ClickHint>View Details →</ClickHint>
+                    {/* ── Footer ── */}
+                    <CardFooter>
+                      <FooterDate>📅 {fmtDate(r.date)}</FooterDate>
+                      <ViewBtn>View Details →</ViewBtn>
+                    </CardFooter>
                   </Card>
                 );
               })}
@@ -492,7 +639,7 @@ const ExamReport = () => {
           )}
         </Inner>
       </Page>
-    </Layout>
+    </>
   );
 };
 

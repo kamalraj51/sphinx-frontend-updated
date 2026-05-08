@@ -22,7 +22,7 @@ const Header = () => {
   return (
     <HeaderMain>
       <div style={{ display: "flex", columnGap: "30px", alignItems: "center" }}>
-        <img src="src/assets/letter-s.png" width="50px" alt="logo" />
+        <img src="/letter-s.png" width="50px" alt="S" />
       </div>
 
       {isAuthenticated ? (
@@ -32,7 +32,7 @@ const Header = () => {
             {isOpen ? <FaTimes /> : <FaBars />}
           </MenuToggle>
           <Menu $isOpen={isOpen}>
-            <NavLink to="/adminhome" onClick={() => setIsOpen(false)}>
+            <NavLink to="/admin-home" onClick={() => setIsOpen(false)}>
               Home
             </NavLink>
 
@@ -40,9 +40,12 @@ const Header = () => {
               Manage Questions
             </NavLink>
 
-             <NavLink to="/create-user" onClick={() => setIsOpen(false)}>
+
+            <NavLink to="/add-user" onClick={() => setIsOpen(false)}>
               Add User
-            </NavLink> 
+            </NavLink>
+
+
             <NavLink to="/creat-exam" onClick={() => setIsOpen(false)}>
               Create Assessment
             </NavLink>
