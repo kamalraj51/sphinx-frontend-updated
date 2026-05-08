@@ -407,7 +407,7 @@ const UserExamDetails = () => {
               <HeroSub>{decodedUserId}</HeroSub>
             </div>
           </HeroLeft>
-          <BackBtn onClick={() => navigate("/all-users")}>
+          <BackBtn onClick={() => navigate(-1)}>
             <ArrowLeft size={14} /> Back
           </BackBtn>
         </HeroBar>
@@ -416,16 +416,8 @@ const UserExamDetails = () => {
         <StatsRow>
           {[
             { label: "Total Exams", value: data.length, color: "#6366f1" },
-            { label: "Completed", value: completedCount, color: "#10b981" },
-            {
-              label: "Pending",
-              value: data.filter((e) =>
-                ["pending", "assigned"].includes(
-                  (e.status || "").toLowerCase(),
-                ),
-              ).length,
-              color: "#f59e0b",
-            },
+           
+          
           ].map((s) => (
             <StatCard key={s.label} $color={s.color}>
               <StatValue $color={s.color}>{loading ? "—" : s.value}</StatValue>
