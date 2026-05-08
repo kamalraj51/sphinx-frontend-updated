@@ -1,28 +1,274 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import UserExamDetails from "./UserExamDetails";
+import styled, { keyframes } from "styled-components";
+import { Users, ChevronRight } from "lucide-react";
+import Layout from "../component/Layout";
 
+/* ── Animations ─────────────────────────────────────── */
+const fadeUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+`;
+const shimmer = keyframes`
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+`;
+
+/* ── Page ───────────────────────────────────────────── */
+const PageWrap = styled.div`
+  font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+/* ── Hero ───────────────────────────────────────────── */
+const HeroBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 32px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(
+      circle,
+      rgba(99, 102, 241, 0.22) 0%,
+      transparent 70%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+  }
+`;
+
+const HeroLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+`;
+
+const HeroIconRing = styled.div`
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(99, 102, 241, 0.22);
+  border: 1.5px solid rgba(165, 180, 252, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a5b4fc;
+  flex-shrink: 0;
+`;
+
+const HeroTitle = styled.h1`
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.4px;
+  position: relative;
+  z-index: 1;
+`;
+
+const HeroSub = styled.p`
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  margin: 2px 0 0;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+`;
+
+const CountBadge = styled.div`
+  background: rgba(165, 180, 252, 0.18);
+  border: 1.5px solid rgba(165, 180, 252, 0.35);
+  color: #c7d2fe;
+  border-radius: 12px;
+  padding: 8px 22px;
+  font-weight: 800;
+  font-size: 22px;
+  font-family: "Sora", sans-serif;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.5px;
+`;
+
+/* ── Card ───────────────────────────────────────────── */
+const Card = styled.div`
+  background: #fff;
+  border-radius: 20px;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.1),
+    0 1px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  animation: ${fadeUp} 0.45s ease both;
+  animation-delay: 0.05s;
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-bottom: 2px solid #e0e7ff;
+  background: #eef2ff;
+`;
+
+const CardTitle = styled.h2`
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #4338ca;
+  margin: 0;
+`;
+
+const CardBody = styled.div`
+  padding: 8px 0;
+`;
+
+/* ── User Row ───────────────────────────────────────── */
+const UserRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.18s ease;
+  animation: ${fadeUp} 0.4s ease both;
+  animation-delay: ${({ $i }) => $i * 0.04}s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: #eef2ff;
+  }
+  &:hover .row-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+`;
+
+const avatarPalette = [
+  ["#6366f1", "#818cf8"],
+  ["#ec4899", "#f472b6"],
+  ["#10b981", "#34d399"],
+  ["#f59e0b", "#fbbf24"],
+  ["#3b82f6", "#60a5fa"],
+  ["#8b5cf6", "#a78bfa"],
+];
+
+const Avatar = styled.div`
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: ${({ $g }) => $g};
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  font-family: "Sora", sans-serif;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px ${({ $sh }) => $sh};
+`;
+
+const UserInfo = styled.div`
+  flex: 1;
+`;
+
+const UserName = styled.p`
+  margin: 0;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 14.5px;
+`;
+const UserIdText = styled.p`
+  margin: 2px 0 0;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+`;
+const UserEmail = styled.p`
+  margin: 2px 0 0;
+  color: #cbd5e1;
+  font-size: 11px;
+`;
+const RoleTag = styled.span`
+  background: #eef2ff;
+  color: #6366f1;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+const RowArrow = styled.span`
+  color: #6366f1;
+  opacity: 0;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+`;
+
+/* ── Skeleton ───────────────────────────────────────── */
+const SkeletonRow = styled.div`
+  height: 74px;
+  margin: 4px 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 600px 100%;
+  animation: ${shimmer} 1.4s ease infinite;
+`;
+
+/* ── Empty ──────────────────────────────────────────── */
+const EmptyWrap = styled.div`
+  text-align: center;
+  padding: 64px 0;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 500;
+`;
+
+/* ── Main ───────────────────────────────────────────── */
 const AllUser = () => {
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const userId = useSelector((state) => state.auth.userLoginId);
+  const navigate = useNavigate();
+  const userId = useSelector((state) => state.auth.user);
 
   const handleUser = async () => {
     try {
-      const response = await fetch(
-        "https://localhost:8443/sphinx/api/user/getAllUser",
+      const res = await fetch(
+        "https://localhost:8443/sphinx/api/user/getAllPartyUsers",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ createdByUserLogin: userId }),
-        }
+        },
       );
-      if (!response.ok) throw new Error("Failed");
-      const data = await response.json();
+      if (!res.ok) throw new Error("Failed");
+      const data = await res.json();
       setUsers(data.allUser || []);
-    } catch (err) {
+    } catch {
       console.log("Retrying...");
       setTimeout(handleUser, 1000);
     } finally {
@@ -34,291 +280,94 @@ const AllUser = () => {
     handleUser();
   }, []);
 
-  if (selectedUser) {
-    return (
-      <UserExamDetails
-        userId={selectedUser.userLoginId}
-        userName={selectedUser.name || selectedUser.userLoginId}
-        onBack={() => setSelectedUser(null)}
-      />
-    );
-  }
-
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        {/* Header */}
-        <div style={styles.header}>
-          <div style={styles.headerLeft}>
-            <div style={styles.headerAccent} />
+    <Layout>
+      <PageWrap>
+        {/* Hero */}
+        <HeroBar>
+          <HeroLeft>
+            <HeroIconRing>
+              <Users size={24} strokeWidth={1.8} />
+            </HeroIconRing>
             <div>
-              <h1 style={styles.title}>All Users</h1>
-              <p style={styles.subtitle}>
-                {users.length} registered user{users.length !== 1 ? "s" : ""}
-              </p>
+              <HeroTitle>All Users</HeroTitle>
+              <HeroSub>
+                {loading
+                  ? "Loading users…"
+                  : `${users.length} registered user${users.length !== 1 ? "s" : ""}`}
+              </HeroSub>
             </div>
-          </div>
-          <div style={styles.badge}>{users.length}</div>
-        </div>
+          </HeroLeft>
+          {!loading && <CountBadge>{users.length}</CountBadge>}
+        </HeroBar>
 
-        {/* Content */}
-        {loading ? (
-          <div style={styles.loadingWrap}>
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} style={{ ...styles.skeleton, animationDelay: `${i * 0.1}s` }} />
-            ))}
-          </div>
-        ) : users.length === 0 ? (
-          <div style={styles.empty}>
-            <span style={styles.emptyIcon}>👤</span>
-            <p style={styles.emptyText}>No users found</p>
-          </div>
-        ) : (
-          <div style={styles.grid}>
-            {users.map((user, idx) => (
-              <UserCard
-                key={user.userLoginId || idx}
-                user={user}
-                onClick={() => setSelectedUser(user)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+        {/* List Card */}
+        <Card>
+          <CardHeader>
+            <Users size={15} color="#4338ca" />
+            <CardTitle>User Directory</CardTitle>
+          </CardHeader>
+          <CardBody>
+            {loading ? (
+              [1, 2, 3, 4].map((i) => <SkeletonRow key={i} />)
+            ) : users.length === 0 ? (
+              <EmptyWrap>
+                <div style={{ fontSize: 44, marginBottom: 12 }}>👤</div>
+                No users found
+              </EmptyWrap>
+            ) : (
+              users.map((user, idx) => {
+                const [c1, c2] =
+                  avatarPalette[
+                    (user.userLoginId || "").length % avatarPalette.length
+                  ];
+                const initials = (user.name || user.userLoginId || "U")
+                  .split(" ")
+                  .map((w) => w[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase();
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700&display=swap');
-        @keyframes shimmer {
-          0% { background-position: -400px 0; }
-          100% { background-position: 400px 0; }
-        }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .user-card:hover {
-          transform: translateY(-3px) !important;
-          box-shadow: 0 12px 40px rgba(99,102,241,0.18) !important;
-          border-color: #6366f1 !important;
-        }
-        .user-card:hover .arrow-icon {
-          opacity: 1 !important;
-          transform: translateX(4px) !important;
-        }
-        .user-card:hover .avatar-ring {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-        }
-      `}</style>
-    </div>
+                return (
+                  <UserRow
+                    key={user.userLoginId || idx}
+                    $i={idx}
+                    onClick={() =>
+                      navigate(
+                        `/user-exam-details/${encodeURIComponent(user.userLoginId)}/${encodeURIComponent(user.name || user.userLoginId)}`,
+                      )
+                    }
+                  >
+                    <Avatar
+                      $g={`linear-gradient(135deg,${c1},${c2})`}
+                      $sh={`${c1}44`}
+                    >
+                      {initials}
+                    </Avatar>
+
+                    <UserInfo>
+                      <UserName>{user.name || "—"}</UserName>
+                      <UserIdText>{user.userLoginId}</UserIdText>
+                      {user.email && <UserEmail>{user.email}</UserEmail>}
+                    </UserInfo>
+
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 10 }}
+                    >
+                      {user.role && <RoleTag>{user.role}</RoleTag>}
+                      <RowArrow className="row-arrow">
+                        <ChevronRight size={18} />
+                      </RowArrow>
+                    </div>
+                  </UserRow>
+                );
+              })
+            )}
+          </CardBody>
+        </Card>
+      </PageWrap>
+    </Layout>
   );
-};
-
-const UserCard = ({ user, onClick }) => {
-  const initials = (user.name || user.userLoginId || "U")
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  const colors = [
-    ["#6366f1", "#8b5cf6"],
-    ["#ec4899", "#f43f5e"],
-    ["#10b981", "#06b6d4"],
-    ["#f59e0b", "#ef4444"],
-    ["#3b82f6", "#6366f1"],
-  ];
-  const color = colors[(user.userLoginId || "").length % colors.length];
-
-  return (
-    <div
-      className="user-card"
-      onClick={onClick}
-      style={{
-        ...styles.card,
-        animation: `fadeUp 0.4s ease both`,
-      }}
-    >
-      <div
-        className="avatar-ring"
-        style={{
-          ...styles.avatarRing,
-          background: `linear-gradient(135deg, ${color[0]}44, ${color[1]}44)`,
-        }}
-      >
-        <div style={{ ...styles.avatar, background: `linear-gradient(135deg, ${color[0]}, ${color[1]})` }}>
-          {initials}
-        </div>
-      </div>
-
-      <div style={styles.cardInfo}>
-        <p style={styles.cardName}>{user.name || "—"}</p>
-        <p style={styles.cardId}>{user.userLoginId}</p>
-        {user.email && <p style={styles.cardEmail}>{user.email}</p>}
-      </div>
-
-      <div style={styles.cardRight}>
-        {user.role && <span style={styles.roleTag}>{user.role}</span>}
-        <span
-          className="arrow-icon"
-          style={styles.arrow}
-        >
-          →
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%)",
-    fontFamily: "'DM Sans', sans-serif",
-    padding: "40px 20px",
-  },
-  container: {
-    maxWidth: 820,
-    margin: "0 auto",
-  },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 36,
-    animation: "fadeUp 0.5s ease both",
-  },
-  headerLeft: {
-    display: "flex",
-    alignItems: "center",
-    gap: 16,
-  },
-  headerAccent: {
-    width: 5,
-    height: 52,
-    borderRadius: 4,
-    background: "linear-gradient(180deg, #6366f1, #8b5cf6)",
-  },
-  title: {
-    fontFamily: "'Syne', sans-serif",
-    fontSize: 28,
-    fontWeight: 700,
-    color: "#fff",
-    margin: 0,
-    letterSpacing: "-0.5px",
-  },
-  subtitle: {
-    fontSize: 13,
-    color: "#6b7280",
-    margin: "4px 0 0",
-  },
-  badge: {
-    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-    color: "#fff",
-    borderRadius: 12,
-    padding: "8px 18px",
-    fontWeight: 700,
-    fontSize: 20,
-    fontFamily: "'Syne', sans-serif",
-  },
-  grid: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  card: {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 16,
-    padding: "16px 20px",
-    display: "flex",
-    alignItems: "center",
-    gap: 16,
-    cursor: "pointer",
-    transition: "all 0.25s ease",
-  },
-  avatarRing: {
-    borderRadius: "50%",
-    padding: 3,
-    transition: "background 0.25s ease",
-  },
-  avatar: {
-    width: 46,
-    height: 46,
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#fff",
-    fontWeight: 700,
-    fontSize: 16,
-    fontFamily: "'Syne', sans-serif",
-  },
-  cardInfo: {
-    flex: 1,
-  },
-  cardName: {
-    margin: 0,
-    color: "#f1f5f9",
-    fontWeight: 600,
-    fontSize: 15,
-  },
-  cardId: {
-    margin: "2px 0 0",
-    color: "#6b7280",
-    fontSize: 12,
-  },
-  cardEmail: {
-    margin: "2px 0 0",
-    color: "#4b5563",
-    fontSize: 11,
-  },
-  cardRight: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: 8,
-  },
-  roleTag: {
-    background: "rgba(99,102,241,0.15)",
-    color: "#a5b4fc",
-    borderRadius: 6,
-    padding: "3px 10px",
-    fontSize: 11,
-    fontWeight: 600,
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-  },
-  arrow: {
-    color: "#6366f1",
-    fontSize: 18,
-    opacity: 0,
-    transition: "all 0.2s ease",
-  },
-  loadingWrap: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  skeleton: {
-    height: 78,
-    borderRadius: 16,
-    background: "linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%)",
-    backgroundSize: "400px 100%",
-    animation: "shimmer 1.4s ease infinite",
-  },
-  empty: {
-    textAlign: "center",
-    padding: "80px 0",
-  },
-  emptyIcon: {
-    fontSize: 48,
-  },
-  emptyText: {
-    color: "#6b7280",
-    marginTop: 12,
-    fontSize: 15,
-  },
 };
 
 export default AllUser;
