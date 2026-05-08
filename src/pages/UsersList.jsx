@@ -6,6 +6,7 @@ import Assignexamtempoaryupdate from "../component/Assignexamtempoaryupdate";
 import ConfirmModal from "../component/ConfirmModal";
 import styled, { keyframes } from "styled-components";
 import { UserPlus, Users, CheckCircle2, Trash2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 /* ═══════════════════════════════════════════
    ANIMATIONS
@@ -400,6 +401,7 @@ const EmptyState = styled.div`
 const UsersList = () => {
   const location = useLocation();
   const examId = location.state?.examId;
+    const userId = useSelector((state) => state.auth.user);
 
   const [user, setUser] = useState([]);
   const [assignedUsers, setAssignedUsers] = useState([]);
@@ -434,6 +436,7 @@ const UsersList = () => {
           body: JSON.stringify({
             examId: formData.examId,
             servicetype: "not assiggned",
+            createdByUserLogin: userId,
           }),
         },
       );
