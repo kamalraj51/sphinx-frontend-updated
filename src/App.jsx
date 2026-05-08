@@ -35,7 +35,9 @@ import ExamReport from "./user/ExamReport";
 import ResultPage from "./user/ResultPage";
 import AllUsers from "./user/AllUsers";
 import UserExamDetails from "./user/UserExamDetails";
+
 import CompletedExam from "./user/CompletedExam";
+import ExamResultAdmin from "./user/ExamResultAdmin";
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -291,6 +293,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ExamReport />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exam-result-admin/:examId/:userId/:userName"
+            element={
+              <ProtectedRoute>
+                <ExamResultAdmin />
               </ProtectedRoute>
             }
           />

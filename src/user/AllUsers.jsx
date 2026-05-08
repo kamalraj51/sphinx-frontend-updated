@@ -346,7 +346,7 @@ const AllUser = () => {
                     </Avatar>
 
                     <UserInfo>
-                      <UserName>{user.name || "—"}</UserName>
+                      <UserName>{user.userName || "—"}</UserName>
                       <UserIdText>{user.userLoginId}</UserIdText>
                       {user.email && <UserEmail>{user.email}</UserEmail>}
                     </UserInfo>
