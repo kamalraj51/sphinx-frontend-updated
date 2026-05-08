@@ -230,6 +230,32 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/user-exam-details/:userId/:userName"
+            element={
+              <ProtectedRoute>
+                <UserExamDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/completed-exams/:userId/:userName"
+            element={
+              <ProtectedRoute>
+                <CompletedExamList />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/exam-result/:examId/:userId/:examName"
+            element={
+              <ProtectedRoute>
+                <CompletedExam />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/userdashboard"

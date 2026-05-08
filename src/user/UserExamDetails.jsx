@@ -1,38 +1,378 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
 import { toast } from "react-toastify";
-import CompletedExam from "./CompletedExam";
+import {
+  ClipboardList,
+  CheckCircle,
+  ArrowLeft,
+  ChevronRight,
+} from "lucide-react";
 import Layout from "../component/Layout";
 
-const statusColor = {
-  assigned: { bg: "rgba(59,130,246,0.15)", text: "#93c5fd" },
-  pending: { bg: "rgba(245,158,11,0.15)", text: "#fcd34d" },
-  completed: { bg: "rgba(16,185,129,0.15)", text: "#6ee7b7" },
-  inprogress: { bg: "rgba(139,92,246,0.15)", text: "#c4b5fd" },
+/* ── Animations ─────────────────────────────────────── */
+const fadeUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+`;
+const shimmer = keyframes`
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+`;
+
+/* ── Page ───────────────────────────────────────────── */
+const PageWrap = styled.div`
+  font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+/* ── Hero ───────────────────────────────────────────── */
+const HeroBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 32px;
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(
+      circle,
+      rgba(16, 185, 129, 0.2) 0%,
+      transparent 70%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+  }
+`;
+
+const HeroLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+`;
+
+const HeroIconRing = styled.div`
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.22);
+  border: 1.5px solid rgba(52, 211, 153, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 18px;
+  font-family: "Sora", sans-serif;
+`;
+
+const HeroTitle = styled.h1`
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.4px;
+`;
+
+const HeroSub = styled.p`
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  margin: 2px 0 0;
+  font-weight: 500;
+`;
+
+export const BackBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: "Sora", "DM Sans", sans-serif;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    transform: translateX(-2px);
+  }
+`;
+
+/* ── Stats Row ──────────────────────────────────────── */
+const StatsRow = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  animation: ${fadeUp} 0.45s ease both;
+  animation-delay: 0.08s;
+`;
+
+const StatCard = styled.div`
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-top: 3px solid ${({ $color }) => $color};
+`;
+
+const StatValue = styled.span`
+  font-size: 30px;
+  font-weight: 800;
+  font-family: "Sora", sans-serif;
+  color: ${({ $color }) => $color};
+  letter-spacing: -1px;
+`;
+
+const StatLabel = styled.span`
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+
+/* ── Card ───────────────────────────────────────────── */
+const Card = styled.div`
+  background: #fff;
+  border-radius: 20px;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.1),
+    0 1px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  animation: ${fadeUp} 0.45s ease both;
+  animation-delay: ${({ $delay }) => $delay || "0.1s"};
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 2px solid ${({ $border }) => $border || "#e0e7ff"};
+  background: ${({ $bg }) => $bg || "#eef2ff"};
+`;
+
+const CardTitleWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const CardTitle = styled.h2`
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: ${({ $color }) => $color || "#4338ca"};
+  margin: 0;
+`;
+
+const CompletedBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: "Sora", "DM Sans", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.28);
+  transition: all 0.18s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  }
+`;
+
+const CountPill = styled.span`
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 1px 9px;
+  font-size: 12px;
+  font-weight: 800;
+`;
+
+const CardBody = styled.div`
+  padding: 8px 0;
+`;
+
+/* ── Exam Row ───────────────────────────────────────── */
+const statusMap = {
+  assigned: { bg: "#eff6ff", text: "#3b82f6", dot: "#3b82f6" },
+  pending: { bg: "#fffbeb", text: "#f59e0b", dot: "#f59e0b" },
+  completed: { bg: "#f0fdf4", text: "#10b981", dot: "#10b981" },
+  inprogress: { bg: "#faf5ff", text: "#8b5cf6", dot: "#8b5cf6" },
 };
 
-const UserExamDetails = ({ userId, userName, onBack }) => {
+const ExamRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: ${({ $clickable }) => ($clickable ? "pointer" : "default")};
+  transition: background 0.18s ease;
+  animation: ${fadeUp} 0.4s ease both;
+  animation-delay: ${({ $i }) => $i * 0.04}s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  ${({ $clickable }) =>
+    $clickable &&
+    `
+    &:hover { background: #f0fdf4; }
+    &:hover .exam-arrow { opacity: 1; transform: translateX(3px); }
+  `}
+`;
+
+const ExamIconBox = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+`;
+
+const ExamInfo = styled.div`
+  flex: 1;
+`;
+
+const ExamName = styled.p`
+  margin: 0;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 14px;
+`;
+
+const ExamMeta = styled.p`
+  margin: 3px 0 0;
+  color: #94a3b8;
+  font-size: 12px;
+`;
+
+const ExamRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+`;
+
+const StatusBadge = styled.span`
+  background: ${({ $bg }) => $bg};
+  color: ${({ $text }) => $text};
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: ${({ $dot }) => $dot};
+    flex-shrink: 0;
+  }
+`;
+
+const ViewLabel = styled.span`
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 700;
+`;
+
+const ExamArrow = styled.span`
+  opacity: 0;
+  color: #10b981;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+`;
+
+/* ── Skeleton ───────────────────────────────────────── */
+const SkeletonRow = styled.div`
+  height: 68px;
+  margin: 4px 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 600px 100%;
+  animation: ${shimmer} 1.4s ease infinite;
+`;
+
+const EmptyWrap = styled.div`
+  text-align: center;
+  padding: 56px 0;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 500;
+`;
+
+/* ── Main ───────────────────────────────────────────── */
+const UserExamDetails = () => {
+  const { userId, userName } = useParams();
+  const decodedUserId = decodeURIComponent(userId);
+  const decodedUserName = decodeURIComponent(userName);
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showCompleted, setShowCompleted] = useState(false);
-  const [selectedExam, setSelectedExam] = useState(null);
+  const navigate = useNavigate();
 
   const getExamData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
+      const res = await fetch(
         "https://localhost:8443/sphinx/api/user/getAssignUserExam",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userLoginId: userId }),
+          body: JSON.stringify({ userLoginId: decodedUserId }),
         },
       );
-      const value = await response.json();
-      if (response.ok) {
-        setData(value.userExam || []);
-      } else {
-        toast.error(value.error);
-      }
+      const value = await res.json();
+      if (res.ok) setData(value.userExam || []);
+      else toast.error(value.error);
     } catch {
       toast.error("Failed to load exams. Please try again.");
     } finally {
@@ -42,74 +382,40 @@ const UserExamDetails = ({ userId, userName, onBack }) => {
 
   useEffect(() => {
     getExamData();
-  }, [userId]);
-
-  // Navigate to CompletedExam for a specific exam
-  if (selectedExam) {
-    return (
-      <CompletedExam
-        examId={selectedExam.examId}
-        userId={userId}
-        examName={selectedExam.examName || selectedExam.examId}
-        onBack={() => setSelectedExam(null)}
-      />
-    );
-  }
-
-  // Show completed exams list
-  if (showCompleted) {
-    const completedExams = data.filter(
-      (e) => (e.status || "").toLowerCase() === "completed",
-    );
-    return (
-      <CompletedExamList
-        exams={completedExams}
-        userId={userId}
-        userName={userName}
-        onBack={() => setShowCompleted(false)}
-        onSelectExam={(exam) => setSelectedExam(exam)}
-      />
-    );
-  }
+  }, [decodedUserId]);
 
   const completedCount = data.filter(
     (e) => (e.status || "").toLowerCase() === "completed",
   ).length;
 
+  const initials = decodedUserName
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <Layout>
-    <div style={styles.page}>
-      <div style={styles.container}>
-        {/* Header */}
-        <div style={styles.header}>
-          <button onClick={onBack} style={styles.backBtn}>
-            ← Back
-          </button>
-          <div style={styles.userInfo}>
-            <div style={styles.userAvatar}>
-              {(userName || "U").slice(0, 2).toUpperCase()}
-            </div>
+      <PageWrap>
+        {/* Hero */}
+        <HeroBar>
+          <HeroLeft>
+            <HeroIconRing>{initials}</HeroIconRing>
             <div>
-              <h1 style={styles.title}>{userName}</h1>
-              <p style={styles.subtitle}>{userId}</p>
+              <HeroTitle>{decodedUserName}</HeroTitle>
+              <HeroSub>{decodedUserId}</HeroSub>
             </div>
-          </div>
-          <button
-            onClick={() => setShowCompleted(true)}
-            style={styles.completedBtn}
-          >
-            <span style={styles.completedBtnIcon}>✓</span>
-            Completed Assessments
-            {completedCount > 0 && (
-              <span style={styles.completedCount}>{completedCount}</span>
-            )}
-          </button>
-        </div>
+          </HeroLeft>
+          <BackBtn onClick={() => navigate("/all-users")}>
+            <ArrowLeft size={14} /> Back
+          </BackBtn>
+        </HeroBar>
 
-        {/* Stats Row */}
-        <div style={styles.statsRow}>
+        {/* Stats */}
+        <StatsRow>
           {[
-            { label: "Total", value: data.length, color: "#6366f1" },
+            { label: "Total Exams", value: data.length, color: "#6366f1" },
             { label: "Completed", value: completedCount, color: "#10b981" },
             {
               label: "Pending",
@@ -121,423 +427,93 @@ const UserExamDetails = ({ userId, userName, onBack }) => {
               color: "#f59e0b",
             },
           ].map((s) => (
-            <div key={s.label} style={styles.statCard}>
-              <span style={{ ...styles.statValue, color: s.color }}>
-                {s.value}
-              </span>
-              <span style={styles.statLabel}>{s.label}</span>
-            </div>
+            <StatCard key={s.label} $color={s.color}>
+              <StatValue $color={s.color}>{loading ? "—" : s.value}</StatValue>
+              <StatLabel>{s.label}</StatLabel>
+            </StatCard>
           ))}
-        </div>
+        </StatsRow>
 
-        {/* Exam List */}
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>All Assigned Exams</h2>
-          {loading ? (
-            <div style={styles.loadingWrap}>
-              {[1, 2, 3].map((i) => (
-                <div key={i} style={styles.skeleton} />
-              ))}
-            </div>
-          ) : data.length === 0 ? (
-            <div style={styles.empty}>
-              <span style={{ fontSize: 42 }}>📋</span>
-              <p style={{ color: "#6b7280", marginTop: 12 }}>
-                No exams assigned
-              </p>
-            </div>
-          ) : (
-            <div style={styles.examList}>
-              {data.map((exam, idx) => (
-                <ExamRow
-                  key={exam.examId || idx}
-                  exam={exam}
-                  onClick={
-                    (exam.status || "").toLowerCase() === "completed"
-                      ? () => setSelectedExam(exam)
-                      : null
-                  }
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+        {/* Exam List Card */}
+        <Card $delay="0.12s">
+          <CardHeader $border="#d1fae5" $bg="#f0fdf4">
+            <CardTitleWrap>
+              <ClipboardList size={15} color="#059669" />
+              <CardTitle $color="#059669">All Assigned Exams</CardTitle>
+            </CardTitleWrap>
 
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700&display=swap');
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes shimmer {
-          0% { background-position: -400px 0; }
-          100% { background-position: 400px 0; }
-        }
-        .exam-row-clickable:hover {
-          border-color: #6366f1 !important;
-          background: rgba(99,102,241,0.08) !important;
-        }
-        .completed-btn:hover {
-          background: linear-gradient(135deg, #10b981, #06b6d4) !important;
-          transform: translateY(-1px);
-        }
-        .back-btn:hover {
-          background: rgba(255,255,255,0.08) !important;
-          color: #fff !important;
-        }
-      `}</style>
-    </div>
+            <CompletedBtn
+              onClick={() =>
+                navigate(
+                  `/completed-exams/${encodeURIComponent(decodedUserId)}/${encodeURIComponent(decodedUserName)}`,
+                )
+              }
+            >
+              <CheckCircle size={15} />
+              Completed Assessments
+              {completedCount > 0 && <CountPill>{completedCount}</CountPill>}
+            </CompletedBtn>
+          </CardHeader>
+
+          <CardBody>
+            {loading ? (
+              [1, 2, 3].map((i) => <SkeletonRow key={i} />)
+            ) : data.length === 0 ? (
+              <EmptyWrap>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>📋</div>
+                No exams assigned yet
+              </EmptyWrap>
+            ) : (
+              data.map((exam, idx) => {
+                const status = (exam.status || "assigned").toLowerCase();
+                const sc = statusMap[status] || statusMap.assigned;
+                const isDone = status === "completed";
+
+                return (
+                  <ExamRow
+                    key={exam.examId || idx}
+                    $i={idx}
+                    $clickable={isDone}
+                    onClick={
+                      isDone
+                        ? () =>
+                            navigate(
+                              `/exam-result/${encodeURIComponent(exam.examId)}/${encodeURIComponent(decodedUserId)}/${encodeURIComponent(exam.examName || exam.examId)}`,
+                            )
+                        : undefined
+                    }
+                  >
+                    <ExamIconBox>📝</ExamIconBox>
+
+                    <ExamInfo>
+                      <ExamName>{exam.examName || exam.examId}</ExamName>
+                      {exam.assignedDate && (
+                        <ExamMeta>Assigned: {exam.assignedDate}</ExamMeta>
+                      )}
+                      {exam.dueDate && <ExamMeta>Due: {exam.dueDate}</ExamMeta>}
+                    </ExamInfo>
+
+                    <ExamRight>
+                      <StatusBadge $bg={sc.bg} $text={sc.text} $dot={sc.dot}>
+                        {exam.status || "Assigned"}
+                      </StatusBadge>
+                      {isDone && <ViewLabel>View Result →</ViewLabel>}
+                    </ExamRight>
+
+                    {isDone && (
+                      <ExamArrow className="exam-arrow">
+                        <ChevronRight size={17} />
+                      </ExamArrow>
+                    )}
+                  </ExamRow>
+                );
+              })
+            )}
+          </CardBody>
+        </Card>
+      </PageWrap>
     </Layout>
   );
-};
-
-const ExamRow = ({ exam, onClick }) => {
-  const status = (exam.status || "assigned").toLowerCase();
-  const sc = statusColor[status] || statusColor.assigned;
-  const isClickable = status === "completed" && onClick;
-
-  return (
-    <div
-      className={isClickable ? "exam-row-clickable" : ""}
-      onClick={isClickable ? onClick : undefined}
-      style={{
-        ...styles.examRow,
-        cursor: isClickable ? "pointer" : "default",
-      }}
-    >
-      <div style={styles.examIcon}>📝</div>
-      <div style={styles.examInfo}>
-        <p style={styles.examName}>{exam.examName || exam.examId}</p>
-        {exam.assignedDate && (
-          <p style={styles.examDate}>Assigned: {exam.assignedDate}</p>
-        )}
-        {exam.dueDate && <p style={styles.examDate}>Due: {exam.dueDate}</p>}
-      </div>
-      <div style={styles.examRight}>
-        <span
-          style={{ ...styles.statusBadge, background: sc.bg, color: sc.text }}
-        >
-          {exam.status || "Assigned"}
-        </span>
-        {isClickable && <span style={styles.viewBtn}>View Result →</span>}
-      </div>
-    </div>
-  );
-};
-
-// Inline completed exam list with Pass/Fail tabs
-const CompletedExamList = ({
-  exams,
-  userId,
-  userName,
-  onBack,
-  onSelectExam,
-}) => {
-  const passed = exams.filter(
-    (e) => (e.result || e.passStatus || "").toLowerCase() === "pass",
-  );
-  const failed = exams.filter(
-    (e) => (e.result || e.passStatus || "").toLowerCase() === "fail",
-  );
-  const [tab, setTab] = useState("all");
-
-  const displayed = tab === "pass" ? passed : tab === "fail" ? failed : exams;
-
-  return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <button onClick={onBack} style={styles.backBtn} className="back-btn">
-            ← Back to {userName}
-          </button>
-        </div>
-
-        <div style={{ marginBottom: 28 }}>
-          <h1 style={styles.title}>Completed Assessments</h1>
-          <p style={styles.subtitle}>
-            {userName} · {exams.length} completed
-          </p>
-        </div>
-
-        {/* Tabs */}
-        <div style={styles.tabs}>
-          {[
-            { key: "all", label: `All (${exams.length})` },
-            {
-              key: "pass",
-              label: `✓ Pass (${passed.length})`,
-              color: "#10b981",
-            },
-            {
-              key: "fail",
-              label: `✗ Fail (${failed.length})`,
-              color: "#ef4444",
-            },
-          ].map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              style={{
-                ...styles.tab,
-                ...(tab === t.key ? styles.tabActive : {}),
-                ...(tab === t.key && t.color
-                  ? {
-                      borderColor: t.color,
-                      color: t.color,
-                      background: `${t.color}18`,
-                    }
-                  : {}),
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* List */}
-        {displayed.length === 0 ? (
-          <div style={styles.empty}>
-            <span style={{ fontSize: 42 }}>🗂️</span>
-            <p style={{ color: "#6b7280", marginTop: 12 }}>
-              No exams in this category
-            </p>
-          </div>
-        ) : (
-          <div style={styles.examList}>
-            {displayed.map((exam, idx) => {
-              const isPassed =
-                (exam.result || exam.passStatus || "").toLowerCase() === "pass";
-              return (
-                <div
-                  key={exam.examId || idx}
-                  onClick={() => onSelectExam(exam)}
-                  style={{
-                    ...styles.examRow,
-                    cursor: "pointer",
-                    borderColor: isPassed
-                      ? "rgba(16,185,129,0.3)"
-                      : "rgba(239,68,68,0.3)",
-                  }}
-                  className="exam-row-clickable"
-                >
-                  <div style={styles.examIcon}>{isPassed ? "🏆" : "📄"}</div>
-                  <div style={styles.examInfo}>
-                    <p style={styles.examName}>
-                      {exam.examName || exam.examId}
-                    </p>
-                    {exam.completedDate && (
-                      <p style={styles.examDate}>
-                        Completed: {exam.completedDate}
-                      </p>
-                    )}
-                    {exam.score !== undefined && (
-                      <p style={styles.examDate}>Score: {exam.score}</p>
-                    )}
-                  </div>
-                  <div style={styles.examRight}>
-                    <span
-                      style={{
-                        ...styles.statusBadge,
-                        background: isPassed
-                          ? "rgba(16,185,129,0.15)"
-                          : "rgba(239,68,68,0.15)",
-                        color: isPassed ? "#6ee7b7" : "#fca5a5",
-                      }}
-                    >
-                      {isPassed ? "✓ Pass" : "✗ Fail"}
-                    </span>
-                    <span style={styles.viewBtn}>Details →</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700&display=swap');
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .exam-row-clickable:hover { border-color: #6366f1 !important; background: rgba(99,102,241,0.08) !important; }
-        .back-btn:hover { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
-      `}</style>
-    </div>
-  );
-};
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background:
-      "linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%)",
-    fontFamily: "'DM Sans', sans-serif",
-    padding: "40px 20px",
-    animation: "fadeUp 0.4s ease both",
-  },
-  container: { maxWidth: 820, margin: "0 auto" },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 28,
-    flexWrap: "wrap",
-    gap: 12,
-  },
-  backBtn: {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    color: "#9ca3af",
-    borderRadius: 10,
-    padding: "8px 18px",
-    cursor: "pointer",
-    fontSize: 13,
-    fontFamily: "'DM Sans', sans-serif",
-    transition: "all 0.2s ease",
-  },
-  userInfo: {
-    display: "flex",
-    alignItems: "center",
-    gap: 14,
-    flex: 1,
-    justifyContent: "center",
-  },
-  userAvatar: {
-    width: 50,
-    height: 50,
-    borderRadius: "50%",
-    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 700,
-    fontSize: 18,
-    fontFamily: "'Syne', sans-serif",
-  },
-  title: {
-    fontFamily: "'Syne', sans-serif",
-    fontSize: 22,
-    fontWeight: 700,
-    color: "#fff",
-    margin: 0,
-    letterSpacing: "-0.3px",
-  },
-  subtitle: { fontSize: 12, color: "#6b7280", margin: "3px 0 0" },
-  completedBtn: {
-    background: "linear-gradient(135deg, #059669, #10b981)",
-    border: "none",
-    color: "#fff",
-    borderRadius: 10,
-    padding: "10px 18px",
-    cursor: "pointer",
-    fontSize: 13,
-    fontWeight: 600,
-    fontFamily: "'DM Sans', sans-serif",
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    transition: "all 0.2s ease",
-  },
-  completedBtnIcon: { fontSize: 16 },
-  completedCount: {
-    background: "rgba(255,255,255,0.25)",
-    borderRadius: 20,
-    padding: "1px 8px",
-    fontSize: 12,
-    fontWeight: 700,
-  },
-  statsRow: {
-    display: "flex",
-    gap: 12,
-    marginBottom: 28,
-  },
-  statCard: {
-    flex: 1,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 14,
-    padding: "18px 16px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 4,
-  },
-  statValue: {
-    fontSize: 28,
-    fontWeight: 700,
-    fontFamily: "'Syne', sans-serif",
-  },
-  statLabel: { fontSize: 12, color: "#6b7280" },
-  section: {},
-  sectionTitle: {
-    fontFamily: "'Syne', sans-serif",
-    fontSize: 16,
-    color: "#9ca3af",
-    margin: "0 0 16px",
-    fontWeight: 600,
-    letterSpacing: "0.5px",
-    textTransform: "uppercase",
-  },
-  examList: { display: "flex", flexDirection: "column", gap: 10 },
-  examRow: {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 14,
-    padding: "14px 18px",
-    display: "flex",
-    alignItems: "center",
-    gap: 14,
-    transition: "all 0.2s ease",
-  },
-  examIcon: { fontSize: 24, flexShrink: 0 },
-  examInfo: { flex: 1 },
-  examName: { margin: 0, color: "#f1f5f9", fontWeight: 600, fontSize: 14 },
-  examDate: { margin: "3px 0 0", color: "#6b7280", fontSize: 12 },
-  examRight: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: 6,
-  },
-  statusBadge: {
-    borderRadius: 20,
-    padding: "3px 12px",
-    fontSize: 11,
-    fontWeight: 600,
-    textTransform: "capitalize",
-  },
-  viewBtn: { fontSize: 11, color: "#6366f1", fontWeight: 600 },
-  tabs: { display: "flex", gap: 8, marginBottom: 20 },
-  tab: {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    color: "#9ca3af",
-    borderRadius: 8,
-    padding: "8px 18px",
-    cursor: "pointer",
-    fontSize: 13,
-    fontFamily: "'DM Sans', sans-serif",
-    fontWeight: 500,
-    transition: "all 0.2s ease",
-  },
-  tabActive: {
-    background: "rgba(99,102,241,0.15)",
-    borderColor: "#6366f1",
-    color: "#a5b4fc",
-  },
-  loadingWrap: { display: "flex", flexDirection: "column", gap: 10 },
-  skeleton: {
-    height: 66,
-    borderRadius: 14,
-    background:
-      "linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%)",
-    backgroundSize: "400px 100%",
-    animation: "shimmer 1.4s ease infinite",
-  },
-  empty: { textAlign: "center", padding: "60px 0" },
 };
 
 export default UserExamDetails;
