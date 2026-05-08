@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import UserExamDetails from "./UserExamDetails";
+import Layout from "../component/Layout";
 
 const AllUser = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const userId = useSelector((state) => state.auth.userLoginId);
+ const userId = useSelector((state) => state.auth.user);
+  console.log("user login id ",userId ,"from all users")
 
   const handleUser = async () => {
     try {
       const response = await fetch(
-        "https://localhost:8443/sphinx/api/user/getAllUser",
+        "https://localhost:8443/sphinx/api/user/getAllPartyUsers",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -45,6 +47,7 @@ const AllUser = () => {
   }
 
   return (
+    <Layout>
     <div style={styles.page}>
       <div style={styles.container}>
         {/* Header */}
@@ -110,6 +113,7 @@ const AllUser = () => {
         }
       `}</style>
     </div>
+    </Layout>
   );
 };
 

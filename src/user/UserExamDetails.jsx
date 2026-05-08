@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CompletedExam from "./CompletedExam";
+import Layout from "../component/Layout";
 
 const statusColor = {
   assigned: { bg: "rgba(59,130,246,0.15)", text: "#93c5fd" },
@@ -76,6 +77,7 @@ const UserExamDetails = ({ userId, userName, onBack }) => {
   ).length;
 
   return (
+    <Layout>
     <div style={styles.page}>
       <div style={styles.container}>
         {/* Header */}
@@ -186,6 +188,7 @@ const UserExamDetails = ({ userId, userName, onBack }) => {
         }
       `}</style>
     </div>
+    </Layout>
   );
 };
 

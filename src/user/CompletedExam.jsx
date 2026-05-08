@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Layout from "../component/Layout";
 
 const CompletedExam = ({ examId, userId, examName, onBack }) => {
   const [result, setResult] = useState(null);
@@ -31,6 +32,7 @@ const CompletedExam = ({ examId, userId, examName, onBack }) => {
 
   if (!result) {
     return (
+      <Layout>
       <div style={styles.page}>
         <div style={styles.container}>
           <button onClick={onBack} style={styles.backBtn} className="back-btn">
@@ -45,6 +47,7 @@ const CompletedExam = ({ examId, userId, examName, onBack }) => {
         </div>
         <style>{baseStyle}</style>
       </div>
+      </Layout>
     );
   }
 
@@ -63,6 +66,7 @@ const CompletedExam = ({ examId, userId, examName, onBack }) => {
   const accentColor = isPassed ? passColor : failColor;
 
   return (
+    <Layout>
     <div style={styles.page}>
       <div style={styles.container}>
         {/* Back */}
@@ -246,6 +250,7 @@ const CompletedExam = ({ examId, userId, examName, onBack }) => {
 
       <style>{baseStyle}</style>
     </div>
+    </Layout>
   );
 };
 
@@ -277,6 +282,7 @@ const LoadingScreen = () => (
     `}
     </style>
   </div>
+
 );
 
 const baseStyle = `
