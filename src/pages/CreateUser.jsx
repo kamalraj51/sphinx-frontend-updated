@@ -4,7 +4,9 @@ import Layout from "../component/Layout";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
-import { UserPlus, User, Mail, AtSign, Shield, ChevronRight } from "lucide-react";
+import { UserPlus, User, Mail, AtSign, Shield, ChevronRight, ArrowLeft } from "lucide-react";
+import { HeroLeft } from "../component/AddTopic";
+import { BackBtn } from "./ExamUpdate";
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -22,6 +24,7 @@ const PageWrap = styled.div`
 const HeroBar = styled.div`
   display: flex;
   align-items: center;
+  justify-content:space-between;
   gap: 18px;
   padding: 20px 32px;
   background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
@@ -252,6 +255,7 @@ const CreateUser = () => {
       <PageWrap>
 
         <HeroBar>
+          <HeroLeft>
           <HeroIconRing>
             <UserPlus size={24} strokeWidth={1.8} />
           </HeroIconRing>
@@ -259,6 +263,14 @@ const CreateUser = () => {
             <HeroTitle>Add User</HeroTitle>
             <HeroSub>Fill in the details to create a new user account</HeroSub>
           </div>
+          </HeroLeft>
+          <BackBtn
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <ArrowLeft size={14} /> Back
+        </BackBtn>
         </HeroBar>
 
         <Card>

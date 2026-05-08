@@ -49,7 +49,7 @@ const HeroBar = styled.div`
   }
 `;
 
-const HeroLeft = styled.div`
+export const HeroLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 18px;

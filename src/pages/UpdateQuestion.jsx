@@ -14,6 +14,8 @@ import {
   TypePill,
   TypePillContainer,
 } from "./CreateQuestion";
+import { ArrowLeft } from "lucide-react";
+import { BackBtn } from "./ExamUpdate";
 
 const UpdateQuestion = () => {
   const { quesId } = useParams();
@@ -255,10 +257,25 @@ const UpdateQuestion = () => {
             />
           </FormGroup>
         )}
-
+<div style={{display:"flex", justifyContent:"space-between", columnGap:"30px"}}>
+        <BackBtn style={{backgroundColor:"green", width: "12%",
+  padding: "16px",
+  borderRadius: "12px",
+  background: "green",
+  color: "white",
+  border: "none",
+  cursor: "pointer",
+  marginTop: "40px"}}
+                      onClick={() => {
+                        navigate(-1);
+                      }}
+                    >
+                      Cancel
+                    </BackBtn>
         <SubmitBtn onClick={handleSubmit} disabled={loading}>
           {loading ? "Updating..." : "Update Question"}
         </SubmitBtn>
+        </div>
       </PremiumWrapper>
     </Layout>
   );

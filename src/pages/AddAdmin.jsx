@@ -5,8 +5,11 @@ import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import {
   ShieldPlus, User, AtSign, Mail, Phone,
-  Lock, Eye, EyeOff, ChevronRight, Loader2, AlertCircle
+  Lock, Eye, EyeOff, ChevronRight, Loader2, AlertCircle,
+  ArrowLeft
 } from "lucide-react";
+import { HeroLeft } from "../component/AddTopic";
+import { BackBtn } from "./ExamUpdate";
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -35,6 +38,7 @@ const HeroBar = styled.div`
   border-radius: 16px;
   position: relative;
   overflow: hidden;
+  justify-content:space-between;
 
   &::before {
     content: '';
@@ -276,6 +280,7 @@ const AddAdmin = () => {
       <PageWrap>
 
         <HeroBar>
+          <HeroLeft>
           <HeroIconRing>
             <ShieldPlus size={24} strokeWidth={1.8} />
           </HeroIconRing>
@@ -283,6 +288,14 @@ const AddAdmin = () => {
             <HeroTitle>Add Admin</HeroTitle>
             <HeroSub>Create a new administrator account</HeroSub>
           </div>
+          </HeroLeft>
+           <BackBtn
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <ArrowLeft size={14} /> Back
+        </BackBtn>
         </HeroBar>
 
         <Card>

@@ -297,10 +297,14 @@ const ExamUpdate = () => {
                 </FieldWrap>
 
               </FormGrid>
-
+<div style={{display:"flex", columnGap:"10px"}}>
+               <SubmitBtn type="submit">
+                Cancel
+              </SubmitBtn>
               <SubmitBtn type="submit">
                 Save Changes <ChevronRight size={16}/>
               </SubmitBtn>
+              </div>
             </form>
           </CardBody>
         </Card>

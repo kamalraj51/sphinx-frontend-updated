@@ -3,7 +3,9 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import styled, { keyframes } from 'styled-components'
-import { ClipboardPlus, FileText, Hash, Clock, BarChart2, ChevronRight } from 'lucide-react'
+import { ClipboardPlus, FileText, Hash, Clock, BarChart2, ChevronRight, ArrowLeft } from 'lucide-react'
+import { BackBtn } from '../pages/ExamUpdate'
+import { HeroLeft } from './AddTopic'
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -27,6 +29,7 @@ const HeroBar = styled.div`
   border-radius: 16px;
   position: relative;
   overflow: hidden;
+  justify-content:space-between;
 
   &::before {
     content: '';
@@ -266,6 +269,7 @@ const CreateExamform = () => {
   return (
     <PageWrap>
       <HeroBar>
+        <HeroLeft>
         <HeroIconRing>
           <ClipboardPlus size={24} strokeWidth={1.8} />
         </HeroIconRing>
@@ -274,6 +278,15 @@ const CreateExamform = () => {
           <HeroTitle>Create Assessment</HeroTitle>
           <HeroSub>Fill in the details to set up a new exam</HeroSub>
         </div>
+      </HeroLeft>
+          <BackBtn
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          <ArrowLeft size={14} /> Back
+        </BackBtn>
+        
       </HeroBar>
 
       <Card>

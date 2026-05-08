@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import QuestionUpload from "./QuestionUpload";
 import Pagination from "./Pagination";
-import { FileQuestion, UploadCloud, BookMarked, Layers, ChevronRight } from "lucide-react";
+import { FileQuestion, UploadCloud, BookMarked, Layers, ChevronRight, ArrowLeft } from "lucide-react";
 import { HeadingTable } from "../styles/AvailableExamStyle";
+import { BackBtn } from "../pages/ExamUpdate";
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -325,11 +326,19 @@ const TopicsShow = () => {
               </HeroTitleGroup>
             </HeroLeft>
           </HeroInner>
-
+<div style={{display:"flex", gap:"20px"}}>
           <UploadBtn onClick={() => setPopup(!popup)}>
             <UploadCloud size={17} />
             Upload Questions
           </UploadBtn>
+              <BackBtn
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                  >
+                    <ArrowLeft size={14} /> Back
+                  </BackBtn>
+                  </div>
         </HeroBar>
 
         {popup && <QuestionUpload handlePop={() => setPopup(false)} />}

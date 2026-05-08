@@ -14,9 +14,17 @@ import Layout from "./Layout";
 import { toast } from "sonner";
 import ConfirmModal from "./ConfirmModal";
 import Pagination from "./Pagination";
-import { Edit as EditIcon, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit as EditIcon, Trash2 } from "lucide-react";
 import styled, { keyframes } from "styled-components";
-import { FileQuestion, PlusCircle, UploadCloud, Layers, BookMarked, ChevronRight } from "lucide-react";
+import {
+  FileQuestion,
+  PlusCircle,
+  UploadCloud,
+  Layers,
+  BookMarked,
+  ChevronRight,
+} from "lucide-react";
+import { BackBtn } from "../pages/ExamUpdate";
 
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -30,7 +38,7 @@ const slideIn = keyframes`
 
 const PageWrap = styled.div`
   min-height: 100vh;
-  font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
+  font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
   padding-bottom: 60px;
 `;
 
@@ -49,11 +57,17 @@ const HeroBar = styled.div`
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: -60px; right: -60px;
-    width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%);
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(
+      circle,
+      rgba(16, 185, 129, 0.18) 0%,
+      transparent 70%
+    );
     border-radius: 50%;
     pointer-events: none;
   }
@@ -105,7 +119,8 @@ const HeroBadge = styled.span`
 `;
 
 const HeroDot = styled.span`
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #34d399;
   display: inline-block;
@@ -135,7 +150,9 @@ const CreateBtn = styled.button`
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
   }
-  &:active { transform: scale(0.97); }
+  &:active {
+    transform: scale(0.97);
+  }
 `;
 
 const ContentArea = styled.div`
@@ -147,7 +164,9 @@ const ContentArea = styled.div`
 const TableCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.10), 0 1px 6px rgba(0,0,0,0.05);
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.1),
+    0 1px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   margin-bottom: 20px;
 `;
@@ -167,7 +186,10 @@ const StatItem = styled.div`
   font-size: 12.5px;
   color: #64748b;
   font-weight: 500;
-  strong { color: #1e293b; font-weight: 800; }
+  strong {
+    color: #1e293b;
+    font-weight: 800;
+  }
 `;
 
 const Toolbar = styled.div`
@@ -226,8 +248,12 @@ const QuesRow = styled.div`
   animation: ${slideIn} 0.3s ease both;
   animation-delay: ${({ $index }) => $index * 0.04}s;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background: #f0fdf4; }
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: #f0fdf4;
+  }
 `;
 
 const RowIndex = styled.span`
@@ -276,22 +302,34 @@ const IconBtn = styled.button`
   font-family: inherit;
   transition: all 0.18s ease;
 
-  &:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-  &:active { transform: scale(0.95); }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const EditBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #10b981, #059669);
   color: #fff;
-  box-shadow: 0 3px 10px rgba(16,185,129,0.3);
-  &:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(16,185,129,0.4); }
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  }
 `;
 
 const DeleteBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: #fff;
-  box-shadow: 0 3px 10px rgba(239,68,68,0.25);
-  &:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239,68,68,0.35); }
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.25);
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+  }
 `;
 
 const BulkDeleteBtn = styled.button`
@@ -308,11 +346,19 @@ const BulkDeleteBtn = styled.button`
   font-family: inherit;
   cursor: pointer;
   transition: all 0.18s ease;
-  box-shadow: 0 3px 10px rgba(239,68,68,0.25);
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.25);
 
-  &:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239,68,68,0.35); }
-  &:active { transform: scale(0.97); }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `;
 
 const EmptyState = styled.div`
@@ -324,7 +370,9 @@ const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  svg { opacity: 0.3; }
+  svg {
+    opacity: 0.3;
+  }
 `;
 
 const ShowQuestion = () => {
@@ -350,9 +398,10 @@ const ShowQuestion = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ topicId: topicID, userLoginId: userId }),
-          }
+          },
         );
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
         const res = await response.json();
         setquestions(res.questionList || []);
       } catch (err) {
@@ -374,7 +423,7 @@ const ShowQuestion = () => {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ questionId: quesId }),
-      }
+      },
     );
     if (!response.ok) throw new Error("Failed to delete question");
   };
@@ -394,8 +443,7 @@ const ShowQuestion = () => {
       }
 
       const remaining =
-        questions.length -
-        (itemToDelete === "bulk" ? selectedIds.length : 1);
+        questions.length - (itemToDelete === "bulk" ? selectedIds.length : 1);
 
       const newTotalPages = Math.ceil(remaining / 10);
       if (currentPage > newTotalPages && newTotalPages > 0) {
@@ -410,8 +458,7 @@ const ShowQuestion = () => {
     }
   };
 
-  const updateQuestion = (quesId) =>
-    navigate(`/update-question/${quesId}`);
+  const updateQuestion = (quesId) => navigate(`/update-question/${quesId}`);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) setSelectIdsAllPage();
@@ -419,15 +466,13 @@ const ShowQuestion = () => {
   };
 
   const handleSelectOne = (e, quesId) => {
-    if (e.target.checked)
-      setSelectedIds((prev) => [...prev, quesId]);
-    else
-      setSelectedIds((prev) => prev.filter((id) => id !== quesId));
+    if (e.target.checked) setSelectedIds((prev) => [...prev, quesId]);
+    else setSelectedIds((prev) => prev.filter((id) => id !== quesId));
   };
 
   const paginatedQuestions = questions.slice(
     (currentPage - 1) * 10,
-    currentPage * 10
+    currentPage * 10,
   );
 
   const setSelectIdsAllPage = () =>
@@ -435,9 +480,7 @@ const ShowQuestion = () => {
 
   const allSelectedOnPage =
     paginatedQuestions.length > 0 &&
-    paginatedQuestions.every((q) =>
-      selectedIds.includes(q.questionId)
-    );
+    paginatedQuestions.every((q) => selectedIds.includes(q.questionId));
 
   return (
     <Layout>
@@ -455,13 +498,21 @@ const ShowQuestion = () => {
               </HeroBadge>
             </HeroTitleGroup>
           </HeroLeft>
-
-          <CreateBtn onClick={() =>
-            navigate(`/create-question/${topicID}/${tname}`)
-          }>
-            <PlusCircle size={17} />
-            Create Question
-          </CreateBtn>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <CreateBtn
+              onClick={() => navigate(`/create-question/${topicID}/${tname}`)}
+            >
+              <PlusCircle size={17} />
+              Create Question
+            </CreateBtn>
+            <BackBtn
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              <ArrowLeft size={14} /> Back
+            </BackBtn>
+          </div>
         </HeroBar>
 
         <ContentArea>
@@ -505,9 +556,7 @@ const ShowQuestion = () => {
               <HeadCell>S.No</HeadCell>
               <HeadCell>Question Details</HeadCell>
               <HeadCell>Question Type</HeadCell>
-              <HeadCell style={{ textAlign: "center" }}>
-                Action
-              </HeadCell>
+              <HeadCell style={{ textAlign: "center" }}>Action</HeadCell>
             </TableHead>
 
             {questions.length === 0 ? (
@@ -517,41 +566,28 @@ const ShowQuestion = () => {
               </EmptyState>
             ) : (
               paginatedQuestions.map((ques, i) => {
-                const isSelected =
-                  selectedIds.includes(ques.questionId);
+                const isSelected = selectedIds.includes(ques.questionId);
 
                 return (
                   <QuesRow key={ques.questionId || i} $index={i}>
                     <Checkbox
                       type="checkbox"
                       checked={isSelected}
-                      onChange={(e) =>
-                        handleSelectOne(e, ques.questionId)
-                      }
+                      onChange={(e) => handleSelectOne(e, ques.questionId)}
                     />
-                    <RowIndex>
-                      {(currentPage - 1) * 10 + i + 1}
-                    </RowIndex>
-                    <QuestionText>
-                      {ques.questionDetail}
-                    </QuestionText>
-                    <TypeBadge>
-                      {ques.questionTypeId}
-                    </TypeBadge>
+                    <RowIndex>{(currentPage - 1) * 10 + i + 1}</RowIndex>
+                    <QuestionText>{ques.questionDetail}</QuestionText>
+                    <TypeBadge>{ques.questionTypeId}</TypeBadge>
                     <ActionGroup>
                       <EditBtn
                         disabled={loading}
-                        onClick={() =>
-                          updateQuestion(ques.questionId)
-                        }
+                        onClick={() => updateQuestion(ques.questionId)}
                       >
                         <EditIcon size={15} />
                       </EditBtn>
                       <DeleteBtn
                         disabled={loading}
-                        onClick={() =>
-                          handleDeleteClick(ques.questionId)
-                        }
+                        onClick={() => handleDeleteClick(ques.questionId)}
                       >
                         <Trash2 size={15} />
                       </DeleteBtn>

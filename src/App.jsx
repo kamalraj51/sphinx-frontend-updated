@@ -33,7 +33,7 @@ import Result from "./pages/Result";
 import Admindashboard from "./Dashboard/Admindashboard";
 import ExamReport from "./user/ExamReport";
 import ResultPage from "./user/ResultPage";
-
+import AllUsers from "./user/AllUsers";
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -219,6 +219,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <ExamUpdate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <AllUsers />
               </ProtectedRoute>
             }
           />
