@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "sonner";
-import { ArrowLeft, CheckCircle2, ChevronDown } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown, ChevronRight } from "lucide-react";
 import { H2 } from "../styles/ExamTDetails.style";
 import { useSelector } from "react-redux";
 import { BackBtn } from "./ExamUpdate";
@@ -107,11 +107,14 @@ export const SubmitBtn = styled.button`
   width: 100%;
   padding: 16px;
   border-radius: 12px;
-  background: green;
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   border: none;
   cursor: pointer;
   margin-top: 40px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 `;
 
 const CreateQuestion = () => {
@@ -329,7 +332,7 @@ const CreateQuestion = () => {
 
   padding: "16px",
   borderRadius: "12px",
-  background: "green",
+ background: "linear-gradient(135deg, #10b981, #059669)",
   color: "white",
   border: "none",
   cursor: "pointer",
@@ -338,10 +341,10 @@ const CreateQuestion = () => {
                         navigate(-1);
                       }}
                     >
-                     Cancel
+                     <ArrowLeft size={14} />Cancel
                     </BackBtn>
         <SubmitBtn onClick={handleSubmit} disabled={loading}>
-          {loading ? "Creating..." : "Save Question"}
+          {loading ? "Creating..." : "Save Question"}<ChevronRight size={16}/>
         </SubmitBtn>
         </div>
       </PremiumWrapper>

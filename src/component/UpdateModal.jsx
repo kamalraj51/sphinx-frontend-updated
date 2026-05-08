@@ -19,7 +19,7 @@ const UpdateModal = ({ isOpen, onClose, topics, onUpdate }) => {
         <HeadingDiv>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
             <FaEdit style={{ height: '20px' }} />
-            <p>Update Topic</p>
+            <p>Edit Topic</p>
           </div>
           <FaTimes style={{ height: '20px', cursor: 'pointer' }} onClick={onClose} />
         </HeadingDiv>
@@ -35,7 +35,7 @@ const UpdateModal = ({ isOpen, onClose, topics, onUpdate }) => {
             onUpdate(topics.topicId, name)
             onClose()
           }}>
-            Update
+            Save
           </Button>
         </FormRow>
 
