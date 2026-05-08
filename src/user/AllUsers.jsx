@@ -334,7 +334,7 @@ const AllUser = () => {
                     $i={idx}
                     onClick={() =>
                       navigate(
-                        `/user-exam-details/${encodeURIComponent(user.userLoginId)}/${encodeURIComponent(user.name || user.userLoginId)}`,
+                        `/user-exam-details/${encodeURIComponent(user.userLoginId)}/${encodeURIComponent(user.userName)}`,
                       )
                     }
                   >
