@@ -26,9 +26,6 @@ import Pagination from "./Pagination";
 import ExamUpdateModal from "../pages/ExamUpdate";
 import styled, { keyframes } from "styled-components";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -39,17 +36,11 @@ const slideIn = keyframes`
   to   { opacity: 1; transform: translateX(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE WRAP
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: row;
@@ -127,9 +118,6 @@ const HeroDot = styled.span`
   display: inline-block;
 `;
 
-/* ═══════════════════════════════════════════
-   TABLE CARD
-═══════════════════════════════════════════ */
 const TableCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -139,7 +127,6 @@ const TableCard = styled.div`
   animation: ${fadeUp} 0.45s ease both;
 `;
 
-/* Stats strip */
 const StatsStrip = styled.div`
   display: flex;
   align-items: center;
@@ -155,10 +142,13 @@ const StatItem = styled.div`
   font-size: 12.5px;
   color: #64748b;
   font-weight: 500;
-  strong { color: #1e293b; font-weight: 800; }
+
+  strong {
+    color: #1e293b;
+    font-weight: 800;
+  }
 `;
 
-/* Table */
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -188,8 +178,13 @@ const TRStyled = styled.tr`
   animation: ${slideIn} 0.3s ease both;
   animation-delay: ${({ $index }) => ($index || 0) * 0.04}s;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background: #f0fdf4; }
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #f0fdf4;
+  }
 `;
 
 const TDStyled = styled.td`
@@ -217,7 +212,6 @@ const DescText = styled.td`
   line-height: 1.5;
 `;
 
-/* Exam name clickable button */
 const ExamNameBtn = styled.button`
   border: none;
   cursor: pointer;
@@ -232,10 +226,12 @@ const ExamNameBtn = styled.button`
   text-decoration: underline;
   text-decoration-color: transparent;
   transition: text-decoration-color 0.18s;
-  &:hover { text-decoration-color: #059669; }
+
+  &:hover {
+    text-decoration-color: #059669;
+  }
 `;
 
-/* Badge pills */
 const Pill = styled.span`
   display: inline-flex;
   align-items: center;
@@ -249,15 +245,16 @@ const Pill = styled.span`
   ${({ $color }) =>
     $color === "indigo" &&
     `background: #eef2ff; border: 1px solid #c7d2fe; color: #4f46e5;`}
+
   ${({ $color }) =>
     $color === "slate" &&
     `background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569;`}
+
   ${({ $color }) =>
     $color === "emerald" &&
     `background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669;`}
 `;
 
-/* Action icon buttons */
 const IconBtn = styled.button`
   display: flex;
   align-items: center;
@@ -269,28 +266,43 @@ const IconBtn = styled.button`
   cursor: pointer;
   font-family: inherit;
   transition: all 0.18s ease;
-  &:active { transform: scale(0.95); }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const EditBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #10b981, #059669);
   color: #fff;
   box-shadow: 0 3px 8px rgba(16,185,129,0.28);
-  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(16,185,129,0.4); }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(16,185,129,0.4);
+  }
 `;
 
 const DeleteBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: #fff;
   box-shadow: 0 3px 8px rgba(239,68,68,0.22);
-  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(239,68,68,0.35); }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(239,68,68,0.35);
+  }
 `;
 
 const AssignBtn = styled(IconBtn)`
   background: linear-gradient(135deg, #6366f1, #4f46e5);
   color: #fff;
   box-shadow: 0 3px 8px rgba(99,102,241,0.22);
-  &:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(99,102,241,0.35); }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(99,102,241,0.35);
+  }
 `;
 
 const BtnGroupWrap = styled.div`
@@ -300,7 +312,6 @@ const BtnGroupWrap = styled.div`
   justify-content: center;
 `;
 
-/* Empty state */
 const EmptyStateStyled = styled.div`
   padding: 64px 32px;
   text-align: center;
@@ -312,22 +323,19 @@ const EmptyStateStyled = styled.div`
   gap: 12px;
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const AvailableExam = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [examData, setExamData]         = useState([]);
-  const [currentPage, setCurrentPage]   = useState(1);
-  const [modalOpen, setModalOpen]       = useState(false);
+  const [examData, setExamData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [modalOpen, setModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedExam, setSelectedExam]   = useState(null);
+  const [selectedExam, setSelectedExam] = useState(null);
 
-  const userId  = useSelector((state) => state.auth.user);
+  const userId = useSelector((state) => state.auth.user);
   const message = location.state?.message;
 
   const getAllExam = async () => {
@@ -335,7 +343,9 @@ const AvailableExam = () => {
       const response = await fetch(
         `https://localhost:8443/sphinx/api/exam/get-exam?userLoginId=${encodeURIComponent(userId)}`
       );
+
       const allData = await response.json();
+
       setExamData((allData?.data?.data || []).filter(Boolean));
     } catch (err) {
       console.error("Failed to fetch exams:", err);
@@ -349,7 +359,9 @@ const AvailableExam = () => {
 
   const handleExamDelete = async () => {
     if (!itemToDelete) return;
+
     setModalOpen(false);
+
     try {
       const response = await fetch(
         "https://localhost:8443/sphinx/api/exam/examDelete",
@@ -359,14 +371,22 @@ const AvailableExam = () => {
           body: JSON.stringify({ examId: itemToDelete, userLoginId: userId }),
         }
       );
-      if (!response.ok) { toast.error("Failed to delete the assessment"); return; }
+
+      if (!response.ok) {
+        toast.error("Failed to delete the assessment");
+        return;
+      }
+
       setExamData((prev) => {
         const updated = prev.filter((item) => item.examId !== itemToDelete);
+
         if (updated.length <= (currentPage - 1) * 10 && currentPage > 1) {
           setCurrentPage((p) => p - 1);
         }
+
         return updated;
       });
+
       toast.success("Assessment deleted successfully");
     } catch {
       toast.error("Network error. Could not delete assessment.");
@@ -406,31 +426,34 @@ const AvailableExam = () => {
 
   return (
     <PageWrap>
-      {/* ── Hero Bar ── */}
       <HeroBar>
         <HeroLeft>
           <HeroIconRing>
             <ClipboardList size={24} strokeWidth={1.8} />
           </HeroIconRing>
+
           <div>
             <HeroTitle>Available Assessments</HeroTitle>
           </div>
         </HeroLeft>
+
         <HeroBadge>
           <HeroDot />
-          {examData.length} Assessment{examData.length !== 1 ? "s" : ""} Available
+          {examData.length} Assessment
+          {examData.length !== 1 ? "s" : ""} Available
         </HeroBadge>
       </HeroBar>
 
-      {/* ── Table Card ── */}
       <TableCard>
-        {/* Stats strip */}
         <StatsStrip>
           <StatItem>
-            Showing <strong>{paginatedData.length}</strong> of <strong>{examData.length}</strong> assessments
+            Showing <strong>{paginatedData.length}</strong> of{" "}
+            <strong>{examData.length}</strong> assessments
           </StatItem>
+
           <StatItem>
-            Page <strong>{currentPage}</strong> of <strong>{Math.max(1, Math.ceil(examData.length / 10))}</strong>
+            Page <strong>{currentPage}</strong> of{" "}
+            <strong>{Math.max(1, Math.ceil(examData.length / 10))}</strong>
           </StatItem>
         </StatsStrip>
 
@@ -443,28 +466,44 @@ const AvailableExam = () => {
           <Table>
             <THeadStyled>
               <tr>
-                <THStyled style={{ width: 52, textAlign: "center" }}>S.No</THStyled>
+                <THStyled style={{ width: 52, textAlign: "center" }}>
+                  S.No
+                </THStyled>
+
                 <THStyled>Assessment Name</THStyled>
+
                 <THStyled>Description</THStyled>
+
                 <THStyled $center>Questions</THStyled>
+
                 <THStyled $center>Duration</THStyled>
+
                 <THStyled $center>Pass %</THStyled>
+
                 <THStyled $center>Actions</THStyled>
               </tr>
             </THeadStyled>
+
             <TBodyStyled>
               {paginatedData.map((data, index) => {
                 if (!data) return null;
+
                 return (
                   <TRStyled key={data.examId} $index={index}>
                     <TDStyled>
-                      <SerialNum>{(currentPage - 1) * 10 + index + 1}</SerialNum>
+                      <SerialNum>
+                        {(currentPage - 1) * 10 + index + 1}
+                      </SerialNum>
                     </TDStyled>
 
                     <TDStyled>
                       <ExamNameBtn
-                        title="Edit Assessment"
-                        onClick={() => navigate("/exam-update", { state: { examData: data } })}
+                        title="Edit Exam"
+                        onClick={() =>
+                          navigate("/exam-update", {
+                            state: { examData: data },
+                          })
+                        }
                       >
                         {data.examName}
                       </ExamNameBtn>
@@ -481,28 +520,38 @@ const AvailableExam = () => {
                     </TDStyled>
 
                     <TDStyled style={{ textAlign: "center" }}>
-                      <Pill $color="emerald">{data.passPercentage}%</Pill>
+                      <Pill $color="emerald">
+                        {data.passPercentage}%
+                      </Pill>
                     </TDStyled>
 
                     <TDStyled>
                       <BtnGroupWrap>
                         <EditBtn
                           title="Edit Topics"
-                          onClick={() => navigate(`/edit-exam/${data.examId}`)}
+                          onClick={() =>
+                            navigate(`/edit-exam/${data.examId}`)
+                          }
                         >
                           <EditIcon size={15} />
                         </EditBtn>
 
                         <DeleteBtn
                           title="Delete Assessment"
-                          onClick={() => handleDeleteClick(data.examId)}
+                          onClick={() =>
+                            handleDeleteClick(data.examId)
+                          }
                         >
                           <Trash2 size={15} />
                         </DeleteBtn>
 
                         <AssignBtn
-                          title="Assign Users"
-                          onClick={() => navigate("/get-user", { state: { examId: data.examId } })}
+                          title="Assign User"
+                          onClick={() =>
+                            navigate("/get-user", {
+                              state: { examId: data.examId },
+                            })
+                          }
                         >
                           <UserPlus size={15} />
                         </AssignBtn>
@@ -534,7 +583,10 @@ const AvailableExam = () => {
       {editModalOpen && selectedExam && (
         <ExamUpdateModal
           examData={selectedExam}
-          onClose={() => { setEditModalOpen(false); setSelectedExam(null); }}
+          onClose={() => {
+            setEditModalOpen(false);
+            setSelectedExam(null);
+          }}
           onUpdateSuccess={handleUpdateSuccess}
         />
       )}

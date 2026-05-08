@@ -5,7 +5,6 @@ import styled, { keyframes, createGlobalStyle } from "styled-components";
 import { jsPDF } from "jspdf";
 import Layout from "../component/Layout";
 
-/* ===================== GLOBAL ===================== */
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; }
@@ -26,14 +25,12 @@ const GlobalStyle = createGlobalStyle`
   body { font-family: var(--font); background: #F5F4EF; margin: 0; padding: 0; }
 `;
 
-/* ===================== ANIMATIONS ===================== */
 const fadeUp   = keyframes`from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}`;
 const pulse    = keyframes`0%,100%{opacity:1}50%{opacity:0.4}`;
 const strokeIn = keyframes`from{stroke-dashoffset:440}to{stroke-dashoffset:0}`;
 const shimmer  = keyframes`0%{background-position:-600px 0}100%{background-position:600px 0}`;
 const spin     = keyframes`from{transform:rotate(0deg)}to{transform:rotate(360deg)}`;
 
-/* ===================== PAGE ===================== */
 const Page = styled.div`
   min-height: 100vh;
   background: #F5F4EF;
@@ -46,7 +43,6 @@ const Inner = styled.div`
   margin: 0 auto;
 `;
 
-/* ===================== BREADCRUMB / HEADER ===================== */
 const HeaderWrap = styled.div`margin-bottom: 24px;`;
 
 const Breadcrumb = styled.button`
@@ -76,7 +72,6 @@ const PageSub = styled.p`
   margin: 0; font-weight: 400; line-height: 1.5;
 `;
 
-/* ===================== MAIN CARD ===================== */
 const Card = styled.div`
   background: #fff;
   border: 1px solid var(--gray-200);
@@ -94,7 +89,6 @@ const CardTopStripe = styled.div`
 `;
 const CardBody = styled.div`padding: 32px 28px 28px;`;
 
-/* ===================== SCORE RING ===================== */
 const RingSection = styled.div`
   display: flex; flex-direction: column; align-items: center;
   margin-bottom: 24px;
@@ -137,13 +131,11 @@ const PassBadge = styled.div`
   color: ${(p) => (p.$pass ? "var(--green-600)" : "var(--red-600)")};
 `;
 
-/* ===================== DIVIDER ===================== */
 const Divider = styled.div`
   height: 1px; background: var(--gray-100);
   margin: 4px 0 20px;
 `;
 
-/* ===================== STATS GRID ===================== */
 const StatsGrid = styled.div`
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 8px; margin-bottom: 20px;
@@ -164,7 +156,6 @@ const StatLabel = styled.div`
   text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600;
 `;
 
-/* ===================== ACCURACY BAR ===================== */
 const BarSection = styled.div`margin-bottom: 20px;`;
 const BarHead = styled.div`
   display: flex; justify-content: space-between; align-items: center;
@@ -193,7 +184,6 @@ const BarFill = styled.div`
   transition: width 1.1s 0.4s cubic-bezier(0.4,0,0.2,1);
 `;
 
-/* ===================== META TABLE ===================== */
 const MetaTable = styled.div`
   display: flex; flex-direction: column;
   border: 1px solid var(--gray-100); border-radius: 14px;
@@ -214,7 +204,6 @@ const MetaVal = styled.span`
   color: var(--gray-800); font-weight: 500;
 `;
 
-/* ===================== ATTEMPT BADGE ===================== */
 const AttemptRow = styled.div`
   display: flex; justify-content: center;
   margin-bottom: 20px;
@@ -227,7 +216,6 @@ const AttemptPill = styled.div`
   color: var(--amber-600);
 `;
 
-/* ===================== BUTTONS ===================== */
 const BtnRow = styled.div`display: flex; gap: 10px;`;
 const BackBtn = styled.button`
   flex: 1; padding: 13px 16px;
@@ -262,7 +250,6 @@ const SpinIcon = styled.span`
   font-style: normal;
 `;
 
-/* ===================== SKELETON ===================== */
 const Skel = styled.div`
   height: ${(p) => p.$h || "16px"};
   border-radius: ${(p) => p.$r || "8px"};
@@ -278,8 +265,7 @@ const SkelRow = styled.div`
   gap: ${(p) => p.$gap || "8px"}; margin-bottom: ${(p) => p.$mb || "0"};
 `;
 
-/* ===================== CERTIFICATE ===================== */
-const buildCertificateHTML = ({ userId, examId, examName, score, correct, total, acc, attempt, date }) => `<!DOCTYPE html>
+const buildCertificateHTML = ({ name, examId, examName, score, correct, total, acc, attempt, date }) => `<!DOCTYPE html>
 <html><head><meta charset="utf-8"/>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -314,22 +300,19 @@ const buildCertificateHTML = ({ userId, examId, examName, score, correct, total,
     <div class="trophy">🏆</div>
     <div class="ct">Certificate of Achievement</div>
     <div class="main">This is to certify that</div>
-    <div class="uid">Name: <strong>${userId}</strong></div>
+    <div class="uid">Name: <strong>${name}</strong></div>
     <div class="div"></div>
     <div class="body">has successfully completed the examination<br/><strong>${examName}</strong><br/>on <strong>${date}</strong></div>
     <div class="pills">
       <div class="pi"><div class="pv" style="color:#3B6D11">${score}%</div><div class="pl">Score</div></div>
-      <div class="pi"><div class="pv" style="color:#854F0B">#${attempt}</div><div class="pl">Attempt</div></div>
-    </div>
+      </div>
     <div class="footer">
-      <div style="text-align:left"><div class="fl">Performance ID</div><div class="fv">—</div></div>
       <div style="display:flex;align-items:center"><div class="logo">✦ SPHINX ✦</div></div>
       <div style="text-align:right"><div class="fl">Issue Date</div><div class="fv">${date}</div></div>
     </div>
   </div>
 </body></html>`;
 
-/* ===================== COMPONENT ===================== */
 const ResultPage = () => {
   const { examId, userId } = useParams();
   const navigate = useNavigate();
@@ -346,7 +329,7 @@ const ResultPage = () => {
           body: JSON.stringify({ examId, userLoginId: userId }),
         });
         const data = await res.json();
-        if (res.ok) setResult(data.result[0]);
+        if (res.ok) setResult({ ...data.result, name: data.name });
         else toast.error("Result not updated yet — please wait.");
       } catch { toast.error("Could not fetch result."); }
       finally { setLoading(false); }
@@ -372,7 +355,8 @@ const ResultPage = () => {
     try {
       const html2canvas = (await import("html2canvas")).default;
       const certHTML = buildCertificateHTML({
-        userId, examId: result?.examId || examId,
+        name: result?.name,
+        examId: result?.examId || examId,
         examName: result?.examName || "Exam",
         score, correct, total, acc, attempt, date: fmtDate(result?.date),
       });
@@ -394,7 +378,9 @@ const ResultPage = () => {
       toast.success("Certificate downloaded!");
     } catch (err) {
       toast.error("Download failed: " + err.message);
-    } finally { setDownloading(false); }
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -417,7 +403,6 @@ const ResultPage = () => {
       <Page>
         <Inner>
 
-          {/* ── Header ── */}
           <HeaderWrap>
             <Breadcrumb onClick={() => navigate(-1)}>
               <BreadDot /> Back to Reports
@@ -431,7 +416,6 @@ const ResultPage = () => {
             <CardBody>
 
               {loading ? (
-                /* ── Skeleton ── */
                 <>
                   <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
                     <Skel $h="156px" $r="50%" style={{ width: 156 }} />
@@ -455,7 +439,6 @@ const ResultPage = () => {
                 </>
               ) : (
                 <>
-                  {/* ── Score Ring ── */}
                   <RingSection>
                     <RingWrap>
                       <RingSvg width="156" height="156" viewBox="0 0 156 156">
@@ -474,7 +457,6 @@ const ResultPage = () => {
 
                   <Divider />
 
-                  {/* ── Stats ── */}
                   <StatsGrid>
                     <StatTile $bg="var(--gray-50)" $border="var(--gray-100)">
                       <StatVal $color="var(--gray-800)">{total}</StatVal>
@@ -494,7 +476,6 @@ const ResultPage = () => {
                     </StatTile>
                   </StatsGrid>
 
-                  {/* ── Accuracy Bar ── */}
                   <BarSection>
                     <BarHead>
                       <BarLabel>Accuracy</BarLabel>
@@ -503,24 +484,18 @@ const ResultPage = () => {
                     <BarTrack><BarFill $pct={acc} /></BarTrack>
                   </BarSection>
 
-                  {/* ── Attempt pill ── */}
                   <AttemptRow>
                     <AttemptPill>Attempt #{attempt}</AttemptPill>
                   </AttemptRow>
 
-                  {/* ── Meta Table ── */}
                   <MetaTable>
                     <MetaRow>
-                      <MetaKey>Exam ID</MetaKey>
-                      <MetaVal>{result?.examId || examId}</MetaVal>
+                      <MetaKey>Name</MetaKey>
+                      <MetaVal>{result?.name || "Na"}</MetaVal>
                     </MetaRow>
                     <MetaRow $alt>
                       <MetaKey>Exam Name</MetaKey>
                       <MetaVal>{result?.examName || "—"}</MetaVal>
-                    </MetaRow>
-                    <MetaRow>
-                      <MetaKey>Performance ID</MetaKey>
-                      <MetaVal>{result?.performanceId ?? "—"}</MetaVal>
                     </MetaRow>
                     <MetaRow $alt>
                       <MetaKey>Date</MetaKey>
@@ -528,7 +503,6 @@ const ResultPage = () => {
                     </MetaRow>
                   </MetaTable>
 
-                  {/* ── Buttons ── */}
                   <BtnRow>
                     <BackBtn onClick={() => navigate(-1)}>← Back</BackBtn>
                     <CertBtn onClick={handleDownload} disabled={!passed || downloading}>

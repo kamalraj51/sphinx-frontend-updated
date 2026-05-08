@@ -12,17 +12,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-/* ═══════════════════════════════════════════
-   ANIMATION
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE WRAP
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   padding-bottom: 60px;
@@ -31,9 +25,6 @@ const PageWrap = styled.div`
   gap: 24px;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR (SAME AS CREATE)
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   align-items: center;
@@ -44,7 +35,6 @@ const HeroBar = styled.div`
   position: relative;
   overflow: hidden;
 
-   
   &::before {
     content: '';
     position: absolute;
@@ -100,9 +90,6 @@ export const BackBtn = styled.button`
   cursor: pointer;
 `;
 
-/* ═══════════════════════════════════════════
-   CARD (SAME)
-═══════════════════════════════════════════ */
 const Card = styled.div`
   background: #fff;
   border-radius: 20px;
@@ -130,9 +117,6 @@ const CardBody = styled.div`
   padding: 28px 32px;
 `;
 
-/* ═══════════════════════════════════════════
-   FORM GRID (MATCHED)
-═══════════════════════════════════════════ */
 const FormGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -147,9 +131,6 @@ const FullSpan = styled.div`
   grid-column: 1 / -1;
 `;
 
-/* ═══════════════════════════════════════════
-   FIELDS (SAME AS CREATE)
-═══════════════════════════════════════════ */
 const FieldWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -199,9 +180,6 @@ const ErrorText = styled.p`
   color: #ef4444;
 `;
 
-/* ═══════════════════════════════════════════
-   BUTTON (SAME STYLE)
-═══════════════════════════════════════════ */
 const SubmitBtn = styled.button`
   margin-top: 20px;
   padding: 11px 28px;
@@ -215,9 +193,6 @@ const SubmitBtn = styled.button`
   cursor: pointer;
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const ExamUpdate = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -252,7 +227,6 @@ const ExamUpdate = () => {
     <Layout>
       <PageWrap>
 
-        {/* HERO */}
         <HeroBar>
           <HeroLeft>
             <HeroIconRing>
@@ -264,9 +238,7 @@ const ExamUpdate = () => {
             </div>
           </HeroLeft>
 
-         <BackBtn onClick={() => {
-  navigate(-1);
-}}>
+          <BackBtn onClick={() => navigate(-1)}>
             <ArrowLeft size={14} /> Back
           </BackBtn>
         </HeroBar>
@@ -325,10 +297,14 @@ const ExamUpdate = () => {
                 </FieldWrap>
 
               </FormGrid>
-
+<div style={{display:"flex", columnGap:"10px"}}>
+               <SubmitBtn type="submit">
+                Cancel
+              </SubmitBtn>
               <SubmitBtn type="submit">
                 Save Changes <ChevronRight size={16}/>
               </SubmitBtn>
+              </div>
             </form>
           </CardBody>
         </Card>

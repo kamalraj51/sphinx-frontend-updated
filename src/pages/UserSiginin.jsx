@@ -13,9 +13,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -25,16 +22,12 @@ const spin = keyframes`
   to   { transform: rotate(360deg); }
 `;
 
-/* ═══════════════════════════════════════════
-   PAGE — fixed 100vh, no scroll
-═══════════════════════════════════════════ */
 const PageWrap = styled.div`
   font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
   height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 40%, #d1fae5 100%);
 `;
 
 const CenterWrap = styled.div`
@@ -45,9 +38,6 @@ const CenterWrap = styled.div`
   padding: 0 20px;
 `;
 
-/* ═══════════════════════════════════════════
-   CARD
-═══════════════════════════════════════════ */
 const Card = styled.div`
   background: #fff;
   border-radius: 24px;
@@ -60,9 +50,6 @@ const Card = styled.div`
   animation: ${fadeUp} 0.45s ease both;
 `;
 
-/* ═══════════════════════════════════════════
-   HERO BAR
-═══════════════════════════════════════════ */
 const HeroBar = styled.div`
   display: flex;
   flex-direction: column;
@@ -104,6 +91,7 @@ const HeroBar = styled.div`
     pointer-events: none;
   }
 `;
+
 const HeroIconRing = styled.div`
   width: 54px;
   height: 54px;
@@ -117,6 +105,7 @@ const HeroIconRing = styled.div`
   position: relative;
   z-index: 1;
 `;
+
 const HeroTitle = styled.h1`
   color: #fff;
   font-size: 20px;
@@ -126,6 +115,7 @@ const HeroTitle = styled.h1`
   position: relative;
   z-index: 1;
 `;
+
 const HeroSub = styled.p`
   color: rgba(255, 255, 255, 0.55);
   font-size: 12px;
@@ -135,9 +125,6 @@ const HeroSub = styled.p`
   z-index: 1;
 `;
 
-/* ═══════════════════════════════════════════
-   CARD HEADER
-═══════════════════════════════════════════ */
 const CardHeader = styled.div`
   display: flex;
   align-items: center;
@@ -146,6 +133,7 @@ const CardHeader = styled.div`
   border-bottom: 2px solid #d1fae5;
   background: #f0fdf4;
 `;
+
 const CardTitle = styled.h2`
   font-size: 11px;
   font-weight: 800;
@@ -155,9 +143,6 @@ const CardTitle = styled.h2`
   margin: 0;
 `;
 
-/* ═══════════════════════════════════════════
-   CARD BODY
-═══════════════════════════════════════════ */
 const CardBody = styled.div`
   padding: 24px 28px 28px;
   display: flex;
@@ -165,15 +150,13 @@ const CardBody = styled.div`
   gap: 14px;
 `;
 
-/* ═══════════════════════════════════════════
-   FIELD
-═══════════════════════════════════════════ */
 const FieldWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
   margin-bottom: 10px;
 `;
+
 const FieldLabel = styled.label`
   font-size: 11px;
   font-weight: 700;
@@ -181,6 +164,7 @@ const FieldLabel = styled.label`
   letter-spacing: 0.6px;
   color: #64748b;
 `;
+
 const StyledInput = styled.input`
   width: 100%;
   padding: 11px 14px;
@@ -205,12 +189,15 @@ const StyledInput = styled.input`
     color: #94a3b8;
   }
 `;
+
 const PasswordWrap = styled.div`
   position: relative;
 `;
+
 const PasswordInput = styled(StyledInput)`
   padding-right: 44px;
 `;
+
 const ToggleBtn = styled.button`
   position: absolute;
   right: 12px;
@@ -224,10 +211,12 @@ const ToggleBtn = styled.button`
   align-items: center;
   padding: 0;
   transition: color 0.15s;
+
   &:hover {
     color: #10b981;
   }
 `;
+
 const ErrorText = styled.p`
   font-size: 11.5px;
   color: #ef4444;
@@ -235,9 +224,6 @@ const ErrorText = styled.p`
   font-weight: 600;
 `;
 
-/* ═══════════════════════════════════════════
-   API ERROR
-═══════════════════════════════════════════ */
 const ApiErrorBox = styled.div`
   display: flex;
   align-items: center;
@@ -251,9 +237,6 @@ const ApiErrorBox = styled.div`
   font-weight: 600;
 `;
 
-/* ═══════════════════════════════════════════
-   SUBMIT
-═══════════════════════════════════════════ */
 const SubmitBtn = styled.button`
   width: 100%;
   display: flex;
@@ -285,13 +268,11 @@ const SubmitBtn = styled.button`
     transform: scale(0.97);
   }
 `;
+
 const SpinIcon = styled(Loader2)`
   animation: ${spin} 0.8s linear infinite;
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const UserSignin = () => {
   const [formData, setFormData] = useState({ userLoginId: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -362,22 +343,18 @@ const UserSignin = () => {
   return (
     <PageWrap>
       <Header />
-
       <CenterWrap>
         <Card>
-          {/* ── Hero Bar ── */}
           <HeroBar>
             <HeroTitle>SPHINX</HeroTitle>
             <HeroSub>Sign in to your account to continue</HeroSub>
           </HeroBar>
 
-          {/* ── Section Label ── */}
           <CardHeader>
             <LogIn size={13} color="#059669" />
-            <CardTitle>Account Login</CardTitle>
+            <CardTitle>Account sign in</CardTitle>
           </CardHeader>
 
-          {/* ── Form ── */}
           <CardBody>
             <form onSubmit={handleSubmit}>
               {apiError && (
@@ -387,7 +364,6 @@ const UserSignin = () => {
                 </ApiErrorBox>
               )}
 
-              {/* Username */}
               <FieldWrap>
                 <FieldLabel htmlFor="userLoginId">Username</FieldLabel>
                 <StyledInput
@@ -401,7 +377,6 @@ const UserSignin = () => {
                 )}
               </FieldWrap>
 
-              {/* Password */}
               <FieldWrap>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <PasswordWrap>
@@ -421,7 +396,6 @@ const UserSignin = () => {
                 {errors.password && <ErrorText>{errors.password}</ErrorText>}
               </FieldWrap>
 
-              {/* Submit */}
               <SubmitBtn type="submit" disabled={loading}>
                 {loading ? (
                   <>

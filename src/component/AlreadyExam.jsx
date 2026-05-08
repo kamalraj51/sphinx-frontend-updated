@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '../styles/AvailableExamStyle'
-import { toast } from 'sonner'
-import { List } from '../styles/Assign.style'
+import React, { useEffect, useState } from "react";
+import { Button } from "../styles/AvailableExamStyle";
+import { toast } from "sonner";
+import { List } from "../styles/Assign.style";
 
 const AlreadyExam = ({ examId }) => {
-  const [data, setData] = useState([])
-
- 
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (examId) {
-      getAll()
+      getAll();
     }
-  }, [examId])  
+  }, [examId]);
 
   const handleDeleteExam = async (item) => {
     try {
@@ -23,28 +21,27 @@ const AlreadyExam = ({ examId }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             examId,
-            partyId: item.partyId
-          })
+            partyId: item.partyId,
+          }),
         }
-      )
+      );
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (res.ok) {
-        toast.success(data.success)
-        getAll() // refresh
+        toast.success(data.success);
+        getAll();
       } else {
-        toast.error(data.error)
+        toast.error(data.error);
       }
-
     } catch (err) {
-      console.error(err)
-      toast.error("Delete failed")
+      console.error(err);
+      toast.error("Delete failed");
     }
-  }
+  };
 
   if (data.length === 0) {
-    return <p>No exams found</p>
+    return <p>No exams found</p>;
   }
 
   return (
@@ -58,7 +55,7 @@ const AlreadyExam = ({ examId }) => {
             padding: "12px",
             border: "1px solid #e5e7eb",
             borderRadius: "8px",
-            marginBottom: "10px"
+            marginBottom: "10px",
           }}
         >
           <div>
@@ -66,13 +63,11 @@ const AlreadyExam = ({ examId }) => {
             <div>{item.userLoginId}</div>
           </div>
 
-          <Button onClick={() => handleDeleteExam(item)}>
-            Delete
-          </Button>
+          <Button onClick={() => handleDeleteExam(item)}>Delete</Button>
         </li>
       ))}
     </List>
-  )
-}
+  );
+};
 
-export default AlreadyExam
+export default AlreadyExam;

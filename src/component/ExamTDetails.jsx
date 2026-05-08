@@ -8,9 +8,6 @@ import { toggle } from "../reducer/apiReduce";
 import UpdateModalExam from "./UpdateModalExam";
 import styled, { keyframes } from "styled-components";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -21,18 +18,12 @@ const slideIn = keyframes`
   to   { opacity: 1; transform: translateX(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════ */
 const Wrap = styled.div`
   font-family: 'Sora', 'DM Sans', 'Segoe UI', sans-serif;
   animation: ${fadeUp} 0.45s ease both;
   margin-top: 24px;
 `;
 
-/* ═══════════════════════════════════════════
-   SECTION LABEL
-═══════════════════════════════════════════ */
 const SectionLabel = styled.div`
   font-size: 12px;
   font-weight: 800;
@@ -43,9 +34,6 @@ const SectionLabel = styled.div`
   padding-left: 2px;
 `;
 
-/* ═══════════════════════════════════════════
-   TABLE CARD
-═══════════════════════════════════════════ */
 const TableCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -54,7 +42,6 @@ const TableCard = styled.div`
   margin-bottom: 20px;
 `;
 
-/* Stats strip */
 const StatsStrip = styled.div`
   display: flex;
   align-items: center;
@@ -73,7 +60,6 @@ const StatItem = styled.div`
   strong { color: #1e293b; font-weight: 800; }
 `;
 
-/* Table header */
 const TableHead = styled.div`
   display: grid;
   grid-template-columns: 52px 1fr 130px 80px;
@@ -92,7 +78,6 @@ const HeadCell = styled.span`
   color: #059669;
 `;
 
-/* Topic row */
 const TopicRow = styled.div`
   display: grid;
   grid-template-columns: 52px 1fr 130px 80px;
@@ -160,7 +145,6 @@ const PercentBadge = styled.span`
   white-space: nowrap;
 `;
 
-/* Action */
 const DeleteBtn = styled.button`
   display: flex;
   align-items: center;
@@ -181,7 +165,6 @@ const DeleteBtn = styled.button`
   &:active { transform: scale(0.95); }
 `;
 
-/* Empty state */
 const EmptyState = styled.div`
   padding: 64px 32px;
   text-align: center;
@@ -194,7 +177,6 @@ const EmptyState = styled.div`
   svg { opacity: 0.3; }
 `;
 
-/* Load Question button */
 const LoadBtn = styled.button`
   display: flex;
   align-items: center;
@@ -220,9 +202,6 @@ const LoadBtn = styled.button`
   &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const ExamTDetails = (props) => {
   const [examTopics, setExamTopics] = useState([]);
   let { examId } = useParams();
@@ -346,22 +325,19 @@ const ExamTDetails = (props) => {
         <SectionLabel>Exam Topics</SectionLabel>
 
         <TableCard>
-          {/* Stats strip */}
           <StatsStrip>
             <StatItem>
               <strong>{examTopics.length}</strong> topic{examTopics.length !== 1 ? "s" : ""} assigned
             </StatItem>
           </StatsStrip>
 
-          {/* Table header */}
           <TableHead>
             <HeadCell>S.No</HeadCell>
             <HeadCell>Topic Name</HeadCell>
-            <HeadCell>Pass %</HeadCell>
+            <HeadCell>Question %</HeadCell>
             <HeadCell style={{ textAlign: "center" }}>Action</HeadCell>
           </TableHead>
 
-          {/* Rows */}
           {examTopics.length === 0 ? (
             <EmptyState>
               <BookMarked size={48} />

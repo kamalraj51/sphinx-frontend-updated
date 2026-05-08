@@ -1,25 +1,27 @@
-
-import React, { useEffect, useState } from 'react';
-import {ActionWrapper, Attempt,Cell,CellPrimary, HeaderRow, Outer,Row,Section,Title} from '../styles/Assign.style';
-import { ButtonSecondary } from '../styles/AvailableExamStyle';
-import AlreadyExam from './AlreadyExam';
-import { toast } from 'sonner';
+import React, { useEffect, useState } from "react";
+import {
+  ActionWrapper,
+  Attempt,
+  Cell,
+  CellPrimary,
+  HeaderRow,
+  Outer,
+  Row,
+  Section,
+  Title,
+} from "../styles/Assign.style";
+import { ButtonSecondary } from "../styles/AvailableExamStyle";
+import AlreadyExam from "./AlreadyExam";
+import { toast } from "sonner";
 
 const Assign = ({ examId, assignedUsers }) => {
   console.log(examId);
-  
- 
+
   const [assign, setAssign] = useState([]);
 
-  
   useEffect(() => {
     setAssign(assignedUsers || []);
   }, [assignedUsers]);
-
- 
-  
-
-
 
   const lastSubmit = async () => {
     try {
@@ -28,9 +30,9 @@ const Assign = ({ examId, assignedUsers }) => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ allData: assign })
+          body: JSON.stringify({ allData: assign }),
         }
       );
 
@@ -38,7 +40,6 @@ const Assign = ({ examId, assignedUsers }) => {
 
       if (response.ok) {
         toast.success(data.success);
-        // getAll();
       } else {
         toast.error(data.error);
       }
@@ -83,15 +84,12 @@ const Assign = ({ examId, assignedUsers }) => {
         )}
 
         <ActionWrapper>
-          <ButtonSecondary onClick={lastSubmit}>
-            Submit All
-          </ButtonSecondary>
+          <ButtonSecondary onClick={lastSubmit}>Submit All</ButtonSecondary>
         </ActionWrapper>
       </Outer>
 
       <Section>
-        <AlreadyExam examId={examId}
-        />
+        <AlreadyExam examId={examId} />
       </Section>
     </>
   );

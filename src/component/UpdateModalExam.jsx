@@ -34,7 +34,7 @@ const UpdateModalExam = ({ isOpen, onClose, topics, onUpdate }) => {
 
           <Button
             onClick={() => {
-              onUpdate(percentage); // send updated value
+              onUpdate(percentage);
               onClose();
             }}
           >

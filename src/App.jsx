@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Toaster } from "sonner";
 
-// Pages & Components
 import UserSignin from "./pages/UserSiginin";
 import AddAdmin from "./pages/AddAdmin";
 import UserPromote from "./pages/UserPromote";
@@ -34,8 +33,7 @@ import Result from "./pages/Result";
 import Admindashboard from "./Dashboard/Admindashboard";
 import ExamReport from "./user/ExamReport";
 import ResultPage from "./user/ResultPage";
-
-// 1. Protected Route: Only allows logged-in users
+import AllUsers from "./user/AllUsers";
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -43,17 +41,9 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/" replace />;
   }
 
-  // // If no children provided, fallback to admin home
-  // if (!children) {
-  //   console.log("first home");
-
-  //   return <Navigate to="/adminhome" replace />;
-  // }
-
   return children;
 };
 
-// 2. Public Route: Prevents logged-in users from seeing the Login page
 const PublicRoute = ({ children }) => {
   const { isAuthenticated, role } = useSelector((state) => state.auth);
   if (isAuthenticated && role === "SPX_ADMIN") {
@@ -69,10 +59,8 @@ const App = () => {
   return (
     <>
       <Toaster position="top-right" richColors />
-      {/* //admin flow */}
       <BrowserRouter>
         <Routes>
-          {/* Public Routes (Redirect to /adminhome if already logged in) */}
           <Route
             path="/"
             element={
@@ -90,7 +78,6 @@ const App = () => {
             }
           />
 
-          {/* Protected Routes (Require Authentication) */}
           <Route
             path="/admin-home"
             element={
@@ -235,7 +222,15 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          {/* user flow */}
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <AllUsers />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/userdashboard"
             element={
@@ -279,7 +274,6 @@ const App = () => {
             }
           />
 
-          {/* Fallback for 404 */}
           <Route path="/*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

@@ -8,9 +8,6 @@ import Pagination from "./Pagination";
 import UpdateModal from "./UpdateModal";
 import styled, { keyframes } from "styled-components";
 
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════ */
 const fadeUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -21,17 +18,11 @@ const slideIn = keyframes`
   to   { opacity: 1; transform: translateX(0); }
 `;
 
-/* ═══════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════ */
 const Wrap = styled.div`
   font-family: "Sora", "DM Sans", "Segoe UI", sans-serif;
   animation: ${fadeUp} 0.45s ease both;
 `;
 
-/* ═══════════════════════════════════════════
-   TABLE CARD
-═══════════════════════════════════════════ */
 const TableCard = styled.div`
   background: #ffffff;
   border-radius: 20px;
@@ -42,7 +33,6 @@ const TableCard = styled.div`
   margin-bottom: 20px;
 `;
 
-/* Stats strip */
 const StatsStrip = styled.div`
   display: flex;
   align-items: center;
@@ -64,7 +54,6 @@ const StatItem = styled.div`
   }
 `;
 
-/* Toolbar */
 const Toolbar = styled.div`
   display: flex;
   justify-content: space-between;
@@ -92,7 +81,6 @@ const Checkbox = styled.input`
   accent-color: #10b981;
 `;
 
-/* Table header */
 const TableHead = styled.div`
   display: grid;
   grid-template-columns: 48px 52px 1fr 120px;
@@ -111,7 +99,6 @@ const HeadCell = styled.span`
   color: #059669;
 `;
 
-/* Topic row */
 const TopicRow = styled.div`
   display: grid;
   grid-template-columns: 48px 52px 1fr 120px;
@@ -167,7 +154,6 @@ const TopicLabel = styled.span`
   line-height: 1.3;
 `;
 
-/* Action buttons */
 const ActionGroup = styled.div`
   display: flex;
   align-items: center;
@@ -243,7 +229,6 @@ const BulkDeleteBtn = styled.button`
   }
 `;
 
-/* Empty state */
 const EmptyState = styled.div`
   padding: 64px 32px;
   text-align: center;
@@ -258,9 +243,6 @@ const EmptyState = styled.div`
   }
 `;
 
-/* ═══════════════════════════════════════════
-   COMPONENT
-═══════════════════════════════════════════ */
 const Topics = () => {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -284,7 +266,7 @@ const Topics = () => {
     const fetchTopics = async () => {
       try {
         const res = await fetch(
-          `https://localhost:8443/sphinx/api/topic/gettopics?userLoginId=${encodeURIComponent(userId)}`,
+          `https://localhost:8443/sphinx/api/topic/gettopics?userLoginId=${encodeURIComponent(userId)}`
         );
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         const data = await res.json();
@@ -298,7 +280,7 @@ const Topics = () => {
 
   const change = (e, id) => {
     const updatedTopics = topics.map((topic) =>
-      topic.topicId === id ? { ...topic, topicName: e.target.value } : topic,
+      topic.topicId === id ? { ...topic, topicName: e.target.value } : topic
     );
     setTopics(updatedTopics);
   };
@@ -312,14 +294,9 @@ const Topics = () => {
     try {
       const response = await fetch(
         `https://localhost:8443/sphinx/api/topic/deletetopic?topicId=${encodeURIComponent(topicId)}&userLoginId=${encodeURIComponent(userId)}`,
-        {
-          method: "DELETE",
-        },
+        { method: "DELETE" }
       );
       if (!response.ok) throw new Error("Failed to delete topic");
-      else {
-        fetchTopics();
-      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -340,15 +317,6 @@ const Topics = () => {
         toast.success("Topic deleted successfully");
         setSelectedIds((prev) => prev.filter((id) => id !== itemToDelete));
       }
-      if (itemToDelete === "bulk") {
-        const remaining = topics.length - selectedIds.length;
-        const newTotalPages = Math.ceil(remaining / 10);
-        if (currentPage > newTotalPages && newTotalPages > 0)
-          setCurrentPage(newTotalPages);
-      } else {
-        if (paginatedTopics.length === 1 && currentPage > 1)
-          setCurrentPage((prev) => prev - 1);
-      }
     } catch (err) {
       toast.error(err.message || "Failed to delete topic(s)");
     } finally {
@@ -358,7 +326,7 @@ const Topics = () => {
   };
 
   const updateTopic = async (topicId, topicName) => {
-    let topic = { topicId: topicId, topicName: topicName, userLoginId: userId };
+    let topic = { topicId, topicName, userLoginId: userId };
     setLoading(true);
     try {
       const response = await fetch(
@@ -366,8 +334,8 @@ const Topics = () => {
         {
           method: "PUT",
           headers: { "content-Type": "application/json" },
-          body: JSON.stringify(topic),
-        },
+          body: JSON.stringify(topic)
+        }
       );
       if (!response.ok) throw new Error("not update");
       const data = response.json();
@@ -380,6 +348,11 @@ const Topics = () => {
     }
   };
 
+  const paginatedTopics = topics.slice(
+    (currentPage - 1) * 10,
+    currentPage * 10
+  );
+
   const handleSelectAll = (e) => {
     if (e.target.checked) setSelectedIds(paginatedTopics.map((t) => t.topicId));
     else setSelectedIds([]);
@@ -390,10 +363,6 @@ const Topics = () => {
     else setSelectedIds((prev) => prev.filter((id) => id !== topicId));
   };
 
-  const paginatedTopics = topics.slice(
-    (currentPage - 1) * 10,
-    currentPage * 10,
-  );
   const allSelectedOnPage =
     paginatedTopics.length > 0 &&
     paginatedTopics.every((t) => selectedIds.includes(t.topicId));
@@ -402,7 +371,6 @@ const Topics = () => {
     <>
       <Wrap>
         <TableCard>
-          {/* Stats strip */}
           <StatsStrip>
             <StatItem>
               Showing <strong>{paginatedTopics.length}</strong> of{" "}
@@ -414,7 +382,6 @@ const Topics = () => {
             </StatItem>
           </StatsStrip>
 
-          {/* Toolbar */}
           {topics.length > 0 && (
             <Toolbar>
               <SelectWrap>
@@ -425,6 +392,7 @@ const Topics = () => {
                 />
                 <span>Select All on Page</span>
               </SelectWrap>
+
               {selectedIds.length > 0 && (
                 <BulkDeleteBtn
                   disabled={loading}
@@ -437,7 +405,6 @@ const Topics = () => {
             </Toolbar>
           )}
 
-          {/* Table header */}
           <TableHead>
             <HeadCell></HeadCell>
             <HeadCell>S.No</HeadCell>
@@ -445,7 +412,6 @@ const Topics = () => {
             <HeadCell style={{ textAlign: "center" }}>Action</HeadCell>
           </TableHead>
 
-          {/* Rows */}
           {topics.length === 0 ? (
             <EmptyState>
               <span style={{ fontSize: 40 }}>📚</span>
@@ -474,11 +440,6 @@ const Topics = () => {
                       onClick={() =>
                         handleOpenModal(topic.topicId, topic.topicName)
                       }
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
                     >
                       <EditIcon size={15} />
                     </EditBtn>
@@ -503,16 +464,12 @@ const Topics = () => {
           onPageChange={(p) => setCurrentPage(p)}
         />
       </Wrap>
+
       <ConfirmModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={executeDelete}
         title={itemToDelete === "bulk" ? "Bulk Delete Topics" : "Delete Topic"}
-        message={
-          itemToDelete === "bulk"
-            ? `Are you sure you want to delete ${selectedIds.length} topics?`
-            : "Are you sure you want to delete this topic?"
-        }
       />
 
       <UpdateModal
