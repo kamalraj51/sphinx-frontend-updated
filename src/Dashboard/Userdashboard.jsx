@@ -539,13 +539,13 @@ const Userdashboard = () => {
                   <div key={exam.examId} className="ud-card-anim ud-card-hover" style={{ ...St.card, animationDelay: `${i * 0.08}s` }}>
                     <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: pal.bar, borderRadius: "12px 12px 0 0" }} />
 
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, paddingTop: 4 }}>
-                      <span style={{ ...St.examId, color: pal.id.color, background: pal.id.bg, borderColor: pal.id.border }}>
+                    <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginBottom: 16, paddingTop: 4 ,width:"100%"}}>
+                      {/* <span style={{ ...St.examId, color: pal.id.color, background: pal.id.bg, borderColor: pal.id.border }}>
                         {exam.examId}
-                      </span>
+                      </span> */}
                       <span style={St.attempts}>
-                        <IconRepeat />
-                        {exam.noOfAttempts ?? 0} / {exam.allowedAttempts ?? "∞"} used
+                        {/* <IconRepeat /> */}
+                            used {exam.noOfAttempts ?? 0} / {exam.allowedAttempts ?? "∞"} left
                       </span>
                     </div>
 
