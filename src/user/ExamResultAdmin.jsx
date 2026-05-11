@@ -48,7 +48,7 @@ const PageWrap = styled.div`
 `;
 
 /* ─────────────────────────────────────────────────────
-   HERO BAR
+   HERO BAR — green theme
 ───────────────────────────────────────────────────── */
 const HeroBar = styled.div`
   display: flex;
@@ -56,18 +56,18 @@ const HeroBar = styled.div`
   justify-content: space-between;
   gap: 16px;
   padding: 22px 32px;
-  background: linear-gradient(135deg, #0f172a, #1e293b, #0f4c81);
+  background: linear-gradient(135deg, #064e3b, #065f46, #047857);
   border-radius: 18px;
   position: relative;
   overflow: hidden;
   &::before {
     content: "";
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -83,12 +83,12 @@ const HeroIcon = styled.div`
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: rgba(59, 130, 246, 0.2);
-  border: 1.5px solid rgba(147, 197, 253, 0.4);
+  background: rgba(16, 185, 129, 0.2);
+  border: 1.5px solid rgba(52, 211, 153, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #93c5fd;
+  color: #34d399;
 `;
 const HeroTitle = styled.h1`
   color: #fff;
@@ -135,7 +135,7 @@ const BackBtn = styled.button`
 const SkeletonBlock = styled.div`
   height: ${({ $h }) => $h || "80px"};
   border-radius: 16px;
-  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background: linear-gradient(90deg, #f0fdf4 25%, #d1fae5 50%, #f0fdf4 75%);
   background-size: 600px 100%;
   animation: ${shimmer} 1.4s ease infinite;
 `;
@@ -237,8 +237,8 @@ const StatsBar = styled.div`
 const StatBox = styled.div`
   flex: 1;
   min-width: 120px;
-  background: ${({ $bg }) => $bg || "#f8fafc"};
-  border: 1.5px solid ${({ $border }) => $border || "#e2e8f0"};
+  background: ${({ $bg }) => $bg || "#f0fdf4"};
+  border: 1.5px solid ${({ $border }) => $border || "#d1fae5"};
   border-radius: 16px;
   padding: 16px 20px;
   display: flex;
@@ -256,20 +256,20 @@ const StatIconRow = styled.div`
 const StatNum = styled.span`
   font-size: 26px;
   font-weight: 800;
-  color: ${({ $c }) => $c || "#1e293b"};
+  color: ${({ $c }) => $c || "#065f46"};
   font-family: "Sora", sans-serif;
   letter-spacing: -1px;
 `;
 const StatLabel = styled.span`
   font-size: 12px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 `;
 
 /* ─────────────────────────────────────────────────────
-   SCORE PROGRESS BAR
+   SCORE PROGRESS CARD
 ───────────────────────────────────────────────────── */
 const ProgressCard = styled.div`
   background: #fff;
@@ -284,15 +284,15 @@ const CardHead = styled.div`
   align-items: center;
   gap: 10px;
   padding: 15px 24px;
-  border-bottom: 2px solid #dbeafe;
-  background: #eff6ff;
+  border-bottom: 2px solid #d1fae5;
+  background: #f0fdf4;
 `;
 const CardTitle = styled.h2`
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #2563eb;
+  color: #059669;
   margin: 0;
 `;
 const CardBody = styled.div`
@@ -315,7 +315,7 @@ const BarLabel = styled.div`
 const BarLabelText = styled.span`
   font-size: 13px;
   font-weight: 700;
-  color: #475569;
+  color: #374151;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -323,11 +323,11 @@ const BarLabelText = styled.span`
 const BarLabelVal = styled.span`
   font-size: 13px;
   font-weight: 800;
-  color: ${({ $c }) => $c || "#1e293b"};
+  color: ${({ $c }) => $c || "#065f46"};
 `;
 const BarBg = styled.div`
   height: 10px;
-  background: #f1f5f9;
+  background: #f0fdf4;
   border-radius: 6px;
   overflow: hidden;
 `;
@@ -341,7 +341,7 @@ const BarFill = styled.div`
 `;
 
 /* ─────────────────────────────────────────────────────
-   INFO CARD (user + exam meta)
+   INFO CARDS
 ───────────────────────────────────────────────────── */
 const InfoGrid = styled.div`
   display: grid;
@@ -364,7 +364,7 @@ const InfoRow = styled.div`
   align-items: center;
   gap: 14px;
   padding: 14px 22px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f0fdf4;
   &:last-child {
     border-bottom: none;
   }
@@ -373,7 +373,7 @@ const InfoIcon = styled.div`
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: ${({ $bg }) => $bg || "#f1f5f9"};
+  background: ${({ $bg }) => $bg || "#f0fdf4"};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -387,7 +387,7 @@ const InfoMeta = styled.div`
 const InfoKey = styled.span`
   font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 `;
@@ -398,7 +398,7 @@ const InfoVal = styled.span`
 `;
 
 /* ─────────────────────────────────────────────────────
-   PASS/FAIL VERDICT BANNER
+   VERDICT BANNER
 ───────────────────────────────────────────────────── */
 const VerdictBanner = styled.div`
   display: flex;
@@ -434,7 +434,6 @@ const ExamResultAdmin = () => {
   const decodedExamId = decodeURIComponent(examId || "");
   const decodedUserId = decodeURIComponent(userId || "");
   const decodedUserName = decodeURIComponent(userName || "");
-  
 
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -456,7 +455,6 @@ const ExamResultAdmin = () => {
         const data = await res.json();
         if (res.ok) {
           setResult({ ...data.result, name: data.name });
-         
         } else {
           toast.error("Result not updated yet — please wait.");
         }
@@ -509,10 +507,7 @@ const ExamResultAdmin = () => {
             <div>
               <HeroTitle>Exam Result Details</HeroTitle>
               <HeroSub>
-               <HeroSub>
-                 {result?.name|| " "} -- {result?.examName || decodedExamId}
-             </HeroSub>
-                
+                {result?.name || " "} -- {result?.examName || decodedExamId}
               </HeroSub>
             </div>
           </HeroLeft>
@@ -536,7 +531,7 @@ const ExamResultAdmin = () => {
             style={{
               textAlign: "center",
               padding: "60px 0",
-              color: "#94a3b8",
+              color: "#6b7280",
               fontSize: 15,
               fontWeight: 500,
             }}
@@ -587,12 +582,12 @@ const ExamResultAdmin = () => {
 
             {/* ── Stats Bar ── */}
             <StatsBar>
-              <StatBox $bg="#f0f9ff" $border="#bae6fd" $d="0.05s">
+              <StatBox $bg="#f0fdf4" $border="#d1fae5" $d="0.05s">
                 <StatIconRow>
-                  <BookOpen size={14} color="#0369a1" />
+                  <BookOpen size={14} color="#059669" />
                   <StatLabel>Total Qs</StatLabel>
                 </StatIconRow>
-                <StatNum $c="#0369a1">{result.noOfQuestions}</StatNum>
+                <StatNum $c="#059669">{result.noOfQuestions}</StatNum>
               </StatBox>
               <StatBox $bg="#f0fdf4" $border="#bbf7d0" $d="0.1s">
                 <StatIconRow>
@@ -620,7 +615,7 @@ const ExamResultAdmin = () => {
             {/* ── Score Breakdown ── */}
             <ProgressCard>
               <CardHead>
-                <BarChart2 size={15} color="#3b82f6" />
+                <BarChart2 size={15} color="#059669" />
                 <CardTitle>Score Breakdown</CardTitle>
               </CardHead>
               <CardBody>
@@ -673,13 +668,13 @@ const ExamResultAdmin = () => {
               {/* Student Info */}
               <InfoCard $d="0.12s">
                 <CardHead>
-                  <User size={15} color="#3b82f6" />
+                  <User size={15} color="#059669" />
                   <CardTitle>Student Info</CardTitle>
                 </CardHead>
                 <div>
                   <InfoRow>
-                    <InfoIcon $bg="#eff6ff">
-                      <User size={16} color="#3b82f6" />
+                    <InfoIcon $bg="#f0fdf4">
+                      <User size={16} color="#059669" />
                     </InfoIcon>
                     <InfoMeta>
                       <InfoKey>Name</InfoKey>
@@ -710,13 +705,13 @@ const ExamResultAdmin = () => {
               {/* Exam Info */}
               <InfoCard $d="0.17s">
                 <CardHead>
-                  <ClipboardCheck size={15} color="#3b82f6" />
+                  <ClipboardCheck size={15} color="#059669" />
                   <CardTitle>Exam Info</CardTitle>
                 </CardHead>
                 <div>
                   <InfoRow>
-                    <InfoIcon $bg="#eff6ff">
-                      <BookOpen size={16} color="#3b82f6" />
+                    <InfoIcon $bg="#f0fdf4">
+                      <BookOpen size={16} color="#059669" />
                     </InfoIcon>
                     <InfoMeta>
                       <InfoKey>Exam ID</InfoKey>
@@ -724,8 +719,8 @@ const ExamResultAdmin = () => {
                     </InfoMeta>
                   </InfoRow>
                   <InfoRow>
-                    <InfoIcon $bg="#f0f9ff">
-                      <Calendar size={16} color="#0369a1" />
+                    <InfoIcon $bg="#f0fdf4">
+                      <Calendar size={16} color="#047857" />
                     </InfoIcon>
                     <InfoMeta>
                       <InfoKey>Date Taken</InfoKey>

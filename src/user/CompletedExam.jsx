@@ -29,7 +29,7 @@ const PageWrap = styled.div`
 `;
 
 /* ─────────────────────────────────────────────────────
-   HERO BAR
+   HERO BAR — green theme
 ───────────────────────────────────────────────────── */
 const HeroBar = styled.div`
   display: flex;
@@ -37,20 +37,20 @@ const HeroBar = styled.div`
   justify-content: space-between;
   gap: 16px;
   padding: 22px 32px;
-  background: linear-gradient(135deg, #0f172a, #1e293b, #0f4c81);
+  background: linear-gradient(135deg, #064e3b, #065f46, #047857);
   border-radius: 18px;
   position: relative;
   overflow: hidden;
   &::before {
     content: "";
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 220px;
-    height: 220px;
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
     background: radial-gradient(
       circle,
-      rgba(59, 130, 246, 0.2) 0%,
+      rgba(16, 185, 129, 0.18) 0%,
       transparent 70%
     );
     border-radius: 50%;
@@ -68,12 +68,12 @@ const HeroIcon = styled.div`
   width: 52px;
   height: 52px;
   border-radius: 16px;
-  background: rgba(59, 130, 246, 0.2);
-  border: 1.5px solid rgba(147, 197, 253, 0.4);
+  background: rgba(16, 185, 129, 0.2);
+  border: 1.5px solid rgba(52, 211, 153, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #93c5fd;
+  color: #34d399;
 `;
 const HeroTitle = styled.h1`
   color: #fff;
@@ -125,8 +125,8 @@ const StatsBar = styled.div`
 const StatBox = styled.div`
   flex: 1;
   min-width: 120px;
-  background: ${({ $bg }) => $bg || "#f8fafc"};
-  border: 1.5px solid ${({ $border }) => $border || "#e2e8f0"};
+  background: ${({ $bg }) => $bg || "#f0fdf4"};
+  border: 1.5px solid ${({ $border }) => $border || "#d1fae5"};
   border-radius: 16px;
   padding: 16px 20px;
   display: flex;
@@ -138,14 +138,14 @@ const StatBox = styled.div`
 const StatNum = styled.span`
   font-size: 28px;
   font-weight: 800;
-  color: ${({ $c }) => $c || "#1e293b"};
+  color: ${({ $c }) => $c || "#065f46"};
   font-family: "Sora", sans-serif;
   letter-spacing: -1px;
 `;
 const StatLabel = styled.span`
   font-size: 12px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 `;
@@ -168,15 +168,15 @@ const CardHead = styled.div`
   align-items: center;
   gap: 10px;
   padding: 15px 24px;
-  border-bottom: 2px solid #dbeafe;
-  background: #eff6ff;
+  border-bottom: 2px solid #d1fae5;
+  background: #f0fdf4;
 `;
 const CardTitle = styled.h2`
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #2563eb;
+  color: #059669;
   margin: 0;
 `;
 
@@ -186,7 +186,7 @@ const CardTitle = styled.h2`
 const TabRow = styled.div`
   display: flex;
   padding: 12px 24px 0;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 2px solid #f0fdf4;
 `;
 const Tab = styled.button`
   display: flex;
@@ -201,17 +201,17 @@ const Tab = styled.button`
   cursor: pointer;
   transition: all 0.18s ease;
   color: ${({ $active, $color }) =>
-    $active ? $color || "#6366f1" : "#94a3b8"};
+    $active ? $color || "#059669" : "#94a3b8"};
   border-bottom: 2.5px solid
-    ${({ $active, $color }) => ($active ? $color || "#6366f1" : "transparent")};
+    ${({ $active, $color }) => ($active ? $color || "#059669" : "transparent")};
   margin-bottom: -2px;
   &:hover {
-    color: ${({ $color }) => $color || "#6366f1"};
+    color: ${({ $color }) => $color || "#059669"};
   }
 `;
 const TabCount = styled.span`
-  background: ${({ $bg }) => $bg || "#eef2ff"};
-  color: ${({ $c }) => $c || "#6366f1"};
+  background: ${({ $bg }) => $bg || "#f0fdf4"};
+  color: ${({ $c }) => $c || "#059669"};
   border-radius: 20px;
   padding: 1px 9px;
   font-size: 11px;
@@ -225,7 +225,7 @@ const SkeletonRow = styled.div`
   height: 88px;
   margin: 8px 16px;
   border-radius: 12px;
-  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background: linear-gradient(90deg, #f0fdf4 25%, #d1fae5 50%, #f0fdf4 75%);
   background-size: 600px 100%;
   animation: ${shimmer} 1.4s ease infinite;
 `;
@@ -236,7 +236,7 @@ const SkeletonRow = styled.div`
 const EmptyWrap = styled.div`
   text-align: center;
   padding: 60px 0;
-  color: #94a3b8;
+  color: #6b7280;
   font-size: 15px;
   font-weight: 500;
 `;
@@ -249,7 +249,7 @@ const ExamRow = styled.div`
   align-items: center;
   gap: 14px;
   padding: 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f0fdf4;
   cursor: pointer;
   transition: background 0.15s ease;
   animation: ${fadeUp} 0.35s ease both;
@@ -258,7 +258,7 @@ const ExamRow = styled.div`
     border-bottom: none;
   }
   &:hover {
-    background: #f8fafc;
+    background: #f0fdf4;
   }
 `;
 const ExamIconBox = styled.div`
@@ -287,7 +287,7 @@ const ExamName = styled.p`
 `;
 const ExamMeta = styled.p`
   margin: 3px 0 0;
-  color: #94a3b8;
+  color: #6b7280;
   font-size: 12px;
 `;
 const ExamRight = styled.div`
@@ -308,7 +308,7 @@ const Badge = styled.span`
 `;
 const ViewLink = styled.span`
   font-size: 11px;
-  color: #94a3b8;
+  color: #6b7280;
   font-weight: 600;
 `;
 
@@ -325,7 +325,7 @@ const MiniBarWrap = styled.div`
 const MiniBarBg = styled.div`
   width: 100%;
   height: 5px;
-  background: #f1f5f9;
+  background: #f0fdf4;
   border-radius: 3px;
   overflow: hidden;
 `;
@@ -367,8 +367,6 @@ const CompletedExamList = () => {
     const fetchReports = async () => {
       try {
         setLoading(true);
-        console.log("Fetching reports for:", decodedUserId);
-
         const response = await fetch(
           "https://localhost:8443/sphinx/api/user/getUserReport",
           {
@@ -379,12 +377,9 @@ const CompletedExamList = () => {
           },
         );
 
-        console.log("Response status:", response.status);
-
         if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
 
         const data = await response.json();
-        console.log("API Response:", data);
 
         const list = Array.isArray(data)
           ? data
@@ -453,8 +448,8 @@ const CompletedExamList = () => {
         {/* ── Summary Stats ── */}
         {!loading && exams.length > 0 && (
           <StatsBar>
-            <StatBox $bg="#f0f9ff" $border="#bae6fd" $d="0.05s">
-              <StatNum $c="#0369a1">{exams.length}</StatNum>
+            <StatBox $bg="#f0fdf4" $border="#d1fae5" $d="0.05s">
+              <StatNum $c="#059669">{exams.length}</StatNum>
               <StatLabel>Total Exams</StatLabel>
             </StatBox>
             <StatBox $bg="#f0fdf4" $border="#bbf7d0" $d="0.1s">
@@ -471,7 +466,7 @@ const CompletedExamList = () => {
         {/* ── Main Card ── */}
         <Card>
           <CardHead>
-            <LayoutList size={15} color="#3b82f6" />
+            <LayoutList size={15} color="#059669" />
             <CardTitle>Assessment Results</CardTitle>
           </CardHead>
 
@@ -479,11 +474,11 @@ const CompletedExamList = () => {
           <TabRow>
             <Tab
               $active={tab === "all"}
-              $color="#6366f1"
+              $color="#059669"
               onClick={() => setTab("all")}
             >
               All
-              <TabCount $bg="#eef2ff" $c="#6366f1">
+              <TabCount $bg="#f0fdf4" $c="#059669">
                 {exams.length}
               </TabCount>
             </Tab>
