@@ -144,7 +144,6 @@ const UploadBtn = styled.button`
 const ContentArea = styled.div`
   position: relative;
   z-index: 2;
-  padding: 0 32px;
   animation: ${fadeUp} 0.45s ease both;
 `;
 
@@ -153,8 +152,7 @@ const TableCard = styled.div`
   border-radius: 20px;
   box-shadow: 0 4px 30px rgba(0,0,0,0.10), 0 1px 6px rgba(0,0,0,0.05);
   overflow: hidden;
-  max-width: 960px;
-  margin: 0 auto;
+  margin-bottom: 20px;
 `;
 
 const StatsStrip = styled.div`
@@ -326,19 +324,15 @@ const TopicsShow = () => {
               </HeroTitleGroup>
             </HeroLeft>
           </HeroInner>
-<div style={{display:"flex", gap:"20px"}}>
-          <UploadBtn onClick={() => setPopup(!popup)}>
-            <UploadCloud size={17} />
-            Upload Questions
-          </UploadBtn>
-              <BackBtn
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                  >
-                    <ArrowLeft size={14} /> Back
-                  </BackBtn>
-                  </div>
+          <div style={{display:"flex", gap:"20px"}}>
+            <UploadBtn onClick={() => setPopup(!popup)}>
+              <UploadCloud size={17} />
+              Upload Questions
+            </UploadBtn>
+            <BackBtn onClick={() => { navigate(-1); }}>
+              <ArrowLeft size={14} /> Back
+            </BackBtn>
+          </div>
         </HeroBar>
 
         {popup && <QuestionUpload handlePop={() => setPopup(false)} />}
@@ -392,14 +386,12 @@ const TopicsShow = () => {
             )}
           </TableCard>
 
-          <div style={{ maxWidth: 960, margin: "20px auto 0" }}>
-            <Pagination
-              currentPage={currentPage}
-              totalItems={topics.length}
-              itemsPerPage={10}
-              onPageChange={(p) => setCurrentPage(p)}
-            />
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalItems={topics.length}
+            itemsPerPage={10}
+            onPageChange={(p) => setCurrentPage(p)}
+          />
         </ContentArea>
       </PageWrap>
     </Layout>
