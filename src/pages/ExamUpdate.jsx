@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../component/Layout";
 import styled, { keyframes } from "styled-components";
+import { toast } from "sonner";
 import {
   ClipboardEdit,
   FileText,
@@ -214,12 +215,14 @@ const ExamUpdate = () => {
       return;
     }
 
-    await fetch("https://localhost:8443/sphinx/api/exam/examUpdate", {
+    const response = await fetch("https://localhost:8443/sphinx/api/exam/examUpdate", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
+if (!response.ok) throw new Error("Failed");
 
+      toast.success("Assessment updated successfully!");
     navigate("/admin-home");
   };
 
