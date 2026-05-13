@@ -141,7 +141,7 @@ const UpdateQuestion = () => {
 
     try {
       const response = await fetch(
-        "https://localhost:8443/sphinx/api/question/edit-question",
+        "https://localhost:8443/sphinx/api/question/update-question",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
