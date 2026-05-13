@@ -337,11 +337,17 @@ const Topics = () => {
           body: JSON.stringify(topic)
         }
       );
-      if (!response.ok) throw new Error("not update");
-      const data = response.json();
+       const data = await response.json();
+       console.log('data',data);
+       
+      if (!response.ok) {
+        toast.error(data.error);
+        return; 
+      }
+     
       toast.success(data.successMessage || "Update successfully");
     } catch (err) {
-      toast.error("Failed to update");
+     
     } finally {
       dispatch(toggle());
       setLoading(false);
